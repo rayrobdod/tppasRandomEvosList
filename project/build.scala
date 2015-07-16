@@ -18,6 +18,7 @@ object MyBuild extends Build {
 			val tarDir = (target in perMonPages in Assets).value
 			val allMons = getAllPokemon
 			allMons.map{_.dexNo}.map{x =>
+				(streams in perMonPages in Assets).value.log.info(x.toString)
 				val outFile = (tarDir / (x.toString + ".html")).toPath
 				val output = PageTemplates.perMonPage(x, allMons).toString
 				val output2 = java.util.Collections.singleton(output)
