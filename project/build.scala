@@ -14,10 +14,12 @@ object MyBuild extends Build {
 	
 	val mySettings = Seq(
 		target in perMonPages in Assets := (resourceManaged in Assets).value,
+		sourceDirectory in perMonPages in Assets := (baseDirectory).value / "src" / "data",
 		perMonPages in Assets := {
 			val tarDir = (target in perMonPages in Assets).value
-			val allMons = getAllPokemon
+			val allMons = getAllPokemon((sourceDirectory in perMonPages in Assets).value)
 			allMons.map{_.dexNo}.map{x =>
+				PageTemplates.evosCacheReadDir = (sourceDirectory in perMonPages in Assets).value
 				(streams in perMonPages in Assets).value.log.info(x.toString)
 				val outFile = (tarDir / (x.toString + ".html")).toPath
 				val output = PageTemplates.perMonPage(x, allMons).toString
@@ -29,8 +31,9 @@ object MyBuild extends Build {
 		},
 		resourceGenerators in Assets <+= perMonPages in Assets,
 		indexPage in Assets := {
+			PageTemplates.evosCacheReadDir = (sourceDirectory in perMonPages in Assets).value
 			val tarDir = (target in perMonPages in Assets).value
-			val allMons = getAllPokemon.tail
+			val allMons = getAllPokemon((sourceDirectory in perMonPages in Assets).value).tail
 			val outFile = (tarDir / ("index.html")).toPath
 			val output = PageTemplates.index(allMons).toString
 			val output2 = java.util.Collections.singleton(output)

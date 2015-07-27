@@ -8,10 +8,9 @@ import java.nio.charset.StandardCharsets.UTF_8
 
 package object possibleEvolutions {
 	
-	def getAllPokemon:Seq[Pokemon] = findNaturalEvolutions(readListOfPokemon)
+	def getAllPokemon(dir:File):Seq[Pokemon] = findNaturalEvolutions(dir, readListOfPokemon(dir))
 	
-	private def readListOfPokemon():Seq[Pokemon] = {
-		val dir = new File("""C:\Users\Raymond\Documents\Programming\HTML-JS\RandomizedEvolutions""")
+	private def readListOfPokemon(dir:File):Seq[Pokemon] = {
 		val inFile = new File(dir, "listOfPokemon.csv")
 		val inReader = new CSVReader(Files.newBufferedReader(inFile.toPath, UTF_8))
 		val inData = inReader.readAll.toArray.toSeq.map{_ match {
@@ -23,8 +22,7 @@ package object possibleEvolutions {
 		inData
 	}
 	
-	private def findNaturalEvolutions(in:Seq[Pokemon]):Seq[Pokemon] = {
-		val dir = new File("""C:\Users\Raymond\Documents\Programming\HTML-JS\RandomizedEvolutions""")
+	private def findNaturalEvolutions(dir:File, in:Seq[Pokemon]):Seq[Pokemon] = {
 		val evoFile = new File(dir, "naturalEvolutions.csv")
 		val evoReader = new CSVReader(Files.newBufferedReader(evoFile.toPath, UTF_8))
 		val evoData = evoReader.readAll.toArray.toSeq.map{_ match {
@@ -37,20 +35,19 @@ package object possibleEvolutions {
 		in.map{x:Pokemon =>
 			val resultNos = evoData.filter{_._1 == x.dexNo}.map{_._2}
 			val resultMons = resultNos.map{y => in.find{_.dexNo == y}}.flatten.toSeq
-			x.copy(evoBst = resultMons.map{_.bst}, naturalEvoNo = resultMons.map{_.dexNo})
+			x.copy(naturalEvoNo = resultMons.map{_.dexNo})
 		}
 	}
 	
 	def findPossibleEvolutions(checkNo:Int, all:Seq[Pokemon]):Seq[Seq[Pokemon]] = {
 		val mon = all.find{_.dexNo == checkNo}.get
-		val origBst = mon.evoBst.toSet.toSeq
 		
 		def typesMatch(a1:String, a2:String, b1:String, b2:String) = {
 			a1 == b1 || a1 == b2 || a2 == b1 || a2 == b2
 		}
 		
 		// https://github.com/kwsch/pk3DS/blob/master/pk3DS/Subforms/Evolution.cs#L202
-		origBst.map{y => all.filter{x => (x.bst * 6 / 5 > y) && (y > x.bst * 5 / 6) && typesMatch(mon.type1, mon.type2, x.type1, x.type2)}}
+		mon.naturalEvoNo.map{all}.map{y => all.filter{x => (x.bst * 6 / 5 > y.bst) && (y.bst > x.bst * 5 / 6) && typesMatch(y.type1, y.type2, x.type1, x.type2)}}
 	}
 	
 	def findPokemonCapableOfEvolvingIntoItself(all:Seq[Pokemon]):Seq[Pokemon] = {
@@ -78,7 +75,6 @@ package possibleEvolutions {
 		type1:String = "",
 		type2:String = "",
 		bst:Int = -1,
-		evoBst:Seq[Int] = Nil,
 		naturalEvoNo:Seq[Int] = Nil,
 		randomizedEvoNo:Seq[Int] = Nil
 	)

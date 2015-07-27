@@ -23,11 +23,13 @@ object PageTemplates {
 		}
 	}
 	
+	// TODO: ew, globals
+	var evosCacheReadDir:File = new File(".")
 	lazy val evosCache:Map[Int, (Int, Int)] = {
-		val x = getAllPokemon
+		val x = getAllPokemon(evosCacheReadDir)
 		x.map{p:Pokemon =>
 			val key = p.dexNo
-			val evos = findPossibleEvolutions(key, x).flatten.size
+			val evos = findPossibleEvolutions(key, x).flatten.toSet.size
 			val prevos = findPossiblePrevolutions(key, x).size
 			((key, ((evos, prevos))))
 		}.toMap
@@ -57,7 +59,7 @@ object PageTemplates {
 	
 	def perMonPage(checkno:Int, all:Seq[Pokemon]):Group[Node] = {
 		val checkMon = all(checkno)
-		val evosBst = checkMon.evoBst.toSet.toSeq
+		val evosBst = checkMon.naturalEvoNo.map{all}.map{_.bst}
 		val evos = findPossibleEvolutions(checkno, all)
 		val prevos = findPossiblePrevolutions(checkno, all)
 		
