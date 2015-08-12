@@ -1,354 +1,357 @@
-001,Bulbasaur,002,Ivysaur
-002,Ivysaur,003,Venusaur
-004,Charmander,005,Charmeleon
-005,Charmeleon,006,Charizard
-007,Squirtle,008,Wartortle
-008,Wartortle,009,Blastoise
-010,Caterpie,011,Metapod
-011,Metapod,012,Butterfree
-013,Weedle,014,Kakuna
-014,Kakuna,015,Beedrill
-016,Pidgey,017,Pidgeotto
-017,Pidgeotto,018,Pidgeot
-019,Rattata,020,Raticate
-021,Spearow,022,Fearow
-023,Ekans,024,Arbok
-172,Pichu,025,Pikachu
-025,Pikachu,026,Raichu
-027,Sandshrew,028,Sandslash
-029,Nidoran♂,030,Nidorino
-030,Nidorino,031,Nidoking
-032,Nidoran♀,033,Nidorina
-033,Nidorina,034,Nidoqueen
-173,Cleffa,035,Clefairy
-035,Clefairy,036,Clefable
-037,Vulpix,038,Ninetales
-174,Igglybuff,039,Jigglypuff
-039,Jigglypuff,040,Wigglytuff
-041,Zubat,042,Golbat
-042,Golbat,169,Crobat
-043,Oddish,044,Gloom
-044,Gloom,045,Vileplume
-044,Gloom,182,Bellossom
-046,Paras,047,Parasect
-048,Venonat,049,Venomoth
-050,Diglett,051,Dugtrio
-052,Meowth,053,Persian
-054,Psyduck,055,Golduck
-056,Mankey,057,Primeape
-058,Growlithe,059,Arcanine
-060,Poliwag,061,Poliwhirl
-061,Poliwhirl,062,Poliwrath
-061,Poliwhirl,186,Politoed
-063,Abra,064,Kadabra
-064,Kadabra,065,Alakazam
-066,Machop,067,Machoke
-067,Machoke,068,Machamp
-069,Bellsprout,070,Weepinbell
-070,Weepinbell,071,Victreebel
-072,Tentacool,073,Tentacruel
-074,Geodude,075,Graveler
-075,Graveler,076,Golem
-077,Ponyta,078,Rapidash
-079,Slowpoke,080,Slowbro
-079,Slowpoke,199,Slowking
-081,Magnemite,082,Magneton
-082,Magneton,462,Magnezone
-084,Doduo,085,Dodrio
-086,Seel,087,Dewgong
-088,Grimer,089,Muk
-090,Shellder,091,Cloyster
-092,Gastly,093,Haunter
-093,Haunter,094,Gengar
-095,Onix,208,Steelix
-096,Drowzee,097,Hypno
-098,Krabby,099,Kingler
-100,Voltorb,101,Electrode
-102,Exeggcute,103,Exeggutor
-104,Cubone,105,Marowak
-236,Tyrogue,106,Hitmonlee
-236,Tyrogue,107,Hitmonchan
-236,Tyrogue,237,Hitmontop
-108,Lickitung,463,Lickilicky
-109,Koffing,110,Weezing
-111,Rhyhorn,112,Rhydon
-112,Rhydon,464,Rhyperior
-440,Happiny,113,Chansey
-113,Chansey,242,Blissey
-114,Tangela,465,Tangrowth
-116,Horsea,117,Seadra
-117,Seadra,230,Kingdra
-118,Goldeen,119,Seaking
-120,Staryu,121,Starmie
-439,Mime Jr.,122,Mr. Mime
-123,Scyther,212,Scizor
-238,Smoochum,124,Jynx
-239,Elekid,125,Electabuzz
-125,Electabuzz,466,Electivire
-240,Magby,126,Magmar
-126,Magmar,467,Magmortar
-129,Magikarp,130,Gyarados
-133,Eevee,134,Vaporeon
-133,Eevee,135,Jolteon
-133,Eevee,136,Flareon
-133,Eevee,196,Espeon
-133,Eevee,197,Umbreon
-133,Eevee,470,Leafeon
-133,Eevee,471,Glaceon
-133,Eevee,700,Sylveon
-137,Porygon,233,Porygon2
-233,Porygon2,474,Porygon-Z
-138,Omanyte,139,Omastar
-140,Kabuto,141,Kabutops
-446,Munchlax,143,Snorlax
-147,Dratini,148,Dragonair
-148,Dragonair,149,Dragonite
-152,Chikorita,153,Bayleef
-153,Bayleef,154,Meganium
-155,Cyndaquil,156,Quilava
-156,Quilava,157,Typhlosion
-158,Totodile,159,Croconaw
-159,Croconaw,160,Feraligatr
-161,Sentret,162,Furret
-163,Hoothoot,164,Noctowl
-165,Ledyba,166,Ledian
-167,Spinarak,168,Ariados
-170,Chinchou,171,Lanturn
-175,Togepi,176,Togetic
-176,Togetic,468,Togekiss
-177,Natu,178,Xatu
-179,Mareep,180,Flaaffy
-180,Flaaffy,181,Ampharos
-298,Azurill,183,Marill
-183,Marill,184,Azumarill
-438,Bonsly,185,Sudowoodo
-187,Hoppip,188,Skiploom
-188,Skiploom,189,Jumpluff
-190,Aipom,424,Ambipom
-191,Sunkern,192,Sunflora
-193,Yanma,469,Yanmega
-194,Wooper,195,Quagsire
-198,Murkrow,430,Honchkrow
-200,Misdreavus,429,Mismagius
-360,Wynaut,202,Wobbuffet
-204,Pineco,205,Forretress
-207,Gligar,472,Gliscor
-209,Snubbull,210,Granbull
-215,Sneasel,461,Weavile
-216,Teddiursa,217,Ursaring
-218,Slugma,219,Magcargo
-220,Swinub,221,Piloswine
-221,Piloswine,473,Mamoswine
-223,Remoraid,224,Octillery
-458,Mantyke,226,Mantine
-228,Houndour,229,Houndoom
-231,Phanpy,232,Donphan
-246,Larvitar,247,Pupitar
-247,Pupitar,248,Tyranitar
-252,Treecko,253,Grovyle
-253,Grovyle,254,Sceptile
-255,Torchic,256,Combusken
-256,Combusken,257,Blaziken
-258,Mudkip,259,Marshtomp
-259,Marshtomp,260,Swampert
-261,Poochyena,262,Mightyena
-263,Zigzagoon,264,Linoone
-265,Wurmple,266,Silcoon
-265,Wurmple,268,Cascoon
-266,Silcoon,267,Beautifly
-268,Cascoon,269,Dustox
-270,Lotad,271,Lombre
-271,Lombre,272,Ludicolo
-273,Seedot,274,Nuzleaf
-274,Nuzleaf,275,Shiftry
-276,Taillow,277,Swellow
-278,Wingull,279,Pelipper
-280,Ralts,281,Kirlia
-281,Kirlia,282,Gardevoir
-281,Kirlia,475,Gallade
-283,Surskit,284,Masquerain
-285,Shroomish,286,Breloom
-287,Slakoth,288,Vigoroth
-288,Vigoroth,289,Slaking
-290,Nincada,291,Ninjask
-290,Nincada,292,Shedinja
-293,Whismur,294,Loudred
-294,Loudred,295,Exploud
-296,Makuhita,297,Hariyama
-299,Nosepass,476,Probopass
-300,Skitty,301,Delcatty
-304,Aron,305,Lairon
-305,Lairon,306,Aggron
-307,Meditite,308,Medicham
-309,Electrike,310,Manectric
-406,Budew,315,Roselia
-315,Roselia,407,Roserade
-316,Gulpin,317,Swalot
-318,Carvanha,319,Sharpedo
-320,Wailmer,321,Wailord
-322,Numel,323,Camerupt
-325,Spoink,326,Grumpig
-328,Trapinch,329,Vibrava
-329,Vibrava,330,Flygon
-331,Cacnea,332,Cacturne
-333,Swablu,334,Altaria
-339,Barboach,340,Whiscash
-341,Corphish,342,Crawdaunt
-343,Baltoy,344,Claydol
-345,Lileep,346,Cradily
-347,Anorith,348,Armaldo
-349,Feebas,350,Milotic
-353,Shuppet,354,Banette
-355,Duskull,356,Dusclops
-356,Dusclops,477,Dusknoir
-433,Chingling,358,Chimecho
-361,Snorunt,362,Glalie
-361,Snorunt,478,Froslass
-363,Spheal,364,Sealeo
-364,Sealeo,365,Walrein
-366,Clamperl,367,Huntail
-366,Clamperl,368,Gorebyss
-371,Bagon,372,Shelgon
-372,Shelgon,373,Salamence
-374,Beldum,375,Metang
-375,Metang,376,Metagross
-387,Turtwig,388,Grotle
-388,Grotle,389,Torterra
-390,Chimchar,391,Monferno
-391,Monferno,392,Infernape
-393,Piplup,394,Prinplup
-394,Prinplup,395,Empoleon
-396,Starly,397,Staravia
-397,Staravia,398,Staraptor
-399,Bidoof,400,Bibarel
-401,Kricketot,402,Kricketune
-403,Shinx,404,Luxio
-404,Luxio,405,Luxray
-408,Cranidos,409,Rampardos
-410,Shieldon,411,Bastiodon
-412,Burmy,413,Wormadam
-415,Combee,416,Vespiquen
-418,Buizel,419,Floatzel
-420,Cherubi,421,Cherrim
-422,Shellos,423,Gastrodon
-425,Drifloon,426,Drifblim
-427,Buneary,428,Lopunny
-431,Glameow,432,Purugly
-434,Stunky,435,Skuntank
-436,Bronzor,437,Bronzong
-443,Gible,444,Gabite
-444,Gabite,445,Garchomp
-447,Riolu,448,Lucario
-449,Hippopotas,450,Hippowdon
-451,Skorupi,452,Drapion
-453,Croagunk,454,Toxicroak
-456,Finneon,457,Lumineon
-459,Snover,460,Abomasnow
-495,Snivy,496,Servine
-496,Servine,497,Serperior
-498,Tepig,499,Pignite
-499,Pignite,500,Emboar
-501,Oshawott,502,Dewott
-502,Dewott,503,Samurott
-504,Patrat,505,Watchog
-506,Lillipup,507,Herdier
-507,Herdier,508,Stoutland
-509,Purrloin,510,Liepard
-511,Pansage,512,Simisage
-513,Pansear,514,Simisear
-515,Panpour,516,Simipour
-517,Munna,518,Musharna
-519,Pidove,520,Tranquill
-520,Tranquill,521,Unfezant
-522,Blitzle,523,Zebstrika
-524,Roggenrola,525,Boldore
-525,Boldore,526,Gigalith
-527,Woobat,528,Swoobat
-529,Drilbur,530,Excadrill
-532,Timburr,533,Gurdurr
-533,Gurdurr,534,Conkeldurr
-535,Tympole,536,Palpitoad
-536,Palpitoad,537,Seismitoad
-540,Sewaddle,541,Swadloon
-541,Swadloon,542,Leavanny
-543,Venipede,544,Whirlipede
-544,Whirlipede,545,Scolipede
-546,Cottonee,547,Whimsicott
-548,Petilil,549,Lilligant
-551,Sandile,552,Krokorok
-552,Krokorok,553,Krookodile
-554,Darumaka,555,Darmanitan
-557,Dwebble,558,Crustle
-559,Scraggy,560,Scrafty
-562,Yamask,563,Cofagrigus
-564,Tirtouga,565,Carracosta
-566,Archen,567,Archeops
-568,Trubbish,569,Garbodor
-570,Zorua,571,Zoroark
-572,Minccino,573,Cinccino
-574,Gothita,575,Gothorita
-575,Gothorita,576,Gothitelle
-577,Solosis,578,Duosion
-578,Duosion,579,Reuniclus
-580,Ducklett,581,Swanna
-582,Vanillite,583,Vanillish
-583,Vanillish,584,Vanilluxe
-585,Deerling,586,Sawsbuck
-588,Karrablast,589,Escavalier
-590,Foongus,591,Amoonguss
-592,Frillish,593,Jellicent
-595,Joltik,596,Galvantula
-597,Ferroseed,598,Ferrothorn
-599,Klink,600,Klang
-600,Klang,601,Klinklang
-602,Tynamo,603,Eelektrik
-603,Eelektrik,604,Eelektross
-605,Elgyem,606,Beheeyem
-607,Litwick,608,Lampent
-608,Lampent,609,Chandelure
-610,Axew,611,Fraxure
-611,Fraxure,612,Haxorus
-613,Cubchoo,614,Beartic
-616,Shelmet,617,Accelgor
-619,Mienfoo,620,Mienshao
-622,Golett,623,Golurk
-624,Pawniard,625,Bisharp
-627,Rufflet,628,Braviary
-629,Vullaby,630,Mandibuzz
-633,Deino,634,Zweilous
-634,Zweilous,635,Hydreigon
-636,Larvesta,637,Volcarona
-650,Chespin,651,Quilladin
-651,Quilladin,652,Chesnaught
-653,Fennekin,654,Braixen
-654,Braixen,655,Delphox
-656,Froakie,657,Frogadier
-657,Frogadier,658,Greninja
-659,Bunnelby,660,Diggersby
-661,Fletchling,662,Fletchinder
-662,Fletchinder,663,Talonflame
-664,Scatterbug,665,Spewpa
-665,Spewpa,666,Vivillon
-667,Litleo,668,Pyroar
-669,Flabébé,670,Floette
-670,Floette,671,Florges
-672,Skiddo,673,Gogoat
-674,Pancham,675,Pangoro
-677,Espurr,678,Meowstic
-679,Honedge,680,Doublade
-680,Doublade,681,Aegislash
-682,Spritzee,683,Aromatisse
-684,Swirlix,685,Slurpuff
-686,Inkay,687,Malamar
-688,Binacle,689,Barbaracle
-690,Skrelp,691,Dragalge
-692,Clauncher,693,Clawitzer
-694,Helioptile,695,Heliolisk
-696,Tyrunt,697,Tyrantrum
-698,Amaura,699,Aurorus
-704,Goomy,705,Sliggoo
-705,Sliggoo,706,Goodra
-708,Phantump,709,Trevenant
-710,Pumpkaboo,711,Gourgeist
-712,Bergmite,713,Avalugg
-714,Noibat,715,Noivern
+001,Bulbasaur,002,Ivysaur,"Level Up [16]"
+002,Ivysaur,003,Venusaur,"Level Up [32]"
+004,Charmander,005,Charmeleon,"Level Up [16]"
+005,Charmeleon,006,Charizard,"Level Up [36]"
+007,Squirtle,008,Wartortle,"Level Up [16]"
+008,Wartortle,009,Blastoise,"Level Up [36]"
+010,Caterpie,011,Metapod,"Level Up [7]"
+011,Metapod,012,Butterfree,"Level Up [10]"
+013,Weedle,014,Kakuna,"Level Up [7]"
+014,Kakuna,015,Beedrill,"Level Up [10]"
+016,Pidgey,017,Pidgeotto,"Level Up [18]"
+017,Pidgeotto,018,Pidgeot,"Level Up [36]"
+019,Rattata,020,Raticate,"Level Up [20]"
+021,Spearow,022,Fearow,"Level Up [20]"
+023,Ekans,024,Arbok,"Level Up [22]"
+025,Pikachu,026,Raichu,"Used Item [Thunder Stone]"
+027,Sandshrew,028,Sandslash,"Level Up [22]"
+029,Nidoran♂,030,Nidorino,"Level Up [16]"
+030,Nidorino,031,Nidoking,"Used Item [Moon Stone]"
+032,Nidoran♀,033,Nidorina,"Level Up [16]"
+033,Nidorina,034,Nidoqueen,"Used Item [Moon Stone]"
+035,Clefairy,036,Clefable,"Used Item [Moon Stone]"
+037,Vulpix,038,Ninetales,"Used Item [Fire Stone]"
+039,Jigglypuff,040,Wigglytuff,"Used Item [Moon Stone]"
+041,Zubat,042,Golbat,"Level Up [22]"
+042,Golbat,169,Crobat,"Level Up with Friendship"
+043,Oddish,044,Gloom,"Level Up [21]"
+044,Gloom,045,Vileplume,"Used Item [Leaf Stone]"
+044,Gloom,182,Bellossom,"Used Item [Sun Stone]"
+046,Paras,047,Parasect,"Level Up [24]"
+048,Venonat,049,Venomoth,"Level Up [31]"
+050,Diglett,051,Dugtrio,"Level Up [26]"
+052,Meowth,053,Persian,"Level Up [28]"
+054,Psyduck,055,Golduck,"Level Up [33]"
+056,Mankey,057,Primeape,"Level Up [28]"
+058,Growlithe,059,Arcanine,"Used Item [Fire Stone]"
+060,Poliwag,061,Poliwhirl,"Level Up [25]"
+061,Poliwhirl,062,Poliwrath,"Used Item [Water Stone]"
+061,Poliwhirl,186,Politoed,"Trade with Held Item [King's Rock]"
+063,Abra,064,Kadabra,"Level Up [16]"
+064,Kadabra,065,Alakazam,"Trade"
+066,Machop,067,Machoke,"Level Up [28]"
+067,Machoke,068,Machamp,"Trade"
+069,Bellsprout,070,Weepinbell,"Level Up [21]"
+070,Weepinbell,071,Victreebel,"Used Item [Leaf Stone]"
+072,Tentacool,073,Tentacruel,"Level Up [30]"
+074,Geodude,075,Graveler,"Level Up [25]"
+075,Graveler,076,Golem,"Trade"
+077,Ponyta,078,Rapidash,"Level Up [40]"
+079,Slowpoke,080,Slowbro,"Level Up [37]"
+079,Slowpoke,199,Slowking,"Trade with Held Item [King's Rock]"
+081,Magnemite,082,Magneton,"Level Up [30]"
+082,Magneton,462,Magnezone,"Level Up at Electric"
+084,Doduo,085,Dodrio,"Level Up [31]"
+086,Seel,087,Dewgong,"Level Up [34]"
+088,Grimer,089,Muk,"Level Up [38]"
+090,Shellder,091,Cloyster,"Used Item [Water Stone]"
+092,Gastly,093,Haunter,"Level Up [25]"
+093,Haunter,094,Gengar,"Trade"
+095,Onix,208,Steelix,"Trade with Held Item [Metal Coat]"
+096,Drowzee,097,Hypno,"Level Up [26]"
+098,Krabby,099,Kingler,"Level Up [28]"
+100,Voltorb,101,Electrode,"Level Up [30]"
+102,Exeggcute,103,Exeggutor,"Used Item [Leaf Stone]"
+104,Cubone,105,Marowak,"Level Up [28]"
+108,Lickitung,463,Lickilicky,"Level Up with Move [Rollout]"
+109,Koffing,110,Weezing,"Level Up [35]"
+111,Rhyhorn,112,Rhydon,"Level Up [42]"
+112,Rhydon,464,Rhyperior,"Trade with Held Item [Protector]"
+113,Chansey,242,Blissey,"Level Up with Friendship"
+114,Tangela,465,Tangrowth,"Level Up with Move [Ancient Power]"
+116,Horsea,117,Seadra,"Level Up [32]"
+117,Seadra,230,Kingdra,"Trade with Held Item [Dragon Scale]"
+118,Goldeen,119,Seaking,"Level Up [33]"
+120,Staryu,121,Starmie,"Used Item [Water Stone]"
+123,Scyther,212,Scizor,"Trade with Held Item [Metal Coat]"
+125,Electabuzz,466,Electivire,"Trade with Held Item [Electirizer]"
+126,Magmar,467,Magmortar,"Trade with Held Item [Magmarizer]"
+129,Magikarp,130,Gyarados,"Level Up [20]"
+133,Eevee,134,Vaporeon,"Used Item [Water Stone]"
+133,Eevee,135,Jolteon,"Used Item [Thunder Stone]"
+133,Eevee,136,Flareon,"Used Item [Fire Stone]"
+133,Eevee,196,Espeon,"Level Up at Morning"
+133,Eevee,197,Umbreon,"Level Up at Night"
+133,Eevee,470,Leafeon,"Level Up at Forest"
+133,Eevee,471,Glaceon,"Level Up at Cold"
+133,Eevee,700,Sylveon,"Level Up with 50 Affection + MoveType [Fairy]"
+137,Porygon,233,Porygon2,"Trade with Held Item [Up-Grade]"
+138,Omanyte,139,Omastar,"Level Up [40]"
+140,Kabuto,141,Kabutops,"Level Up [40]"
+147,Dratini,148,Dragonair,"Level Up [30]"
+148,Dragonair,149,Dragonite,"Level Up [55]"
+152,Chikorita,153,Bayleef,"Level Up [16]"
+153,Bayleef,154,Meganium,"Level Up [32]"
+155,Cyndaquil,156,Quilava,"Level Up [14]"
+156,Quilava,157,Typhlosion,"Level Up [36]"
+158,Totodile,159,Croconaw,"Level Up [18]"
+159,Croconaw,160,Feraligatr,"Level Up [30]"
+161,Sentret,162,Furret,"Level Up [15]"
+163,Hoothoot,164,Noctowl,"Level Up [20]"
+165,Ledyba,166,Ledian,"Level Up [18]"
+167,Spinarak,168,Ariados,"Level Up [22]"
+170,Chinchou,171,Lanturn,"Level Up [27]"
+172,Pichu,025,Pikachu,"Level Up with Friendship"
+173,Cleffa,035,Clefairy,"Level Up with Friendship"
+174,Igglybuff,039,Jigglypuff,"Level Up with Friendship"
+175,Togepi,176,Togetic,"Level Up with Friendship"
+176,Togetic,468,Togekiss,"Used Item [Shiny Stone]"
+177,Natu,178,Xatu,"Level Up [25]"
+179,Mareep,180,Flaaffy,"Level Up [15]"
+180,Flaaffy,181,Ampharos,"Level Up [30]"
+183,Marill,184,Azumarill,"Level Up [18]"
+187,Hoppip,188,Skiploom,"Level Up [18]"
+188,Skiploom,189,Jumpluff,"Level Up [27]"
+190,Aipom,424,Ambipom,"Level Up with Move [Double Hit]"
+191,Sunkern,192,Sunflora,"Used Item [Sun Stone]"
+193,Yanma,469,Yanmega,"Level Up with Move [Ancient Power]"
+194,Wooper,195,Quagsire,"Level Up [20]"
+198,Murkrow,430,Honchkrow,"Used Item [Dusk Stone]"
+200,Misdreavus,429,Mismagius,"Used Item [Dusk Stone]"
+204,Pineco,205,Forretress,"Level Up [31]"
+207,Gligar,472,Gliscor,"Level Up with Held Item (Night) [Razor Fang]"
+209,Snubbull,210,Granbull,"Level Up [23]"
+215,Sneasel,461,Weavile,"Level Up with Held Item (Night) [Razor Claw]"
+216,Teddiursa,217,Ursaring,"Level Up [30]"
+218,Slugma,219,Magcargo,"Level Up [38]"
+220,Swinub,221,Piloswine,"Level Up [33]"
+221,Piloswine,473,Mamoswine,"Level Up with Move [Ancient Power]"
+223,Remoraid,224,Octillery,"Level Up [25]"
+228,Houndour,229,Houndoom,"Level Up [24]"
+231,Phanpy,232,Donphan,"Level Up [25]"
+233,Porygon2,474,Porygon-Z,"Trade with Held Item [Dubious Disc]"
+236,Tyrogue,106,Hitmonlee,"Level Up (Attack > Defense) [20]"
+236,Tyrogue,107,Hitmonchan,"Level Up (Attack < Defense) [20]"
+236,Tyrogue,237,Hitmontop,"Level Up (Attack = Defense) [20]"
+238,Smoochum,124,Jynx,"Level Up [30]"
+239,Elekid,125,Electabuzz,"Level Up [30]"
+240,Magby,126,Magmar,"Level Up [30]"
+246,Larvitar,247,Pupitar,"Level Up [30]"
+247,Pupitar,248,Tyranitar,"Level Up [55]"
+252,Treecko,253,Grovyle,"Level Up [16]"
+253,Grovyle,254,Sceptile,"Level Up [36]"
+255,Torchic,256,Combusken,"Level Up [16]"
+256,Combusken,257,Blaziken,"Level Up [36]"
+258,Mudkip,259,Marshtomp,"Level Up [16]"
+259,Marshtomp,260,Swampert,"Level Up [36]"
+261,Poochyena,262,Mightyena,"Level Up [18]"
+263,Zigzagoon,264,Linoone,"Level Up [20]"
+265,Wurmple,266,Silcoon,"Level Up (Random < 5) [7]"
+265,Wurmple,268,Cascoon,"Level Up (Random > 5) [7]"
+266,Silcoon,267,Beautifly,"Level Up [10]"
+268,Cascoon,269,Dustox,"Level Up [10]"
+270,Lotad,271,Lombre,"Level Up [14]"
+271,Lombre,272,Ludicolo,"Used Item [Water Stone]"
+273,Seedot,274,Nuzleaf,"Level Up [14]"
+274,Nuzleaf,275,Shiftry,"Used Item [Leaf Stone]"
+276,Taillow,277,Swellow,"Level Up [22]"
+278,Wingull,279,Pelipper,"Level Up [25]"
+280,Ralts,281,Kirlia,"Level Up [20]"
+281,Kirlia,282,Gardevoir,"Level Up [30]"
+281,Kirlia,475,Gallade,"Level Up with Held Item (Male) [Dawn Stone]"
+283,Surskit,284,Masquerain,"Level Up [22]"
+285,Shroomish,286,Breloom,"Level Up [23]"
+287,Slakoth,288,Vigoroth,"Level Up [18]"
+288,Vigoroth,289,Slaking,"Level Up [36]"
+290,Nincada,291,Ninjask,"Level Up (Ninjask) [20]"
+290,Nincada,292,Shedinja,"Level Up (Shedinja) [20]"
+293,Whismur,294,Loudred,"Level Up [20]"
+294,Loudred,295,Exploud,"Level Up [40]"
+296,Makuhita,297,Hariyama,"Level Up [24]"
+298,Azurill,183,Marill,"Level Up with Friendship"
+299,Nosepass,476,Probopass,"Level Up at Electric"
+300,Skitty,301,Delcatty,"Used Item [Moon Stone]"
+304,Aron,305,Lairon,"Level Up [32]"
+305,Lairon,306,Aggron,"Level Up [42]"
+307,Meditite,308,Medicham,"Level Up [37]"
+309,Electrike,310,Manectric,"Level Up [26]"
+315,Roselia,407,Roserade,"Used Item [Shiny Stone]"
+316,Gulpin,317,Swalot,"Level Up [26]"
+318,Carvanha,319,Sharpedo,"Level Up [30]"
+320,Wailmer,321,Wailord,"Level Up [40]"
+322,Numel,323,Camerupt,"Level Up [33]"
+325,Spoink,326,Grumpig,"Level Up [32]"
+328,Trapinch,329,Vibrava,"Level Up [35]"
+329,Vibrava,330,Flygon,"Level Up [45]"
+331,Cacnea,332,Cacturne,"Level Up [32]"
+333,Swablu,334,Altaria,"Level Up [35]"
+339,Barboach,340,Whiscash,"Level Up [30]"
+341,Corphish,342,Crawdaunt,"Level Up [30]"
+343,Baltoy,344,Claydol,"Level Up [36]"
+345,Lileep,346,Cradily,"Level Up [40]"
+347,Anorith,348,Armaldo,"Level Up [40]"
+349,Feebas,350,Milotic,"Level Up (Beauty) [170]"
+349,Feebas,350,Milotic,"Trade with Held Item [Prism Scale]"
+353,Shuppet,354,Banette,"Level Up [37]"
+355,Duskull,356,Dusclops,"Level Up [37]"
+356,Dusclops,477,Dusknoir,"Trade with Held Item [Reaper Cloth]"
+360,Wynaut,202,Wobbuffet,"Level Up [15]"
+361,Snorunt,362,Glalie,"Level Up [42]"
+361,Snorunt,478,Froslass,"Level Up with Held Item (Female) [Dawn Stone]"
+363,Spheal,364,Sealeo,"Level Up [32]"
+364,Sealeo,365,Walrein,"Level Up [44]"
+366,Clamperl,367,Huntail,"Trade with Held Item [Deep Sea Tooth]"
+366,Clamperl,368,Gorebyss,"Trade with Held Item [Deep Sea Scale]"
+371,Bagon,372,Shelgon,"Level Up [30]"
+372,Shelgon,373,Salamence,"Level Up [50]"
+374,Beldum,375,Metang,"Level Up [20]"
+375,Metang,376,Metagross,"Level Up [45]"
+387,Turtwig,388,Grotle,"Level Up [18]"
+388,Grotle,389,Torterra,"Level Up [32]"
+390,Chimchar,391,Monferno,"Level Up [14]"
+391,Monferno,392,Infernape,"Level Up [36]"
+393,Piplup,394,Prinplup,"Level Up [16]"
+394,Prinplup,395,Empoleon,"Level Up [36]"
+396,Starly,397,Staravia,"Level Up [14]"
+397,Staravia,398,Staraptor,"Level Up [34]"
+399,Bidoof,400,Bibarel,"Level Up [15]"
+401,Kricketot,402,Kricketune,"Level Up [10]"
+403,Shinx,404,Luxio,"Level Up [15]"
+404,Luxio,405,Luxray,"Level Up [30]"
+406,Budew,315,Roselia,"Level Up at Morning"
+408,Cranidos,409,Rampardos,"Level Up [30]"
+410,Shieldon,411,Bastiodon,"Level Up [30]"
+412,Burmy,413,Wormadam,"Level Up Female [20]"
+412,Burmy,414,Mothim,"Level Up Male [20]"
+415,Combee,416,Vespiquen,"Level Up Female [21]"
+418,Buizel,419,Floatzel,"Level Up [26]"
+420,Cherubi,421,Cherrim,"Level Up [25]"
+422,Shellos,423,Gastrodon,"Level Up [30]"
+425,Drifloon,426,Drifblim,"Level Up [28]"
+427,Buneary,428,Lopunny,"Level Up with Friendship"
+431,Glameow,432,Purugly,"Level Up [38]"
+433,Chingling,358,Chimecho,"Level Up at Night"
+434,Stunky,435,Skuntank,"Level Up [34]"
+436,Bronzor,437,Bronzong,"Level Up [33]"
+438,Bonsly,185,Sudowoodo,"Level Up with Move [Mimic]"
+439,Mime Jr.,122,Mr. Mime,"Level Up with Move [Mimic]"
+440,Happiny,113,Chansey,"Level Up with Held Item (Day) [Oval Stone]"
+443,Gible,444,Gabite,"Level Up [24]"
+444,Gabite,445,Garchomp,"Level Up [48]"
+446,Munchlax,143,Snorlax,"Level Up with Friendship"
+447,Riolu,448,Lucario,"Level Up at Morning"
+449,Hippopotas,450,Hippowdon,"Level Up [34]"
+451,Skorupi,452,Drapion,"Level Up [40]"
+453,Croagunk,454,Toxicroak,"Level Up [37]"
+456,Finneon,457,Lumineon,"Level Up [31]"
+458,Mantyke,226,Mantine,"Level up with Party [Remoraid]"
+459,Snover,460,Abomasnow,"Level Up [40]"
+495,Snivy,496,Servine,"Level Up [17]"
+496,Servine,497,Serperior,"Level Up [36]"
+498,Tepig,499,Pignite,"Level Up [17]"
+499,Pignite,500,Emboar,"Level Up [36]"
+501,Oshawott,502,Dewott,"Level Up [17]"
+502,Dewott,503,Samurott,"Level Up [36]"
+504,Patrat,505,Watchog,"Level Up [20]"
+506,Lillipup,507,Herdier,"Level Up [16]"
+507,Herdier,508,Stoutland,"Level Up [32]"
+509,Purrloin,510,Liepard,"Level Up [20]"
+511,Pansage,512,Simisage,"Used Item [Leaf Stone]"
+513,Pansear,514,Simisear,"Used Item [Fire Stone]"
+515,Panpour,516,Simipour,"Used Item [Water Stone]"
+517,Munna,518,Musharna,"Used Item [Moon Stone]"
+519,Pidove,520,Tranquill,"Level Up [21]"
+520,Tranquill,521,Unfezant,"Level Up [32]"
+522,Blitzle,523,Zebstrika,"Level Up [27]"
+524,Roggenrola,525,Boldore,"Level Up [25]"
+525,Boldore,526,Gigalith,"Trade"
+527,Woobat,528,Swoobat,"Level Up with Friendship"
+529,Drilbur,530,Excadrill,"Level Up [31]"
+532,Timburr,533,Gurdurr,"Level Up [25]"
+533,Gurdurr,534,Conkeldurr,"Trade"
+535,Tympole,536,Palpitoad,"Level Up [25]"
+536,Palpitoad,537,Seismitoad,"Level Up [36]"
+540,Sewaddle,541,Swadloon,"Level Up [20]"
+541,Swadloon,542,Leavanny,"Level Up with Friendship"
+543,Venipede,544,Whirlipede,"Level Up [22]"
+544,Whirlipede,545,Scolipede,"Level Up [30]"
+546,Cottonee,547,Whimsicott,"Used Item [Sun Stone]"
+548,Petilil,549,Lilligant,"Used Item [Sun Stone]"
+551,Sandile,552,Krokorok,"Level Up [29]"
+552,Krokorok,553,Krookodile,"Level Up [40]"
+554,Darumaka,555,Darmanitan,"Level Up [35]"
+557,Dwebble,558,Crustle,"Level Up [34]"
+559,Scraggy,560,Scrafty,"Level Up [39]"
+562,Yamask,563,Cofagrigus,"Level Up [34]"
+564,Tirtouga,565,Carracosta,"Level Up [37]"
+566,Archen,567,Archeops,"Level Up [37]"
+568,Trubbish,569,Garbodor,"Level Up [36]"
+570,Zorua,571,Zoroark,"Level Up [30]"
+572,Minccino,573,Cinccino,"Used Item [Shiny Stone]"
+574,Gothita,575,Gothorita,"Level Up [32]"
+575,Gothorita,576,Gothitelle,"Level Up [41]"
+577,Solosis,578,Duosion,"Level Up [32]"
+578,Duosion,579,Reuniclus,"Level Up [41]"
+580,Ducklett,581,Swanna,"Level Up [35]"
+582,Vanillite,583,Vanillish,"Level Up [35]"
+583,Vanillish,584,Vanilluxe,"Level Up [47]"
+585,Deerling,586,Sawsbuck,"Level Up [34]"
+588,Karrablast,589,Escavalier,"Trade for opposite Karrablast/Shelmet"
+590,Foongus,591,Amoonguss,"Level Up [39]"
+592,Frillish,593,Jellicent,"Level Up [40]"
+595,Joltik,596,Galvantula,"Level Up [36]"
+597,Ferroseed,598,Ferrothorn,"Level Up [40]"
+599,Klink,600,Klang,"Level Up [38]"
+600,Klang,601,Klinklang,"Level Up [49]"
+602,Tynamo,603,Eelektrik,"Level Up [39]"
+603,Eelektrik,604,Eelektross,"Used Item [Thunder Stone]"
+605,Elgyem,606,Beheeyem,"Level Up [42]"
+607,Litwick,608,Lampent,"Level Up [41]"
+608,Lampent,609,Chandelure,"Used Item [Dusk Stone]"
+610,Axew,611,Fraxure,"Level Up [38]"
+611,Fraxure,612,Haxorus,"Level Up [48]"
+613,Cubchoo,614,Beartic,"Level Up [37]"
+616,Shelmet,617,Accelgor,"Trade for opposite Karrablast/Shelmet"
+619,Mienfoo,620,Mienshao,"Level Up [50]"
+622,Golett,623,Golurk,"Level Up [43]"
+624,Pawniard,625,Bisharp,"Level Up [52]"
+627,Rufflet,628,Braviary,"Level Up [54]"
+629,Vullaby,630,Mandibuzz,"Level Up [54]"
+633,Deino,634,Zweilous,"Level Up [50]"
+634,Zweilous,635,Hydreigon,"Level Up [64]"
+636,Larvesta,637,Volcarona,"Level Up [59]"
+650,Chespin,651,Quilladin,"Level Up [16]"
+651,Quilladin,652,Chesnaught,"Level Up [36]"
+653,Fennekin,654,Braixen,"Level Up [16]"
+654,Braixen,655,Delphox,"Level Up [36]"
+656,Froakie,657,Frogadier,"Level Up [16]"
+657,Frogadier,658,Greninja,"Level Up [36]"
+659,Bunnelby,660,Diggersby,"Level Up [20]"
+661,Fletchling,662,Fletchinder,"Level Up [17]"
+662,Fletchinder,663,Talonflame,"Level Up [35]"
+664,Scatterbug,665,Spewpa,"Level Up [9]"
+665,Spewpa,666,Vivillon,"Level Up [12]"
+667,Litleo,668,Pyroar,"Level Up [35]"
+669,Flabébé,670,Floette,"Level Up [19]"
+670,Floette,671,Florges,"Used Item [Shiny Stone]"
+672,Skiddo,673,Gogoat,"Level Up [32]"
+674,Pancham,675,Pangoro,"Dark Type in Party [32]"
+677,Espurr,678,Meowstic,"Level Up Male [25]"
+677,Espurr,678,Meowstic,"Level Up Female (SetForm 1) [25]"
+679,Honedge,680,Doublade,"Level Up [35]"
+680,Doublade,681,Aegislash,"Used Item [Dusk Stone]"
+682,Spritzee,683,Aromatisse,"Trade with Held Item [Sachet]"
+684,Swirlix,685,Slurpuff,"Trade with Held Item [Whipped Dream]"
+686,Inkay,687,Malamar,"Level Up with 3DS Upside Down [30]"
+688,Binacle,689,Barbaracle,"Level Up [39]"
+690,Skrelp,691,Dragalge,"Level Up [48]"
+692,Clauncher,693,Clawitzer,"Level Up [37]"
+694,Helioptile,695,Heliolisk,"Used Item [Sun Stone]"
+696,Tyrunt,697,Tyrantrum,"Level Up (@) at Night [39]"
+698,Amaura,699,Aurorus,"Level Up (@) at Night [39]"
+704,Goomy,705,Sliggoo,"Level Up [40]"
+705,Sliggoo,706,Goodra,"Overworld Rain [50]"
+708,Phantump,709,Trevenant,"Trade"
+710,Pumpkaboo,711,Gourgeist,"Trade"
+712,Bergmite,713,Avalugg,"Level Up [37]"
+714,Noibat,715,Noivern,"Level Up [48]"
