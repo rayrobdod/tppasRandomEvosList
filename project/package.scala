@@ -8,7 +8,11 @@ import java.nio.charset.StandardCharsets.UTF_8
 
 package object possibleEvolutions {
 	
-	def getAllPokemon(dir:File):Seq[Pokemon] = findNaturalEvolutions(dir, readListOfPokemon(dir))
+	def getAllPokemon(dir:File):Seq[Pokemon] = {
+			findAlphaEvolutions(dir,
+			findNaturalEvolutions(dir,
+			 readListOfPokemon(dir)))
+	}
 	
 	private def readListOfPokemon(dir:File):Seq[Pokemon] = {
 		val inFile = new File(dir, "listOfPokemon.csv")
@@ -36,6 +40,23 @@ package object possibleEvolutions {
 			val resultNos = evoData.filter{_._1 == x.dexNo}.map{_._2}
 			val resultMons = resultNos.map{y => in.find{_.dexNo == y}}.flatten.toSeq
 			x.copy(naturalEvoNo = resultMons.map{_.dexNo})
+		}
+	}
+	
+	private def findAlphaEvolutions(dir:File, in:Seq[Pokemon]):Seq[Pokemon] = {
+		val evoFile = new File(dir, "alphaSapphireEvolutions.csv")
+		val evoReader = new CSVReader(Files.newBufferedReader(evoFile.toPath, UTF_8))
+		val evoData = evoReader.readAll.toArray.toSeq.map{_ match {
+			case Array(inNo:String, inName:String, outNo:String, outName:String) => {
+				((inNo.toInt, outNo.toInt))
+			}
+		}}
+		evoReader.close()
+		
+		in.map{x:Pokemon =>
+			val resultNos = evoData.filter{_._1 == x.dexNo}.map{_._2}
+			val resultMons = resultNos.map{y => in.find{_.dexNo == y}}.flatten.toSeq
+			x.copy(randomizedEvoNo = resultMons.map{_.dexNo})
 		}
 	}
 	
@@ -79,5 +100,9 @@ package possibleEvolutions {
 		randomizedEvoNo:Seq[Int] = Nil
 	)
 	
+	object EvosType extends Enumeration {
+		val Natural = Value(0, "natural")
+		val AlphaSapphire = Value(1, "alpha-sapphire")
+	}
 }
 

@@ -89,11 +89,11 @@ object PageTemplates {
 							Elem(htmlBinding, "div", Attributes(), Group(Text(x._1.size.toString))),
 							Elem(htmlBinding, "a", Attributes("href" -> ("http://veekun.com/dex/pokemon/search?type=" + checkMon.type1.toLowerCase +
 									"&type=" + checkMon.type2.toLowerCase + "&stat_total=" + (x._2 * 0.8).intValue + "-" + (x._2 * 1.2).intValue)), Group(Text("Veekun Version"))),
-							pokemonListTable(x._1)
+							pokemonListTable(x._1, Option(checkMon))
 						)})),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Prevos"))),
 						Elem(htmlBinding, "div", Attributes(), Group(Text(prevos.size.toString))),
-						pokemonListTable(prevos)
+						pokemonListTable(prevos, Option(checkMon))
 					))
 				))
 			))
@@ -107,7 +107,7 @@ object PageTemplates {
 		}))
 	}
 	
-	def pokemonListTable(x:Seq[Pokemon]):Node = {
+	def pokemonListTable(x:Seq[Pokemon], base:Option[Pokemon] = None):Node = {
 		Elem(htmlBinding, "table", Attributes("class" -> "pokemon-list"), Group(
 			Elem(htmlBinding, "thead", Attributes(), Group(
 				Elem(htmlBinding, "tr", Attributes(), Group(
@@ -121,13 +121,19 @@ object PageTemplates {
 				))
 			)),
 			Elem(htmlBinding, "tbody", Attributes(), Group.fromSeq(
-				x.map{pokemonTableRow _}
+				x.map{(pokemonTableRow(base) _)}
 			))
 		))
 	}
 	
-	def pokemonTableRow(x:Pokemon):Node = {
-		Elem(htmlBinding, "tr", Attributes(), Group(
+	def pokemonTableRow(base:Option[Pokemon])(x:Pokemon):Node = {
+		val game = base.map[Seq[EvosType.Value]]{y => 
+			(if (x.naturalEvoNo.contains(y.dexNo) || y.naturalEvoNo.contains(x.dexNo)) {Seq(EvosType.Natural)} else {Nil}) ++:
+			(if (x.randomizedEvoNo.contains(y.dexNo) || y.randomizedEvoNo.contains(x.dexNo)) {Seq(EvosType.AlphaSapphire)} else {Nil}) ++:
+			Nil
+		}.getOrElse{Nil}.map{_.toString}.mkString("", " ", "")
+		
+		Elem(htmlBinding, "tr", Attributes("data-game" -> game), Group(
 			Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(x.dexNo)), Group(Text(x.dexNo.toString))),
 			Elem(htmlBinding, "td", Attributes("data-sort" -> x.name), Group(
 				Elem(htmlBinding, "a", Attributes("href" -> (x.dexNo + ".html")), Group(Text(x.name)))

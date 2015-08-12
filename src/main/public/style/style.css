@@ -6,6 +6,7 @@ body {margin: 0px;}
 
 table.pokemon-list {border-collapse:collapse;}
 table.pokemon-list td {border:1px solid black; padding:2px;}
+
 table.pokemon-list td[data-type="none"]{display:none;}
 table.pokemon-list td[data-type="bug"]{background-color:#a8b820}
 table.pokemon-list td[data-type="dark"]{background-color:#705848;color:white;}
@@ -35,3 +36,6 @@ table.pokemon-list td[data-type="beast"]{background-color:#b8a038;}
 table.pokemon-list td[data-type="heart"]{background-color:#f8a8b8;}
 table.pokemon-list td[data-type="native"]{background-color:#78c850;}
 table.pokemon-list td[data-type="reason"]{background-color:#f85888;}
+
+table.pokemon-list tr[data-game="natural"]{background-color:#EAC5BF;} /* hsl(5/240, 50%, 200/240) */
+table.pokemon-list tr[data-game="alpha-sapphire"]{background-color:#BFE4EA;} /* hsl(125/240, 50%, 200/240) */
