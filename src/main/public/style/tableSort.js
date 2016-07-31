@@ -11,11 +11,11 @@ function toArray(x) {
 }
 
 function sortTable(tableToSort, columnNo) {
-	var initial = tableToSort.tBodies[0].rows;
+	var initial = toArray(tableToSort.tBodies[0].rows);
 	function compareRows(a,b) {
-		if (a.cells[columnNo].dataset["sort"] < b.cells[columnNo].dataset["sort"]) { return 1; }
-		if (a.cells[columnNo].dataset["sort"] > b.cells[columnNo].dataset["sort"]) { return -1; }
-		else { return 0; }
+		if (a.cells[columnNo].dataset["sort"] < b.cells[columnNo].dataset["sort"]) { return -1; }
+		if (a.cells[columnNo].dataset["sort"] > b.cells[columnNo].dataset["sort"]) { return 1; }
+		else { return initial.indexOf(a) - initial.indexOf(b); }
 	}
 	var sortedArray = toArray(initial).sort(compareRows)
 	
