@@ -33,9 +33,10 @@ object MyBuild extends Build {
 		indexPage in Assets := {
 			PageTemplates.evosCacheReadDir = (sourceDirectory in perMonPages in Assets).value
 			val tarDir = (target in perMonPages in Assets).value
+			val baseDir = (baseDirectory).value
 			val allMons = getAllPokemon((sourceDirectory in perMonPages in Assets).value).tail
 			val outFile = (tarDir / ("index.html")).toPath
-			val output = PageTemplates.index(allMons).toString
+			val output = PageTemplates.index(allMons, readPrologue(baseDir / "README.md")).toString
 			val output2 = java.util.Collections.singleton(output)
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)

@@ -3,7 +3,7 @@
 Between July 12th and July 26th,
 [TwitchPlaysPokemon](http://www.twitch.tv/twitchplayspokemon) played a game of
 Pokémon Alpha Sapphire randomized using [pk3DS](https://github.com/kwsch/pk3DS).
-The randomization included evolutions such that a Torchic would not neccessarily
+The randomization included evolutions such that a Torchic would not necessarily
 evolve into a Combusken.
 
 The rules were known to be: A Pokemon's new evolution would match at least one
@@ -16,12 +16,12 @@ a Pokémon to evolve into itself, but this code was never changed to account for
 that. Second, the Randomizer, if it tries and fails to find an evolution within
 the allowed parameters, will increase the upper range of allowed BSTs. So, even
 though Flygon's BST is 30% more than Dugtrio's BST, enough luck allows a Diglet
-to evolve into Diglett to evolve into a Flygon. Lastly, BSTs were randomized as
+to evolve into a Flygon. Lastly, BSTs were randomized as
 well, although this was not figured out until someone noticed that Mega
 Rayquaza's Special Attack was significantly lower than Rayquaza's Special
-Attack, and that Mega Rayquaza's HP were higher than Rayquaza's HP. Obviusly, if
+Attack, and that Mega Rayquaza's HP was higher than Rayquaza's HP. If
 no one noticed before then, the difference couldn't have been that much, but it
-would explain how Chancey was allowed to evolve into Wigglytuff.
+would explain how Chansey was allowed to evolve into Wigglytuff.
 
 
 ## Build

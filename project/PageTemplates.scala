@@ -35,7 +35,7 @@ object PageTemplates {
 		}.toMap
 	}
 	
-	def index(all:Seq[Pokemon]):Group[Node] = {
+	def index(all:Seq[Pokemon], prologue:Group[Node]):Group[Node] = {
 		Group(xmlProcInstr, Text("\n"), htmlDoctype, Text("\n"),
 			Elem(htmlBinding, "html", Attributes("lang" -> "en-US"), Group(
 				Elem(htmlBinding, "head", Attributes(), Group(
@@ -50,6 +50,7 @@ object PageTemplates {
 					)),
 					Elem(htmlBinding, "main", Attributes(), Group(
 						Elem(htmlBinding, "h1", Attributes(), Group(Text("Index"))),
+						Elem(htmlBinding, "div", Attributes(), prologue),
 						pokemonListTable(all)
 					))
 				))

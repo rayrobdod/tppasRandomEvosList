@@ -5,8 +5,38 @@ import java.io.File
 import java.nio.file.Files
 import com.opencsv.{CSVReader, CSVWriter}
 import java.nio.charset.StandardCharsets.UTF_8
+import com.codecommit.antixml.{Group, Node}
 
 package object possibleEvolutions {
+	
+	def readPrologue(readmemdFile:File):Group[Node] = {
+		import com.codecommit.antixml.{Group, Text, Elem, Attributes,
+				Node, NamespaceBinding, XMLConvertable, ProcInstr
+		}
+		import scala.collection.JavaConversions._
+		val HTML_NAMESPACE = "http://www.w3.org/1999/xhtml"
+		val htmlBinding = NamespaceBinding(HTML_NAMESPACE)
+		val containsLink = """([^\[]*)\[(\w+)\]\(([\w\:\/\.]+)\)(.*)""".r
+		
+		val emptyParagraph = Elem(htmlBinding, "p")
+		
+		val lines = Files.readAllLines(readmemdFile.toPath)
+		val usedLines = lines.dropWhile{!_.startsWith("#")}.drop(1)
+				.takeWhile{!_.startsWith("##")}
+				.dropWhile{_ == "\n"}
+				.reverse.dropWhile{_ == "\n"}.reverse
+		usedLines.foldLeft(Group(emptyParagraph)){(folding, line) => line match {
+			case "" => folding :+ emptyParagraph
+			case containsLink(before, label, href, after) => {
+				folding.init :+ (folding.last addChild Text(" ") addChild Text(before)
+						addChild Elem(htmlBinding, "a", Attributes("href" -> href), Group(Text(label)))
+						addChild Text(after))
+			}
+			case _ => {
+				folding.init :+ (folding.last addChild Text(" ") addChild Text(line))
+			}
+		}}
+	}
 	
 	def getAllPokemon(dir:File):Seq[Pokemon] = {
 			findEvolutions(dir,
