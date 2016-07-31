@@ -118,7 +118,7 @@ package object possibleEvolutions {
 
 package possibleEvolutions {
 
-	case class Pokemon(
+	final case class Pokemon(
 		dexNo:Int = -1,
 		name:String = "",
 		type1:String = "",
