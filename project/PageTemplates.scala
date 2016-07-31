@@ -140,7 +140,7 @@ object PageTemplates {
 	}
 	
 	def pokemonTableRow(realEvos:Iterable[(EvosGame.Value, Int)])(x:Pokemon):Node = {
-		val game = realEvos.filter{_._2 == x.dexNo}.map{_._1}.map{_.toString}.mkString("", " ", "")
+		val game = realEvos.filter{_._2 == x.dexNo}.map{_._1}.to[Seq].distinct.map{_.toString}.mkString("", " ", "")
 		
 		Elem(htmlBinding, "tr", Attributes("data-game" -> game), Group(
 			Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(x.dexNo)), Group(Text(x.dexNo.toString))),
