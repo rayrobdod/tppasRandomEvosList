@@ -20,7 +20,7 @@ package object possibleEvolutions {
 		
 		val emptyParagraph = Elem(htmlBinding, "p")
 		
-		val lines = Files.readAllLines(readmemdFile.toPath)
+		val lines = Files.readAllLines(readmemdFile.toPath, UTF_8)
 		val usedLines = lines.dropWhile{!_.startsWith("#")}.drop(1)
 				.takeWhile{!_.startsWith("##")}
 				.dropWhile{_ == "\n"}
