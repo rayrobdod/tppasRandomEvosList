@@ -4,7 +4,9 @@
 
 body {margin: 0px;}
 
+table.evolution-list,
 table.pokemon-list {border-collapse:collapse;}
+table.evolution-list td,
 table.pokemon-list td {border:1px solid black; padding:2px;}
 
 table.pokemon-list td[data-type="none"]{display:none;}

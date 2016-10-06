@@ -41,3 +41,17 @@ toArray(tables).filter(function(tab) {return tab.classList.contains("pokemon-lis
 			}
 		}
 	})
+
+toArray(tables).filter(function(tab) {return tab.classList.contains("evolution-list")}).forEach(function(tab) {
+		var headerCells = tab.tHead.rows[0].cells
+		for (j = 0; j < headerCells.length; j++) {
+				function doThing(cellIndex) {
+					var c = headerCells[cellIndex];
+					c.appendChild(document.createTextNode(SORT_INDICATOR));
+					c.addEventListener("click", function() {
+						sortTable(tab, cellIndex)
+					});
+				}
+				doThing(j)
+		}
+	})

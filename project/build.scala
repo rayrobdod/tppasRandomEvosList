@@ -10,6 +10,7 @@ import com.typesafe.sbt.web.Import.Assets
 object MyBuild extends Build {
 	
 	val perMonPages = TaskKey[Seq[File]]("perMonPages")
+	val perGamePages = TaskKey[Seq[File]]("perGamePages")
 	val indexPage = TaskKey[Seq[File]]("indexPage")
 	
 	val mySettings = Seq(
@@ -30,6 +31,20 @@ object MyBuild extends Build {
 			}
 		},
 		resourceGenerators in Assets <+= perMonPages in Assets,
+		perGamePages in Assets := {
+			val tarDir = (target in perMonPages in Assets).value
+			val allMons = getAllPokemon((sourceDirectory in perMonPages in Assets).value)
+			EvosGame.values.to[Seq].map{x =>
+				(streams in perMonPages in Assets).value.log.info(x.toString)
+				val outFile = (tarDir / (x.toString + ".html")).toPath
+				val output = PageTemplates.perGamePage(x, allMons).toString
+				val output2 = java.util.Collections.singleton(output)
+				Files.createDirectories(outFile.getParent)
+				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE)
+				outFile.toFile
+			}
+		},
+		resourceGenerators in Assets <+= perGamePages in Assets,
 		indexPage in Assets := {
 			PageTemplates.evosCacheReadDir = (sourceDirectory in perMonPages in Assets).value
 			val tarDir = (target in perMonPages in Assets).value
