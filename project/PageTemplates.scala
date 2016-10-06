@@ -89,6 +89,8 @@ object PageTemplates {
 							tableRow(Seq("Number", checkMon.dexNo.toString)),
 							tableRow(Seq("Type1", checkMon.type1)),
 							tableRow(Seq("Type2", checkMon.type2)),
+							tableRow(Seq("Platinum Type1", checkMon.rpType1)),
+							tableRow(Seq("Platinum Type2", checkMon.rpType2)),
 							tableRow(Seq("Base Stat Total", checkMon.bst.toString))
 						)),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Evos"))),

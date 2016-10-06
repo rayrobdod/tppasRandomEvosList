@@ -47,8 +47,8 @@ package object possibleEvolutions {
 		val inFile = new File(dir, "listOfPokemon.csv")
 		val inReader = new CSVReader(Files.newBufferedReader(inFile.toPath, UTF_8))
 		val inData = inReader.readAll.toArray.toSeq.map{_ match {
-			case Array(dexNo:String, name:String, type1:String, type2:String, bst:String) => {
-				Pokemon(dexNo.toInt, name, type1, type2, bst.toInt, Map.empty)
+			case Array(dexNo:String, name:String, type1:String, type2:String, bst:String, rpType1:String, rpType2:String) => {
+				Pokemon(dexNo.toInt, name, type1, type2, rpType1, rpType2, bst.toInt, Map.empty)
 			}
 		}}
 		inReader.close()
@@ -69,7 +69,9 @@ package object possibleEvolutions {
 		}
 		val natural = readEvoDataFile("naturalEvolutions.csv", EvosGame.Natural)
 		val alphaSapphire = readEvoDataFile("alphaSapphireEvolutions.csv", EvosGame.AlphaSapphire)
-		val summed:Seq[(Int, Int, String, EvosGame.Value)] = natural ++ alphaSapphire 
+		val platinum = readEvoDataFile("platinumEvolutions.csv", EvosGame.Platinum)
+		
+		val summed:Seq[(Int, Int, String, EvosGame.Value)] = natural ++ alphaSapphire ++ platinum
 		
 		
 		in.map{mon:Pokemon =>
@@ -123,6 +125,8 @@ package possibleEvolutions {
 		name:String = "",
 		type1:String = "",
 		type2:String = "",
+		rpType1:String = "",
+		rpType2:String = "",
 		bst:Int = -1,
 		evos:Map[String, Map[EvosGame.Value, Int]] = Map.empty
 	) {
@@ -132,6 +136,7 @@ package possibleEvolutions {
 	object EvosGame extends Enumeration {
 		val Natural = Value(0, "natural")
 		val AlphaSapphire = Value(1, "alpha-sapphire")
+		val Platinum = Value(2, "platinum")
 	}
 }
 

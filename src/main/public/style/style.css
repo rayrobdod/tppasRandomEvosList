@@ -39,3 +39,8 @@ table.pokemon-list td[data-type="reason"]{background-color:#f85888;}
 
 table.pokemon-list tr[data-game="natural"]{background-color:#EAC5BF;} /* hsl(5/240, 50%, 200/240) */
 table.pokemon-list tr[data-game="alpha-sapphire"]{background-color:#BFE4EA;} /* hsl(125/240, 50%, 200/240) */
+table.pokemon-list tr[data-game="platinum"]{background-color:#C9D4DF;} /* hsl(140/240, 10%, 200/240) */
+table.pokemon-list tr[data-game="natural platinum"]{
+	background-color:#EAC5BF;
+	background: linear-gradient(to bottom, #EAC5BF 0%,#EAC5BF 50%,#C9D4DF 51%,#C9D4DF 100%);
+}
