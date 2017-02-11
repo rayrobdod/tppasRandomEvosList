@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets.UTF_8
 import com.typesafe.sbt.web.Import.WebKeys.webTarget
 import com.typesafe.sbt.web.Import.Assets
 
-object MyBuild extends Build {
+object MyBuild {
 	
 	val perMonPages = TaskKey[Seq[File]]("perMonPages")
 	val indexPage = TaskKey[Seq[File]]("indexPage")
@@ -29,7 +29,7 @@ object MyBuild extends Build {
 				outFile.toFile
 			}
 		},
-		resourceGenerators in Assets <+= perMonPages in Assets,
+		resourceGenerators in Assets += (perMonPages in Assets).taskValue,
 		indexPage in Assets := {
 			PageTemplates.evosCacheReadDir = (sourceDirectory in perMonPages in Assets).value
 			val tarDir = (target in perMonPages in Assets).value
@@ -42,15 +42,6 @@ object MyBuild extends Build {
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
 			Seq(outFile.toFile)
 		},
-		resourceGenerators in Assets <+= indexPage in Assets
+		resourceGenerators in Assets += (indexPage in Assets).taskValue
 	)
-	
-	lazy val root = Project(
-			id = "randEvos",
-			base = file("."),
-			settings = {
-				mySettings ++
-				Nil
-			}
-	).enablePlugins(com.typesafe.sbt.web.SbtWeb)
 }

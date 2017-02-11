@@ -13,9 +13,8 @@ package object possibleEvolutions {
 		import com.codecommit.antixml.{Group, Text, Elem, Attributes,
 				Node, NamespaceBinding, XMLConvertable, ProcInstr
 		}
+		import com.rayrobdod.website.base.constants.xhtml.{binding => htmlBinding}
 		import scala.collection.JavaConversions._
-		val HTML_NAMESPACE = "http://www.w3.org/1999/xhtml"
-		val htmlBinding = NamespaceBinding(HTML_NAMESPACE)
 		val containsLink = """([^\[]*)\[(\w+)\]\(([\w\:\/\.]+)\)(.*)""".r
 		
 		val emptyParagraph = Elem(htmlBinding, "p")
