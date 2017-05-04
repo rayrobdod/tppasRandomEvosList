@@ -9,5 +9,6 @@ version := "SNAPSHOT"
 pipelineStages := Nil
 
 enablePlugins(com.typesafe.sbt.web.SbtWeb)
+enablePlugins(net.virtualvoid.optimizer.SbtOptimizerPlugin)
 
 com.rayrobdod.possibleEvolutions.MyBuild.mySettings

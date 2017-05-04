@@ -9,17 +9,19 @@ import com.typesafe.sbt.web.Import.Assets
 
 object MyBuild {
 	
+	val monData = TaskKey[ListOfPokemon]("")
 	val perMonPages = TaskKey[Seq[File]]("perMonPages")
 	val indexPage = TaskKey[Seq[File]]("indexPage")
 	
 	val mySettings = Seq(
+		monData := new ListOfPokemon((sourceDirectory in perMonPages in Assets).value),
+		
 		target in perMonPages in Assets := (resourceManaged in Assets).value,
 		sourceDirectory in perMonPages in Assets := (baseDirectory).value / "src" / "data",
 		perMonPages in Assets := {
 			val tarDir = (target in perMonPages in Assets).value
-			val allMons = getAllPokemon((sourceDirectory in perMonPages in Assets).value)
-			allMons.map{_.dexNo}.map{x =>
-				PageTemplates.evosCacheReadDir = (sourceDirectory in perMonPages in Assets).value
+			val allMons = monData.value
+			allMons.rawdata.map{_.dexNo}.map{x =>
 				(streams in perMonPages in Assets).value.log.info(x.toString)
 				val outFile = (tarDir / (x.toString + ".html")).toPath
 				val output = PageTemplates.perMonPage(x, allMons).toString
@@ -31,10 +33,9 @@ object MyBuild {
 		},
 		resourceGenerators in Assets += (perMonPages in Assets).taskValue,
 		indexPage in Assets := {
-			PageTemplates.evosCacheReadDir = (sourceDirectory in perMonPages in Assets).value
 			val tarDir = (target in perMonPages in Assets).value
 			val baseDir = (baseDirectory).value
-			val allMons = getAllPokemon((sourceDirectory in perMonPages in Assets).value).tail
+			val allMons = monData.value
 			val outFile = (tarDir / ("index.html")).toPath
 			val output = PageTemplates.index(allMons, readPrologue(baseDir / "README.md")).toString
 			val output2 = java.util.Collections.singleton(output)
