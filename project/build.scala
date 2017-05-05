@@ -42,7 +42,7 @@ object MyBuild {
 				val output = PageTemplates.perGamePage(x, allMons).toString
 				val output2 = java.util.Collections.singleton(output)
 				Files.createDirectories(outFile.getParent)
-				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE)
+				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
 				outFile.toFile
 			}
 		},
@@ -60,4 +60,4 @@ object MyBuild {
 		},
 		resourceGenerators in Assets += (indexPage in Assets).taskValue
 	)
-			}
+}

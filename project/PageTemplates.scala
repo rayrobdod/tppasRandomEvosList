@@ -29,7 +29,15 @@ object PageTemplates {
 					Elem(htmlBinding, "main", Attributes(), Group(
 						Elem(htmlBinding, "h1", Attributes(), Group(Text("Index"))),
 						Elem(htmlBinding, "div", Attributes(), prologue),
-						pokemonListTable(all.rawdata.tail, Map.empty, all.possibleEvosCount, all.possiblePrevosCount)
+						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon List"))),
+						pokemonListTable(all.rawdata.tail, Map.empty, all.possibleEvosCount, all.possiblePrevosCount),
+						Elem(htmlBinding, "h2", Attributes(), Group(Text("Games List"))),
+						Elem(htmlBinding, "ul", Attributes(), Group.fromSeq(EvosGame.values.to[Seq].map{game =>
+							val name = game.toString
+							Elem(htmlBinding, "li", Attributes(), Group(
+								Elem(htmlBinding, "a", Attributes("href" -> (name + ".html")), Group(Text(name)))
+							))
+						}))
 					))
 				))
 			))
@@ -111,7 +119,7 @@ object PageTemplates {
 				)),
 				Elem(htmlBinding, "body", Attributes(), Group(
 					Elem(htmlBinding, "header", Attributes(), Group(
-						
+						Elem(htmlBinding, "a", Attributes("href" -> "index.html"), Group(Text("Back to Index")))
 					)),
 					Elem(htmlBinding, "main", Attributes(), Group(
 						Elem(htmlBinding, "h1", Attributes(), Group(Text(game.toString))),
