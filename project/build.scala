@@ -11,6 +11,7 @@ object MyBuild {
 	
 	val monData = TaskKey[ListOfPokemon]("")
 	val perMonPages = TaskKey[Seq[File]]("perMonPages")
+	val perGamePages = TaskKey[Seq[File]]("perGamePages")
 	val indexPage = TaskKey[Seq[File]]("indexPage")
 	
 	val mySettings = Seq(
@@ -32,6 +33,20 @@ object MyBuild {
 			}
 		},
 		resourceGenerators in Assets += (perMonPages in Assets).taskValue,
+		perGamePages in Assets := {
+			val tarDir = (target in perMonPages in Assets).value
+			val allMons = monData.value
+			EvosGame.values.to[Seq].map{x =>
+				(streams in perMonPages in Assets).value.log.info(x.toString)
+				val outFile = (tarDir / (x.toString + ".html")).toPath
+				val output = PageTemplates.perGamePage(x, allMons).toString
+				val output2 = java.util.Collections.singleton(output)
+				Files.createDirectories(outFile.getParent)
+				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
+				outFile.toFile
+			}
+		},
+		resourceGenerators in Assets += (perGamePages in Assets).taskValue,
 		indexPage in Assets := {
 			val tarDir = (target in perMonPages in Assets).value
 			val baseDir = (baseDirectory).value

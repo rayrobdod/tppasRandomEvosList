@@ -29,7 +29,15 @@ object PageTemplates {
 					Elem(htmlBinding, "main", Attributes(), Group(
 						Elem(htmlBinding, "h1", Attributes(), Group(Text("Index"))),
 						Elem(htmlBinding, "div", Attributes(), prologue),
-						pokemonListTable(all.rawdata.tail, Map.empty, all.possibleEvosCount, all.possiblePrevosCount)
+						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon List"))),
+						pokemonListTable(all.rawdata.tail, Map.empty, all.possibleEvosCount, all.possiblePrevosCount),
+						Elem(htmlBinding, "h2", Attributes(), Group(Text("Games List"))),
+						Elem(htmlBinding, "ul", Attributes(), Group.fromSeq(EvosGame.values.to[Seq].map{game =>
+							val name = game.toString
+							Elem(htmlBinding, "li", Attributes(), Group(
+								Elem(htmlBinding, "a", Attributes("href" -> (name + ".html")), Group(Text(name)))
+							))
+						}))
 					))
 				))
 			))
@@ -93,6 +101,74 @@ object PageTemplates {
 			))
 		)
 	}
+	
+	def perGamePage(game:EvosGame.Value, all:ListOfPokemon):Group[Node] = {
+		
+		val evolutionList:Seq[(Pokemon, String, Pokemon)] = all.rawdata.flatMap{from =>
+			from.evos.mapValues{x => x.find{_._1 == game}.map{_._2}.getOrElse(0)}.to[Seq]
+					.map{case (method, toNo) => ((from, method, all.rawdata(toNo)))}
+		}
+		
+		Group(xmlProcInstr, Text("\n"), htmlDoctype, Text("\n"),
+			Elem(htmlBinding, "html", Attributes("lang" -> "en-US"), Group(
+				Elem(htmlBinding, "head", Attributes(), Group(
+					Elem(htmlBinding, "title", Attributes(), Group(Text("Possible Evolutions - " + game.toString))),
+					Elem(htmlBinding, "meta", Attributes("http-equiv" -> "content-type", "content" -> "application/xhtml+xml")),
+					Elem(htmlBinding, "link", Attributes("rel" -> "stylesheet", "href" -> "style/style.css")),
+					Elem(htmlBinding, "script", Attributes("defer" -> "defer", "type" -> "text/javascript", "src" -> "style/tableSort.js"), Group(Text(" ")))
+				)),
+				Elem(htmlBinding, "body", Attributes(), Group(
+					Elem(htmlBinding, "header", Attributes(), Group(
+						Elem(htmlBinding, "a", Attributes("href" -> "index.html"), Group(Text("Back to Index")))
+					)),
+					Elem(htmlBinding, "main", Attributes(), Group(
+						Elem(htmlBinding, "h1", Attributes(), Group(Text(game.toString))),
+						Elem(htmlBinding, "h2", Attributes(), Group(Text("Evolutions"))),
+						Elem(htmlBinding, "table", Attributes("class" -> "evolution-list"), Group(
+							Elem(htmlBinding, "thead", Attributes(), Group(
+								Elem(htmlBinding, "tr", Attributes(), Group(
+									Elem(htmlBinding, "th", Attributes(), Group(Text("From DexNo"))),
+									Elem(htmlBinding, "th", Attributes(), Group(Text("From Name"))),
+									Elem(htmlBinding, "th", Attributes(), Group(Text("Method"))),
+									Elem(htmlBinding, "th", Attributes(), Group(Text("To DexNo"))),
+									Elem(htmlBinding, "th", Attributes(), Group(Text("To Name")))
+								))
+							)),
+							Elem(htmlBinding, "tbody", Attributes(), Group.fromSeq(
+								 evolutionList.map{case (from, method, to) =>
+									Elem(htmlBinding, "tr", Attributes(), Group(
+										Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(from.dexNo)), Group(Text(from.dexNo.toString))),
+										Elem(htmlBinding, "td", Attributes("data-sort" -> from.name), Group(
+											Elem(htmlBinding, "a", Attributes("href" -> (from.dexNo + ".html")), Group(Text(from.name)))
+										)),
+										Elem(htmlBinding, "td", Attributes("data-sort" -> method), Group(Text(method))),
+										Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(to.dexNo)), Group(Text(to.dexNo.toString))),
+										Elem(htmlBinding, "td", Attributes("data-sort" -> to.name), Group(
+											Elem(htmlBinding, "a", Attributes("href" -> (to.dexNo + ".html")), Group(Text(to.name)))
+										))
+									))
+								}
+							))
+						)),
+						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon that nothing evolves into"))),
+						pokemonListTable(
+							all.rawdata.filterNot(evolutionList.map{_._3}.toSet)
+							, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
+						),
+						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon that multiple things evolves into"))),
+						pokemonListTable(
+							evolutionList.foldLeft(Map.empty[Pokemon, Seq[Pokemon]]){(folding, next) =>
+								val (from, _, to) = next
+								folding + (to -> (folding.getOrElse(to, Seq.empty) :+ from))
+							}.filter{_._2.size >= 2}.to[Seq].map{_._1}.sortBy{_.dexNo}
+							, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
+						)
+					))
+				))
+			))
+		)
+	}
+	
 	
 	private[this] def monInfoTableRow(th:String, td:String):Node = {
 		Elem(htmlBinding, "tr", Attributes(), Group(

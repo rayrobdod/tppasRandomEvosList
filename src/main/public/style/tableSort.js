@@ -25,13 +25,30 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 		tableToSort.replaceChild(newTableBody, tableToSort.tBodies[0]);
 	}
-	
+
 	toArray(tables)
 		.filter(function(tab) {return tab.classList.contains("pokemon-list")})
 		.forEach(function(tab) {
+		var headerCells = tab.tHead.rows[0].cells
+		for (j = 0; j < headerCells.length; j++) {
+			if (j != 2 && j != 3) {
+				function doThing(cellIndex) {
+					var c = headerCells[cellIndex];
+					c.appendChild(document.createTextNode(SORT_INDICATOR));
+					c.addEventListener("click", function() {
+						sortTable(tab, cellIndex)
+					});
+				}
+				doThing(j)
+			}
+		}
+	})
+
+	toArray(tables)
+		.filter(function(tab) {return tab.classList.contains("evolution-list")})
+		.forEach(function(tab) {
 			var headerCells = tab.tHead.rows[0].cells
 			for (j = 0; j < headerCells.length; j++) {
-				if (j != 2 && j != 3) {
 					function doThing(cellIndex) {
 						var c = headerCells[cellIndex];
 						c.appendChild(document.createTextNode(SORT_INDICATOR));
@@ -40,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function() {
 						});
 					}
 					doThing(j)
-				}
 			}
 		})
 })
