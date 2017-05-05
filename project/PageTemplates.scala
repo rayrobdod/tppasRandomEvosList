@@ -63,7 +63,7 @@ object PageTemplates {
 					Elem(htmlBinding, "title", Attributes(), Group(Text("Possible Evolutions - " + checkMon.name))),
 					Elem(htmlBinding, "meta", Attributes("http-equiv" -> "content-type", "content" -> "application/xhtml+xml")),
 					Elem(htmlBinding, "link", Attributes("rel" -> "stylesheet", "href" -> "style/style.css")),
-					Elem("script", Attributes("defer" -> "defer", "type" -> "text/javascript", "src" -> "style/tableSort.js"), Group(Text(" ")))
+					Elem(htmlBinding, "script", Attributes("defer" -> "defer", "type" -> "text/javascript", "src" -> "style/tableSort.js"), Group(Text(" ")))
 				)),
 				Elem(htmlBinding, "body", Attributes(), Group(
 					Elem(htmlBinding, "header", Attributes(), Group(
