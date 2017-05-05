@@ -1,8 +1,7 @@
 ::selection{background:inherit;color:#c40029;}
 ::-moz-selection{background:inherit;color:#c40029;}
 
-
-body {margin: 0px;}
+table.general-info th {text-align: left;}
 
 table.pokemon-list {border-collapse:collapse;}
 table.pokemon-list td {border:1px solid black; padding:2px;}

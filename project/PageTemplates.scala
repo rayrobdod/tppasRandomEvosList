@@ -24,7 +24,7 @@ object PageTemplates {
 				)),
 				Elem(htmlBinding, "body", Attributes(), Group(
 					Elem(htmlBinding, "header", Attributes(), Group(
-						
+						Text(" ")
 					)),
 					Elem(htmlBinding, "main", Attributes(), Group(
 						Elem(htmlBinding, "h1", Attributes(), Group(Text("Index"))),
@@ -59,17 +59,17 @@ object PageTemplates {
 				)),
 				Elem(htmlBinding, "body", Attributes(), Group(
 					Elem(htmlBinding, "header", Attributes(), Group(
-						
+						Elem(htmlBinding, "a", Attributes("href" -> "index.html"), Group(Text("Back to Index")))
 					)),
 					Elem(htmlBinding, "main", Attributes(), Group(
 						Elem(htmlBinding, "h1", Attributes(), Group(Text(checkMon.name))),
-						Elem(htmlBinding, "table", Attributes(), Group(
-							tableRow(Seq("Number", checkMon.dexNo.toString)),
-							tableRow(Seq("Type1", checkMon.type1)),
-							tableRow(Seq("Type2", checkMon.type2)),
-							tableRow(Seq("Platinum Type1", checkMon.rpType1)),
-							tableRow(Seq("Platinum Type2", checkMon.rpType2)),
-							tableRow(Seq("Base Stat Total", checkMon.bst.toString))
+						Elem(htmlBinding, "table", Attributes("class" -> "general-info"), Group(
+							monInfoTableRow("Number", checkMon.dexNo.toString),
+							monInfoTableRowType("Type1", checkMon.type1),
+							monInfoTableRowType("Type2", checkMon.type2),
+							monInfoTableRowType("Platinum Type1", checkMon.rpType1),
+							monInfoTableRowType("Platinum Type2", checkMon.rpType2),
+							monInfoTableRow("Base Stat Total", checkMon.bst.toString)
 						)),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Evos"))),
 						Elem(htmlBinding, "div", Attributes(), Group.fromSeq(evos.flatMap{x:(String, Seq[Pokemon]) =>
@@ -94,11 +94,18 @@ object PageTemplates {
 		)
 	}
 	
+	private[this] def monInfoTableRow(th:String, td:String):Node = {
+		Elem(htmlBinding, "tr", Attributes(), Group(
+			Elem(htmlBinding, "th", Attributes(), Group(Text(th))),
+			Elem(htmlBinding, "td", Attributes(), Group(Text(td)))
+		))
+	}
 	
-	def tableRow(strs:Seq[String]):Node = {
-		Elem(htmlBinding, "tr", Attributes(), Group.fromSeq(strs.map{x =>
-			Elem(htmlBinding, "td", Attributes(), Group(Text(x)))
-		}))
+	private[this] def monInfoTableRowType(th:String, td:String):Node = {
+		Elem(htmlBinding, "tr", Attributes(), Group(
+			Elem(htmlBinding, "th", Attributes(), Group(Text(th))),
+			Elem(htmlBinding, "td", Attributes("data-type" -> td.toLowerCase), Group(Text(td)))
+		))
 	}
 	
 	def pokemonListTable(x:Seq[Pokemon], realEvos:Iterable[(EvosGame.Value, Int)], possibleEvosCount:Int => Int, possiblePrevosCount:Int => Int):Node = {
