@@ -74,12 +74,12 @@ object PageTemplates {
 							monInfoTableRowType("Type2", checkMon.type2),
 							monInfoTableRowType("Platinum Type1", checkMon.rpType1),
 							monInfoTableRowType("Platinum Type2", checkMon.rpType2),
-							monInfoTableRow("Base Stat Total", checkMon.bst.toString)
+							monInfoTableRow("Base Stat Total", checkMon.gen6bst.toString)
 						)),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Evos"))),
 						Elem(htmlBinding, "div", Attributes(), Group.fromSeq(evos.flatMap{x:(String, Seq[Pokemon]) =>
 							val method = x._1
-							val naturalBst = all.rawdata(checkMon.naturalEvos(method)).bst
+							val naturalBst = all.rawdata(checkMon.naturalEvos(method)).gen6bst
 							val realEvos = checkMon.evos(method).map{_._2}.map(all.rawdata)
 							
 							Seq(
@@ -210,7 +210,7 @@ object PageTemplates {
 			)),
 			Elem(htmlBinding, "td", Attributes("data-sort" -> x.type1.toLowerCase, "data-type" -> x.type1.toLowerCase), Group(Text(x.type1))),
 			Elem(htmlBinding, "td", Attributes("data-sort" -> x.type2.toLowerCase, "data-type" -> x.type2.toLowerCase), Group(Text(x.type2))),
-			Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(x.bst)), Group(Text(x.bst.toString))),
+			Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(x.gen6bst)), Group(Text(x.gen6bst.toString))),
 			Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(possibleEvosCount(x.dexNo))), Group(Text(possibleEvosCount(x.dexNo).toString))),
 			Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(possiblePrevosCount(x.dexNo))), Group(Text(possiblePrevosCount(x.dexNo).toString)))
 		))

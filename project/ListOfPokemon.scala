@@ -15,8 +15,8 @@ final class ListOfPokemon(datadir:File) {
 			val inFile = new File(datadir, "listOfPokemon.csv")
 			val inReader = new CSVReader(Files.newBufferedReader(inFile.toPath, UTF_8))
 			val inData = inReader.readAll.toArray.to[Seq].map{_ match {
-				case Array(dexNo:String, name:String, type1:String, type2:String, bst:String, rpType1:String, rpType2:String) => {
-					Pokemon(dexNo.toInt, name, type1, type2, rpType1, rpType2, bst.toInt, Map.empty)
+				case Array(dexNo:String, name:String, bst1:String, bst2:String, bst6:String, bst7:String, type1:String, type2:String, rpType1:String, rpType2:String) => {
+					Pokemon(dexNo.toInt, name, type1, type2, rpType1, rpType2, bst1.toInt, bst2.toInt, bst6.toInt, bst7.toInt, Map.empty)
 				}
 			}}
 			inReader.close()
@@ -64,7 +64,7 @@ final class ListOfPokemon(datadir:File) {
 			
 			// https://github.com/kwsch/pk3DS/blob/master/pk3DS/Subforms/Evolution.cs#L202
 			naturalEvoMons.mapValues{naturalEvoMon => rawdata.filter{candidate =>
-				(candidate.bst * 6 / 5 > naturalEvoMon.bst) && (naturalEvoMon.bst > candidate.bst * 5 / 6) &&
+				(candidate.gen6bst * 6 / 5 > naturalEvoMon.gen6bst) && (naturalEvoMon.gen6bst > candidate.gen6bst * 5 / 6) &&
 						typesMatch(naturalEvoMon.type1, naturalEvoMon.type2, candidate.type1, candidate.type2)
 			}}
 		}
