@@ -9,7 +9,7 @@ import com.typesafe.sbt.web.Import.Assets
 
 object MyBuild {
 	
-	val monData = TaskKey[ListOfPokemon]("")
+	val monData = TaskKey[ListOfPokemon]("monData")
 	val perMonPages = TaskKey[Seq[File]]("perMonPages")
 	val perGamePages = TaskKey[Seq[File]]("perGamePages")
 	val indexPage = TaskKey[Seq[File]]("indexPage")

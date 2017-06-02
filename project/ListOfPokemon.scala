@@ -63,7 +63,10 @@ final class ListOfPokemon(datadir:File) {
 			val naturalEvoMons:Map[String, Pokemon] = naturalEvoNos.mapValues(rawdata)
 			
 			// https://github.com/kwsch/pk3DS/blob/master/pk3DS/Subforms/Evolution.cs#L202
-			naturalEvoMons.mapValues{y => rawdata.filter{x => (x.bst * 6 / 5 > y.bst) && (y.bst > x.bst * 5 / 6) && typesMatch(y.type1, y.type2, x.type1, x.type2)}}
+			naturalEvoMons.mapValues{naturalEvoMon => rawdata.filter{candidate =>
+				(candidate.bst * 6 / 5 > naturalEvoMon.bst) && (naturalEvoMon.bst > candidate.bst * 5 / 6) &&
+						typesMatch(naturalEvoMon.type1, naturalEvoMon.type2, candidate.type1, candidate.type2)
+			}}
 		}
 	}
 	
