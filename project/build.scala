@@ -13,8 +13,10 @@ object MyBuild {
 	val perMonPages = TaskKey[Seq[File]]("perMonPages")
 	val perGamePages = TaskKey[Seq[File]]("perGamePages")
 	val indexPage = TaskKey[Seq[File]]("indexPage")
+	val configuration = SettingKey[Configuration.Value]("evoConfiguration")
 	
 	val mySettings = Seq(
+		configuration := Configuration.Gen5,
 		monData := new ListOfPokemon((sourceDirectory in perMonPages in Assets).value),
 		
 		target in perMonPages in Assets := (resourceManaged in Assets).value,
@@ -25,7 +27,7 @@ object MyBuild {
 			allMons.rawdata.map{_.dexNo}.map{x =>
 				(streams in perMonPages in Assets).value.log.info(x.toString)
 				val outFile = (tarDir / (x.toString + ".html")).toPath
-				val output = PageTemplates.perMonPage(x, allMons).toString
+				val output = PageTemplates.perMonPage(x, allMons)(configuration.value).toString
 				val output2 = java.util.Collections.singleton(output)
 				Files.createDirectories(outFile.getParent)
 				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -39,7 +41,7 @@ object MyBuild {
 			EvosGame.values.to[Seq].map{x =>
 				(streams in perMonPages in Assets).value.log.info(x.toString)
 				val outFile = (tarDir / (x.toString + ".html")).toPath
-				val output = PageTemplates.perGamePage(x, allMons).toString
+				val output = PageTemplates.perGamePage(x, allMons)(configuration.value).toString
 				val output2 = java.util.Collections.singleton(output)
 				Files.createDirectories(outFile.getParent)
 				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -52,7 +54,7 @@ object MyBuild {
 			val baseDir = (baseDirectory).value
 			val allMons = monData.value
 			val outFile = (tarDir / ("index.html")).toPath
-			val output = PageTemplates.index(allMons, readPrologue(baseDir / "README.md")).toString
+			val output = PageTemplates.index(allMons, readPrologue(baseDir / "README.md"))(configuration.value).toString
 			val output2 = java.util.Collections.singleton(output)
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)

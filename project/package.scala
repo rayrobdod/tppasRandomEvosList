@@ -45,11 +45,11 @@ package object possibleEvolutions {
 
 package possibleEvolutions {
 	
-	final case class Pokemon(
-		dexNo:Int = -1,
-		name:String = "",
-		type1:String = "",
-		type2:String = "",
+	final class Pokemon(
+		val dexNo:Int = -1,
+		val name:String = "",
+		naturalType1:String = "",
+		naturalType2:String = "",
 		rpType1:String = "",
 		rpType2:String = "",
 		gen1bst:Int = -1,
@@ -57,6 +57,28 @@ package possibleEvolutions {
 		gen6bst:Int = -1,
 		gen7bst:Int = -1
 	) {
+		def exists(implicit config:Configuration.Value):Boolean = config match {
+			case Configuration.RandPlat => this.dexNo <= 493
+			case Configuration.Gen5 => this.dexNo <= 649
+			case Configuration.Gen6 => this.dexNo <= 772
+			// case Configuration.Gen7 => this.dexNo <= 802
+		}
+		
+		def types(implicit config:Configuration.Value):(String, String) = config match {
+			case Configuration.RandPlat => ((rpType1, rpType2))
+			case Configuration.Gen6 => ((naturalType1, naturalType2))
+			case Configuration.Gen5 => {
+				val _1 = (if (naturalType1 == "Fairy") {"Normal"} else {naturalType1})
+				val _2 = (if (naturalType2 == "Fairy") {_1} else {naturalType2})
+				((_1, _2))
+			}
+		}
+		
+		def bst(implicit config:Configuration.Value):Int = config match {
+			case Configuration.RandPlat => gen2bst
+			case Configuration.Gen5 => gen2bst
+			case Configuration.Gen6 => gen6bst
+		}
 	}
 	
 	object EvosGame extends Enumeration {
@@ -64,5 +86,19 @@ package possibleEvolutions {
 		val AlphaSapphire = Value(1, "alpha-sapphire")
 		val Platinum = Value(2, "platinum")
 	}
+	
+	object MonToMatch extends Enumeration {
+		val BaseForm = Value
+		val EvolvedForm = Value
+	}
+	
+	object Configuration {
+		sealed trait Value { def monToMatch:MonToMatch.Value }
+		
+		object RandPlat extends Value { val monToMatch = MonToMatch.BaseForm }
+		object Gen5 extends Value { val monToMatch = MonToMatch.BaseForm }
+		object Gen6 extends Value { val monToMatch = MonToMatch.EvolvedForm }
+		
+		val values = Set(RandPlat, Gen5, Gen6)
+	}
 }
-

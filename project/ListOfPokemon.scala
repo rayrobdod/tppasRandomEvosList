@@ -16,7 +16,7 @@ final class ListOfPokemon(datadir:File) {
 			val inReader = new CSVReader(Files.newBufferedReader(inFile.toPath, UTF_8))
 			val inData = inReader.readAll.toArray.to[Seq].map{_ match {
 				case Array(dexNo:String, name:String, bst1:String, bst2:String, bst6:String, bst7:String, type1:String, type2:String, rpType1:String, rpType2:String) => {
-					Pokemon(dexNo.toInt, name, type1, type2, rpType1, rpType2, bst1.toInt, bst2.toInt, bst6.toInt, bst7.toInt)
+					new Pokemon(dexNo.toInt, name, type1, type2, rpType1, rpType2, bst1.toInt, bst2.toInt, bst6.toInt, bst7.toInt)
 				}
 			}}
 			inReader.close()
@@ -63,7 +63,7 @@ final class ListOfPokemon(datadir:File) {
 		}}
 	}
 	
-	val possibleEvolutions:Seq[Map[String, Seq[Pokemon]]] = {
+	def possibleEvolutions(implicit config:Configuration.Value):Seq[Map[String, Seq[Pokemon]]] = {
 		def typesMatch(a1:String, a2:String, b1:String, b2:String) = {
 			a1 == b1 || a1 == b2 || a2 == b1 || a2 == b2
 		}
@@ -74,13 +74,25 @@ final class ListOfPokemon(datadir:File) {
 			
 			// https://github.com/kwsch/pk3DS/blob/master/pk3DS/Subforms/Evolution.cs#L202
 			naturalEvoMons.mapValues{naturalEvoMon => rawdata.filter{candidate =>
-				(candidate.gen6bst * 6 / 5 > naturalEvoMon.gen6bst) && (naturalEvoMon.gen6bst > candidate.gen6bst * 5 / 6) &&
-						typesMatch(naturalEvoMon.type1, naturalEvoMon.type2, candidate.type1, candidate.type2)
+				val typsMatch = {
+					val candidateType = candidate.types
+					val selfType = config.monToMatch match {
+						case MonToMatch.BaseForm => checkMon.types
+						case MonToMatch.EvolvedForm => naturalEvoMon.types 
+					}
+					typesMatch(selfType._1, selfType._2, candidateType._1, candidateType._2)
+				}
+				val bstMatch = {
+					val candidateBst = candidate.bst
+					val selfBst = naturalEvoMon.bst
+					(candidateBst * 6 / 5 > selfBst) && (selfBst > candidateBst * 5 / 6)
+				}
+				typsMatch && bstMatch
 			}}
 		}
 	}
 	
-	val possiblePrevolutions:Seq[Seq[Pokemon]] = {
+	def possiblePrevolutions(implicit config:Configuration.Value):Seq[Seq[Pokemon]] = {
 		val retval = Seq.fill(rawdata.size){MSeq.empty[Pokemon]}
 		
 		this.possibleEvolutions.zipWithIndex.foreach({(evos:Map[String, Seq[Pokemon]], prevoDexno:Int) =>
@@ -91,7 +103,7 @@ final class ListOfPokemon(datadir:File) {
 		
 		retval.map{_.to[Seq]}
 	}
-	val possibleEvosCount:Seq[Int] = this.possibleEvolutions.map{x => x.values.flatten.toSet.size}
-	val possiblePrevosCount:Seq[Int] = this.possiblePrevolutions.map{_.size}
+	def possibleEvosCount(implicit config:Configuration.Value):Seq[Int] = this.possibleEvolutions.map{x => x.values.flatten.toSet.size}
+	def possiblePrevosCount(implicit config:Configuration.Value):Seq[Int] = this.possiblePrevolutions.map{_.size}
 	
 }
