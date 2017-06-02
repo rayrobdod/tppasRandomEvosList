@@ -16,12 +16,17 @@ final class ListOfPokemon(datadir:File) {
 			val inReader = new CSVReader(Files.newBufferedReader(inFile.toPath, UTF_8))
 			val inData = inReader.readAll.toArray.to[Seq].map{_ match {
 				case Array(dexNo:String, name:String, bst1:String, bst2:String, bst6:String, bst7:String, type1:String, type2:String, rpType1:String, rpType2:String) => {
-					Pokemon(dexNo.toInt, name, type1, type2, rpType1, rpType2, bst1.toInt, bst2.toInt, bst6.toInt, bst7.toInt, Map.empty)
+					Pokemon(dexNo.toInt, name, type1, type2, rpType1, rpType2, bst1.toInt, bst2.toInt, bst6.toInt, bst7.toInt)
 				}
 			}}
 			inReader.close()
 			inData
 		}
+		
+		readListOfPokemon()
+	}
+	
+	val evolutions:Seq[Map[String, Map[EvosGame.Value, Int]]] = {
 		def readEvoDataFile(fileName:String, game:EvosGame.Value):Seq[(Int, Int, String, EvosGame.Value)] = {
 			val f = new File(datadir, fileName)
 			val r = new CSVReader(Files.newBufferedReader(f.toPath, UTF_8))
@@ -39,8 +44,7 @@ final class ListOfPokemon(datadir:File) {
 		
 		val summed:Seq[(Int, Int, String, EvosGame.Value)] = natural ++ alphaSapphire ++ platinum
 		
-		
-		readListOfPokemon().map{mon:Pokemon =>
+		rawdata.map{mon:Pokemon =>
 			val methods = natural.filter{_._1 == mon.dexNo}.map{_._3}
 			val evos:Map[String, Map[EvosGame.Value, Int]] = methods.map{method:String =>
 				((method,
@@ -49,8 +53,14 @@ final class ListOfPokemon(datadir:File) {
 							.toMap
 				))
 			}.toMap
-			mon.copy(evos = evos)
+			evos
 		}
+	}
+	
+	val naturalEvos:Seq[Map[String, Int]] = {
+		evolutions.map{_.mapValues{x =>
+			x.find{_._1 == EvosGame.Natural}.map{_._2}.getOrElse(0)
+		}}
 	}
 	
 	val possibleEvolutions:Seq[Map[String, Seq[Pokemon]]] = {
@@ -59,7 +69,7 @@ final class ListOfPokemon(datadir:File) {
 		}
 		
 		rawdata.map{checkMon =>
-			val naturalEvoNos:Map[String, Int] = checkMon.naturalEvos
+			val naturalEvoNos:Map[String, Int] = naturalEvos(checkMon.dexNo)
 			val naturalEvoMons:Map[String, Pokemon] = naturalEvoNos.mapValues(rawdata)
 			
 			// https://github.com/kwsch/pk3DS/blob/master/pk3DS/Subforms/Evolution.cs#L202

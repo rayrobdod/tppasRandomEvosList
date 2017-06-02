@@ -55,10 +55,8 @@ package possibleEvolutions {
 		gen1bst:Int = -1,
 		gen2bst:Int = -1,
 		gen6bst:Int = -1,
-		gen7bst:Int = -1,
-		evos:Map[String, Map[EvosGame.Value, Int]] = Map.empty
+		gen7bst:Int = -1
 	) {
-		def naturalEvos:Map[String, Int] = evos.mapValues{x => x.find{_._1 == EvosGame.Natural}.map{_._2}.getOrElse(0)}
 	}
 	
 	object EvosGame extends Enumeration {

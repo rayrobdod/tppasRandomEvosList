@@ -47,7 +47,7 @@ object PageTemplates {
 		val prevos = all.possiblePrevolutions(checkno)
 		val realPrevos:Seq[(EvosGame.Value, Int)] = {
 			val allEvoPairs:Seq[(Int, EvosGame.Value, Int)] = all.rawdata.flatMap{mon =>
-				val a:Seq[(EvosGame.Value, Int)] = mon.evos.toList.flatMap{_._2}
+				val a:Seq[(EvosGame.Value, Int)] = all.evolutions(mon.dexNo).toList.flatMap{_._2}
 				a.map{x => ((mon.dexNo, x._1, x._2))}
 			}
 			val relevantEvoPairs = allEvoPairs.filter{_._3 == checkno}
@@ -79,15 +79,15 @@ object PageTemplates {
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Evos"))),
 						Elem(htmlBinding, "div", Attributes(), Group.fromSeq(evos.flatMap{x:(String, Seq[Pokemon]) =>
 							val method = x._1
-							val naturalBst = all.rawdata(checkMon.naturalEvos(method)).gen6bst
-							val realEvos = checkMon.evos(method).map{_._2}.map(all.rawdata)
+							val naturalBst = all.rawdata(all.naturalEvos(checkMon.dexNo)(method)).gen6bst
+							val realEvos = all.evolutions(checkMon.dexNo)(method).map{_._2}.map(all.rawdata)
 							
 							Seq(
 								Elem(htmlBinding, "h3", Attributes(), Group(Text(x._1))),
 								Elem(htmlBinding, "div", Attributes(), Group(Text(x._2.size.toString))),
 								Elem(htmlBinding, "a", Attributes("href" -> ("http://veekun.com/dex/pokemon/search?type=" + checkMon.type1.toLowerCase +
 										"&type=" + checkMon.type2.toLowerCase + "&stat_total=" + (naturalBst * 0.8).intValue + "-" + (naturalBst * 1.2).intValue)), Group(Text("Veekun Version"))),
-								pokemonListTable(x._2 ++ realEvos.filterNot{x._2.contains(_)}, checkMon.evos(method), all.possibleEvosCount, all.possiblePrevosCount)
+								pokemonListTable(x._2 ++ realEvos.filterNot{x._2.contains(_)}, all.evolutions(checkMon.dexNo)(method), all.possibleEvosCount, all.possiblePrevosCount)
 							)
 						}.toSeq)),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Prevos"))),
@@ -102,7 +102,7 @@ object PageTemplates {
 	def perGamePage(game:EvosGame.Value, all:ListOfPokemon):Group[Node] = {
 		
 		val evolutionList:Seq[(Pokemon, String, Pokemon)] = all.rawdata.flatMap{from =>
-			from.evos.mapValues{x => x.find{_._1 == game}.map{_._2}.getOrElse(0)}.to[Seq]
+			all.evolutions(from.dexNo).mapValues{x => x.find{_._1 == game}.map{_._2}.getOrElse(0)}.to[Seq]
 					.map{case (method, toNo) => ((from, method, all.rawdata(toNo)))}
 		}
 		
