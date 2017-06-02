@@ -7,14 +7,11 @@ import java.text.SimpleDateFormat
 import com.codecommit.antixml.{Group, Text, Elem, Attributes,
 		Node, NamespaceBinding, XMLConvertable, ProcInstr
 }
-import com.rayrobdod.website.base.constants.xml.{processingInstruction => xmlProcInstr}
-import com.rayrobdod.website.base.constants.xhtml.{binding => htmlBinding}
-import com.rayrobdod.website.base.constants.xhtml.{doctype => htmlDoctype}
 
 object PageTemplates {
 	
 	def index(all:ListOfPokemon, prologue:Group[Node]):Group[Node] = {
-		Group(xmlProcInstr, Text("\n"), htmlDoctype, Text("\n"),
+		Group(xmlProcessingInstruction, Text("\n"), htmlDoctype, Text("\n"),
 			Elem(htmlBinding, "html", Attributes("lang" -> "en-US"), Group(
 				Elem(htmlBinding, "head", Attributes(), Group(
 					Elem(htmlBinding, "title", Attributes(), Group(Text("Possible Evolutions"))),
@@ -57,7 +54,7 @@ object PageTemplates {
 			relevantEvoPairs.map{x => ((x._2, x._1))}
 		}
 		
-		Group(xmlProcInstr, Text("\n"), htmlDoctype, Text("\n"),
+		Group(xmlProcessingInstruction, Text("\n"), htmlDoctype, Text("\n"),
 			Elem(htmlBinding, "html", Attributes("lang" -> "en-US"), Group(
 				Elem(htmlBinding, "head", Attributes(), Group(
 					Elem(htmlBinding, "title", Attributes(), Group(Text("Possible Evolutions - " + checkMon.name))),
@@ -109,7 +106,7 @@ object PageTemplates {
 					.map{case (method, toNo) => ((from, method, all.rawdata(toNo)))}
 		}
 		
-		Group(xmlProcInstr, Text("\n"), htmlDoctype, Text("\n"),
+		Group(xmlProcessingInstruction, Text("\n"), htmlDoctype, Text("\n"),
 			Elem(htmlBinding, "html", Attributes("lang" -> "en-US"), Group(
 				Elem(htmlBinding, "head", Attributes(), Group(
 					Elem(htmlBinding, "title", Attributes(), Group(Text("Possible Evolutions - " + game.toString))),

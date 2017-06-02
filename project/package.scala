@@ -5,15 +5,19 @@ import java.io.File
 import java.nio.file.Files
 import com.opencsv.{CSVReader, CSVWriter}
 import java.nio.charset.StandardCharsets.UTF_8
-import com.codecommit.antixml.{Group, Node}
+import com.codecommit.antixml.{Group, Node, NamespaceBinding, ProcInstr}
 
 package object possibleEvolutions {
 	
+	val xmlProcessingInstruction = ProcInstr("xml", "version=\"1.0\" encoding=\"utf-8\"")
+	val htmlNamespace = "http://www.w3.org/1999/xhtml"
+	val htmlBinding = NamespaceBinding(htmlNamespace)
+	object htmlDoctype extends ProcInstr("DOCTYPE", "html") {
+		override val toString = "<!DOCTYPE html>"
+	}
+	
 	def readPrologue(readmemdFile:File):Group[Node] = {
-		import com.codecommit.antixml.{Group, Text, Elem, Attributes,
-				Node, NamespaceBinding, XMLConvertable, ProcInstr
-		}
-		import com.rayrobdod.website.base.constants.xhtml.{binding => htmlBinding}
+		import com.codecommit.antixml.{Text, Elem, Attributes}
 		import scala.collection.JavaConversions._
 		val containsLink = """([^\[]*)\[(\w+)\]\(([\w\:\/\.]+)\)(.*)""".r
 		
