@@ -41,7 +41,7 @@ object MyBuild {
 			EvosGame.values.to[Seq].map{x =>
 				(streams in perMonPages in Assets).value.log.info(x.toString)
 				val outFile = (tarDir / (x.toString + ".html")).toPath
-				val output = PageTemplates.perGamePage(x, allMons)(configuration.value).toString
+				val output = PageTemplates.perGamePage(x, allMons).toString
 				val output2 = java.util.Collections.singleton(output)
 				Files.createDirectories(outFile.getParent)
 				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)

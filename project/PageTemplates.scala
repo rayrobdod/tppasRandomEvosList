@@ -90,11 +90,13 @@ object PageTemplates {
 		)
 	}
 	
-	def perGamePage(game:EvosGame.Value, all:ListOfPokemon)(implicit config:Configuration.Value):Group[Node] = {
+	def perGamePage(game:EvosGame.Value, all:ListOfPokemon):Group[Node] = {
+		implicit val config = Configuration.forGame(game)
 		
 		val evolutionList:Seq[(Pokemon, String, Pokemon)] = all.allPokemon.flatMap{from =>
 			all.evolutions(from.dexNo).mapValues{x => x.find{_._1 == game}.map{_._2}.getOrElse(DexNo.missing)}.to[Seq]
 					.map{case (method, toNo) => ((from, method, all.getPokemon(toNo)))}
+					.filter{case (mon1, _, mon2) => mon1.exists && mon2.exists}
 		}
 		
 		Group(xmlProcessingInstruction, Text("\n"), htmlDoctype, Text("\n"),
@@ -140,7 +142,7 @@ object PageTemplates {
 						)),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon that nothing evolves into"))),
 						pokemonListTable(
-							all.allPokemon.filterNot(evolutionList.map{_._3}.toSet)
+							all.allPokemon.filterNot(evolutionList.map{_._3}.toSet).filter{_.exists}
 							, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
 						),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon that multiple things evolves into"))),
@@ -148,7 +150,7 @@ object PageTemplates {
 							evolutionList.foldLeft(Map.empty[Pokemon, Seq[Pokemon]]){(folding, next) =>
 								val (from, _, to) = next
 								folding + (to -> (folding.getOrElse(to, Seq.empty) :+ from))
-							}.filter{_._2.size >= 2}.to[Seq].map{_._1}.sortBy{_.dexNo}
+							}.filter{_._2.size >= 2}.to[Seq].map{_._1}.filter{_.exists}.sortBy{_.dexNo}
 							, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
 						)
 					))

@@ -73,8 +73,7 @@ package possibleEvolutions {
 		def exists(implicit config:Configuration.Value):Boolean = config match {
 			case Configuration.RandPlat => this.dexNo <= 493
 			case Configuration.Gen5 => this.dexNo <= 649
-			case Configuration.Gen6 => this.dexNo <= 772
-			// case Configuration.Gen7 => this.dexNo <= 802
+			case Configuration.Gen6 => this.dexNo <= 721
 		}
 		
 		def types(implicit config:Configuration.Value):(String, String) = config match {
@@ -112,6 +111,12 @@ package possibleEvolutions {
 		object Gen5 extends Value { val monToMatch = MonToMatch.BaseForm }
 		object Gen6 extends Value { val monToMatch = MonToMatch.EvolvedForm }
 		
-		val values = Set(RandPlat, Gen5, Gen6)
+		val values:Set[Configuration.Value] = Set(RandPlat, Gen5, Gen6)
+		
+		def forGame(game:EvosGame.Value):Configuration.Value = game match {
+			case EvosGame.Natural => Gen5
+			case EvosGame.AlphaSapphire => Gen6
+			case EvosGame.Platinum => RandPlat
+		}
 	}
 }
