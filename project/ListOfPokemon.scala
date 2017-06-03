@@ -19,7 +19,7 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 	val allDexNos:Seq[DexNo] = allPokemon.map{_.dexNo}
 	
 	/** A list of prevolutions that have occured in a TPP randomized game */
-	val prevos:Map[DexNo, Map[EvosGame.Value, DexNo]] = {
+	val prevos:Map[DexNo, Seq[(EvosGame.Value, DexNo)]] = {
 		val retval = allDexNos.map{dexNo => ((dexNo, MSeq.empty[(EvosGame.Value, DexNo)]))}.toMap
 		
 		for (
@@ -30,7 +30,7 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 			retval(evoDexno) += ((game, prevoDexno))
 		}
 		
-		retval.mapValues{_.toMap}
+		retval.mapValues{_.to[Seq]}
 	}
 	
 	/** A list of each Pokemon's evolutions in a vanila game */
