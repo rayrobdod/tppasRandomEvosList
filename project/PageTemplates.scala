@@ -90,6 +90,7 @@ object PageTemplates {
 	
 	def perGamePage(game:EvosGame.Value, all:ListOfPokemon):Group[Node] = {
 		implicit val config = Configuration.forGame(game)
+		val showSeedData = EvosGame.White2 != game
 		
 		val evolutionList:Seq[(Pokemon, String, Pokemon)] = {
 			for (
@@ -115,51 +116,58 @@ object PageTemplates {
 					Elem(htmlBinding, "header", Attributes(), Group(
 						Elem(htmlBinding, "a", Attributes("href" -> "../index.html"), Group(Text("Back to Index")))
 					)),
-					Elem(htmlBinding, "main", Attributes(), Group(
-						Elem(htmlBinding, "h1", Attributes(), Group(Text(game.toString))),
-						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon List"))),
-						pokemonListTable(all.allPokemon.tail.filter{_.exists}, Map.empty, all.possibleEvosCount, all.possiblePrevosCount),
-						Elem(htmlBinding, "h2", Attributes(), Group(Text("Evolutions"))),
-						Elem(htmlBinding, "table", Attributes("class" -> "evolution-list"), Group(
-							Elem(htmlBinding, "thead", Attributes(), Group(
-								Elem(htmlBinding, "tr", Attributes(), Group(
-									Elem(htmlBinding, "th", Attributes(), Group(Text("From DexNo"))),
-									Elem(htmlBinding, "th", Attributes(), Group(Text("From Name"))),
-									Elem(htmlBinding, "th", Attributes(), Group(Text("Method"))),
-									Elem(htmlBinding, "th", Attributes(), Group(Text("To DexNo"))),
-									Elem(htmlBinding, "th", Attributes(), Group(Text("To Name")))
-								))
-							)),
-							Elem(htmlBinding, "tbody", Attributes(), Group.fromSeq(
-								 evolutionList.map{case (from, method, to) =>
-									Elem(htmlBinding, "tr", Attributes(), Group(
-										Elem(htmlBinding, "td", Attributes("data-sort" -> from.dexNo.toStringPadded), Group(Text(from.dexNo.toString))),
-										Elem(htmlBinding, "td", Attributes("data-sort" -> from.name), Group(
-											Elem(htmlBinding, "a", Attributes("href" -> (from.dexNo + ".html")), Group(Text(from.name)))
-										)),
-										Elem(htmlBinding, "td", Attributes("data-sort" -> method), Group(Text(method))),
-										Elem(htmlBinding, "td", Attributes("data-sort" -> to.dexNo.toStringPadded), Group(Text(to.dexNo.toString))),
-										Elem(htmlBinding, "td", Attributes("data-sort" -> to.name), Group(
-											Elem(htmlBinding, "a", Attributes("href" -> (to.dexNo + ".html")), Group(Text(to.name)))
+					Elem(htmlBinding, "main", Attributes(), 
+						Group(
+							Elem(htmlBinding, "h1", Attributes(), Group(Text(game.toString))),
+							Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon List"))),
+							pokemonListTable(all.allPokemon.tail.filter{_.exists}, Map.empty, all.possibleEvosCount, all.possiblePrevosCount)
+						) ++ (
+							if (showSeedData) { Group(
+								Elem(htmlBinding, "h2", Attributes(), Group(Text("Evolutions"))),
+								Elem(htmlBinding, "table", Attributes("class" -> "evolution-list"), Group(
+									Elem(htmlBinding, "thead", Attributes(), Group(
+										Elem(htmlBinding, "tr", Attributes(), Group(
+											Elem(htmlBinding, "th", Attributes(), Group(Text("From DexNo"))),
+											Elem(htmlBinding, "th", Attributes(), Group(Text("From Name"))),
+											Elem(htmlBinding, "th", Attributes(), Group(Text("Method"))),
+											Elem(htmlBinding, "th", Attributes(), Group(Text("To DexNo"))),
+											Elem(htmlBinding, "th", Attributes(), Group(Text("To Name")))
 										))
+									)),
+									Elem(htmlBinding, "tbody", Attributes(), Group.fromSeq(
+										 evolutionList.map{case (from, method, to) =>
+											Elem(htmlBinding, "tr", Attributes(), Group(
+												Elem(htmlBinding, "td", Attributes("data-sort" -> from.dexNo.toStringPadded), Group(Text(from.dexNo.toString))),
+												Elem(htmlBinding, "td", Attributes("data-sort" -> from.name), Group(
+													Elem(htmlBinding, "a", Attributes("href" -> (from.dexNo + ".html")), Group(Text(from.name)))
+												)),
+												Elem(htmlBinding, "td", Attributes("data-sort" -> method), Group(Text(method))),
+												Elem(htmlBinding, "td", Attributes("data-sort" -> to.dexNo.toStringPadded), Group(Text(to.dexNo.toString))),
+												Elem(htmlBinding, "td", Attributes("data-sort" -> to.name), Group(
+													Elem(htmlBinding, "a", Attributes("href" -> (to.dexNo + ".html")), Group(Text(to.name)))
+												))
+											))
+										}
 									))
-								}
-							))
-						)),
-						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon that nothing evolves into"))),
-						pokemonListTable(
-							all.allPokemon.filterNot(evolutionList.map{_._3}.toSet).filter{_.exists}
-							, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
-						),
-						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon that multiple things evolves into"))),
-						pokemonListTable(
-							evolutionList.foldLeft(Map.empty[Pokemon, Seq[Pokemon]]){(folding, next) =>
-								val (from, _, to) = next
-								folding + (to -> (folding.getOrElse(to, Seq.empty) :+ from))
-							}.filter{_._2.size >= 2}.to[Seq].map{_._1}.filter{_.exists}.sortBy{_.dexNo}
-							, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
+								)),
+								Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon that nothing evolves into"))),
+								pokemonListTable(
+									all.allPokemon.filterNot(evolutionList.map{_._3}.toSet).filter{_.exists}
+									, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
+								),
+								Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon that multiple things evolve into"))),
+								pokemonListTable(
+									evolutionList.foldLeft(Map.empty[Pokemon, Seq[Pokemon]]){(folding, next) =>
+										val (from, _, to) = next
+										folding + (to -> (folding.getOrElse(to, Seq.empty) :+ from))
+									}.filter{_._2.size >= 2}.to[Seq].map{_._1}.filter{_.exists}.sortBy{_.dexNo}
+									, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
+								)
+							) } else {
+								Group.empty
+							}
 						)
-					))
+					)
 				))
 			))
 		)
