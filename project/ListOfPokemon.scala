@@ -8,58 +8,16 @@ import scala.collection.mutable.{Buffer => MSeq}
 import com.opencsv.{CSVReader, CSVWriter}
 import java.nio.charset.StandardCharsets.UTF_8
 
-final class ListOfPokemon(datadir:File) {
+/**
+ * @constructor
+ * @param allPokemon A list of every Pokemon
+ * @param evolutions A list of evolutions that have occured in a TPP randomized game
+ */
+final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo, Map[String, Map[EvosGame.Value, DexNo]]]) {
 	
-	/** A list of every Pokemon that this knows about */
-	val allPokemon:Seq[Pokemon] = {
-		def readListOfPokemon():Seq[Pokemon] = {
-			val inFile = new File(datadir, "listOfPokemon.csv")
-			val inReader = new CSVReader(Files.newBufferedReader(inFile.toPath, UTF_8))
-			val inData = inReader.readAll.toArray.to[Seq].map{_ match {
-				case Array(dexNo:String, name:String, bst1:String, bst2:String, bst6:String, bst7:String, type1:String, type2:String, rpType1:String, rpType2:String) => {
-					new Pokemon(DexNo(dexNo.toInt), name, type1, type2, rpType1, rpType2, bst1.toInt, bst2.toInt, bst6.toInt, bst7.toInt)
-				}
-			}}
-			inReader.close()
-			inData
-		}
-		
-		readListOfPokemon()
-	}
 	def getPokemon(id:DexNo):Pokemon = allPokemon.find{_.dexNo == id}.get
 	val allDexNos:Seq[DexNo] = allPokemon.map{_.dexNo}
 	
-	/** A list of evolutions that have occured in a TPP randomized game */
-	val evolutions:Map[DexNo, Map[String, Map[EvosGame.Value, DexNo]]] = {
-		def readEvoDataFile(fileName:String, game:EvosGame.Value):Seq[(DexNo, DexNo, String, EvosGame.Value)] = {
-			val f = new File(datadir, fileName)
-			val r = new CSVReader(Files.newBufferedReader(f.toPath, UTF_8))
-			val data = r.readAll.toArray.to[Seq].map{_ match {
-				case Array(inNo:String, inName:String, outNo:String, outName:String, method:String) => {
-					((DexNo(inNo.toInt), DexNo(outNo.toInt), method, game))
-				}
-			}}
-			r.close()
-			data
-		}
-		val natural = readEvoDataFile("naturalEvolutions.csv", EvosGame.Natural)
-		val alphaSapphire = readEvoDataFile("alphaSapphireEvolutions.csv", EvosGame.AlphaSapphire)
-		val platinum = readEvoDataFile("platinumEvolutions.csv", EvosGame.Platinum)
-		
-		val summed:Seq[(DexNo, DexNo, String, EvosGame.Value)] = natural ++ alphaSapphire ++ platinum
-		
-		allDexNos.map{dexNo:DexNo =>
-			val methods = natural.filter{_._1 == dexNo}.map{_._3}
-			val evos:Map[String, Map[EvosGame.Value, DexNo]] = methods.map{method:String =>
-				((method,
-					summed.filter{x => x._1 == dexNo && x._3 == method}
-							.map{x => ((x._4, x._2))}
-							.toMap
-				))
-			}.toMap
-			((dexNo, evos))
-		}.toMap
-	}
 	/** A list of prevolutions that have occured in a TPP randomized game */
 	val prevos:Map[DexNo, Map[EvosGame.Value, DexNo]] = {
 		val retval = allDexNos.map{dexNo => ((dexNo, MSeq.empty[(EvosGame.Value, DexNo)]))}.toMap
@@ -142,4 +100,60 @@ final class ListOfPokemon(datadir:File) {
 	/** The number of possible prevolutions that a randomizer can produce for the given mon*/
 	def possiblePrevosCount(dexno:DexNo)(implicit config:Configuration.Value):Int = this.possiblePrevosCountData(config)(dexno)
 	
+}
+
+object ListOfPokemon {
+	
+	/** Constructs a ListOfPokemon from the csv files contained in the `datadir` */
+	def fromFiles(datadir:File):ListOfPokemon = {
+		val allPokemon:Seq[Pokemon] = {
+			def readListOfPokemon():Seq[Pokemon] = {
+				val inFile = new File(datadir, "listOfPokemon.csv")
+				val inReader = new CSVReader(Files.newBufferedReader(inFile.toPath, UTF_8))
+				val inData = inReader.readAll.toArray.to[Seq].map{_ match {
+					case Array(dexNo:String, name:String, bst1:String, bst2:String, bst6:String, bst7:String, type1:String, type2:String, rpType1:String, rpType2:String) => {
+						new Pokemon(DexNo(dexNo.toInt), name, type1, type2, rpType1, rpType2, bst1.toInt, bst2.toInt, bst6.toInt, bst7.toInt)
+					}
+				}}
+				inReader.close()
+				inData
+			}
+			
+			readListOfPokemon()
+		}
+		val allDexNos:Seq[DexNo] = allPokemon.map{_.dexNo}
+		
+		val evolutions:Map[DexNo, Map[String, Map[EvosGame.Value, DexNo]]] = {
+			def readEvoDataFile(fileName:String, game:EvosGame.Value):Seq[(DexNo, DexNo, String, EvosGame.Value)] = {
+				val f = new File(datadir, fileName)
+				val r = new CSVReader(Files.newBufferedReader(f.toPath, UTF_8))
+				val data = r.readAll.toArray.to[Seq].map{_ match {
+					case Array(inNo:String, inName:String, outNo:String, outName:String, method:String) => {
+						((DexNo(inNo.toInt), DexNo(outNo.toInt), method, game))
+					}
+				}}
+				r.close()
+				data
+			}
+			val natural = readEvoDataFile("naturalEvolutions.csv", EvosGame.Natural)
+			val alphaSapphire = readEvoDataFile("alphaSapphireEvolutions.csv", EvosGame.AlphaSapphire)
+			val platinum = readEvoDataFile("platinumEvolutions.csv", EvosGame.Platinum)
+			
+			val summed:Seq[(DexNo, DexNo, String, EvosGame.Value)] = natural ++ alphaSapphire ++ platinum
+			
+			allDexNos.map{dexNo:DexNo =>
+				val methods = natural.filter{_._1 == dexNo}.map{_._3}
+				val evos:Map[String, Map[EvosGame.Value, DexNo]] = methods.map{method:String =>
+					((method,
+						summed.filter{x => x._1 == dexNo && x._3 == method}
+								.map{x => ((x._4, x._2))}
+								.toMap
+					))
+				}.toMap
+				((dexNo, evos))
+			}.toMap
+		}
+		
+		new ListOfPokemon(allPokemon, evolutions)
+	}
 }

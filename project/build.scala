@@ -17,7 +17,7 @@ object MyBuild {
 	
 	val mySettings = Seq(
 		configuration := Configuration.Gen5,
-		monData := new ListOfPokemon((sourceDirectory in perMonPages in Assets).value),
+		monData := ListOfPokemon.fromFiles((sourceDirectory in perMonPages in Assets).value),
 		
 		target in perMonPages in Assets := (resourceManaged in Assets).value,
 		sourceDirectory in perMonPages in Assets := (baseDirectory).value / "src" / "data",
