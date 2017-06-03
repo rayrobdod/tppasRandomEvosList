@@ -10,29 +10,23 @@ import com.codecommit.antixml.{Group, Text, Elem, Attributes,
 
 object PageTemplates {
 	
-	def index(all:ListOfPokemon, prologue:Group[Node])(implicit config:Configuration.Value):Group[Node] = {
+	def index(prologue:Group[Node]):Group[Node] = {
 		Group(xmlProcessingInstruction, Text("\n"), htmlDoctype, Text("\n"),
 			Elem(htmlBinding, "html", Attributes("lang" -> "en-US"), Group(
 				Elem(htmlBinding, "head", Attributes(), Group(
 					Elem(htmlBinding, "title", Attributes(), Group(Text("Possible Evolutions"))),
 					Elem(htmlBinding, "meta", Attributes("http-equiv" -> "content-type", "content" -> "application/xhtml+xml")),
-					Elem(htmlBinding, "link", Attributes("rel" -> "stylesheet", "href" -> "style/style.css")),
-					Elem(htmlBinding, "script", Attributes("defer" -> "defer", "type" -> "text/javascript", "src" -> "style/tableSort.js"), Group(Text(" ")))
+					Elem(htmlBinding, "link", Attributes("rel" -> "stylesheet", "href" -> "style/style.css"))
 				)),
 				Elem(htmlBinding, "body", Attributes(), Group(
-					Elem(htmlBinding, "header", Attributes(), Group(
-						Text(" ")
-					)),
 					Elem(htmlBinding, "main", Attributes(), Group(
 						Elem(htmlBinding, "h1", Attributes(), Group(Text("Index"))),
 						Elem(htmlBinding, "div", Attributes(), prologue),
-						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon List"))),
-						pokemonListTable(all.allPokemon.tail, Map.empty, all.possibleEvosCount, all.possiblePrevosCount),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Games List"))),
-						Elem(htmlBinding, "ul", Attributes(), Group.fromSeq(EvosGame.values.to[Seq].map{game =>
+						Elem(htmlBinding, "ul", Attributes("class" -> "gamesList"), Group.fromSeq(EvosGame.values.to[Seq].tail.map{game =>
 							val name = game.toString
-							Elem(htmlBinding, "li", Attributes(), Group(
-								Elem(htmlBinding, "a", Attributes("href" -> (name + ".html")), Group(Text(name)))
+							Elem(htmlBinding, "li", Attributes("data-game" -> name), Group(
+								Elem(htmlBinding, "a", Attributes("href" -> (name + "/index.html")), Group(Text(name)))
 							))
 						}))
 					))
@@ -52,12 +46,14 @@ object PageTemplates {
 				Elem(htmlBinding, "head", Attributes(), Group(
 					Elem(htmlBinding, "title", Attributes(), Group(Text("Possible Evolutions - " + checkMon.name))),
 					Elem(htmlBinding, "meta", Attributes("http-equiv" -> "content-type", "content" -> "application/xhtml+xml")),
-					Elem(htmlBinding, "link", Attributes("rel" -> "stylesheet", "href" -> "style/style.css")),
-					Elem(htmlBinding, "script", Attributes("defer" -> "defer", "type" -> "text/javascript", "src" -> "style/tableSort.js"), Group(Text(" ")))
+					Elem(htmlBinding, "link", Attributes("rel" -> "stylesheet", "href" -> "../style/style.css")),
+					Elem(htmlBinding, "script", Attributes("defer" -> "defer", "type" -> "text/javascript", "src" -> "../style/tableSort.js"), Group(Text(" ")))
 				)),
 				Elem(htmlBinding, "body", Attributes(), Group(
 					Elem(htmlBinding, "header", Attributes(), Group(
-						Elem(htmlBinding, "a", Attributes("href" -> "index.html"), Group(Text("Back to Index")))
+						Elem(htmlBinding, "a", Attributes("href" -> "../index.html"), Group(Text("Index"))),
+						Text(" > "),
+						Elem(htmlBinding, "a", Attributes("href" -> "index.html"), Group(Text("Game")))
 					)),
 					Elem(htmlBinding, "main", Attributes(), Group(
 						Elem(htmlBinding, "h1", Attributes(), Group(Text(checkMon.name))),
@@ -93,26 +89,34 @@ object PageTemplates {
 	def perGamePage(game:EvosGame.Value, all:ListOfPokemon):Group[Node] = {
 		implicit val config = Configuration.forGame(game)
 		
-		val evolutionList:Seq[(Pokemon, String, Pokemon)] = all.allPokemon.flatMap{from =>
-			all.evolutions(from.dexNo).mapValues{x => x.find{_._1 == game}.map{_._2}.getOrElse(DexNo.missing)}.to[Seq]
-					.map{case (method, toNo) => ((from, method, all.getPokemon(toNo)))}
-					.filter{case (mon1, _, mon2) => mon1.exists && mon2.exists}
-		}
+		val evolutionList:Seq[(Pokemon, String, Pokemon)] = {
+			for (
+				(prevoDexno, prevoDexnoInfo) <- all.evolutions;
+				(method, methodInfo) <- prevoDexnoInfo;
+				(mGame, evoDexno) <- methodInfo if (game == mGame)
+			) yield {
+				((all.getPokemon(prevoDexno), method, all.getPokemon(evoDexno)))
+			}
+		}.to[Seq].sortBy{_._1.dexNo}
+		
 		
 		Group(xmlProcessingInstruction, Text("\n"), htmlDoctype, Text("\n"),
 			Elem(htmlBinding, "html", Attributes("lang" -> "en-US"), Group(
 				Elem(htmlBinding, "head", Attributes(), Group(
 					Elem(htmlBinding, "title", Attributes(), Group(Text("Possible Evolutions - " + game.toString))),
 					Elem(htmlBinding, "meta", Attributes("http-equiv" -> "content-type", "content" -> "application/xhtml+xml")),
-					Elem(htmlBinding, "link", Attributes("rel" -> "stylesheet", "href" -> "style/style.css")),
-					Elem(htmlBinding, "script", Attributes("defer" -> "defer", "type" -> "text/javascript", "src" -> "style/tableSort.js"), Group(Text(" ")))
+					Elem(htmlBinding, "link", Attributes("rel" -> "stylesheet", "href" -> "../style/style.css")),
+					Elem(htmlBinding, "script", Attributes("defer" -> "defer", "type" -> "text/javascript", "src" -> "../style/sectionCollapse.js"), Group(Text(" "))),
+					Elem(htmlBinding, "script", Attributes("defer" -> "defer", "type" -> "text/javascript", "src" -> "../style/tableSort.js"), Group(Text(" ")))
 				)),
 				Elem(htmlBinding, "body", Attributes(), Group(
 					Elem(htmlBinding, "header", Attributes(), Group(
-						Elem(htmlBinding, "a", Attributes("href" -> "index.html"), Group(Text("Back to Index")))
+						Elem(htmlBinding, "a", Attributes("href" -> "../index.html"), Group(Text("Back to Index")))
 					)),
 					Elem(htmlBinding, "main", Attributes(), Group(
 						Elem(htmlBinding, "h1", Attributes(), Group(Text(game.toString))),
+						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon List"))),
+						pokemonListTable(all.allPokemon.tail.filter{_.exists}, Map.empty, all.possibleEvosCount, all.possiblePrevosCount),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Evolutions"))),
 						Elem(htmlBinding, "table", Attributes("class" -> "evolution-list"), Group(
 							Elem(htmlBinding, "thead", Attributes(), Group(

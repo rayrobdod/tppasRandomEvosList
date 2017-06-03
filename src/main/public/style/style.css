@@ -1,6 +1,18 @@
 ::selection{background:inherit;color:#c40029;}
 ::-moz-selection{background:inherit;color:#c40029;}
 
+ul.gamesList {
+	list-style:none;
+	font-size: larger;
+	padding: 0 2.5em;
+	display: flex;
+}
+ul.gamesList > li {
+	padding: 0.5em;
+	text-align: center;
+	flex-grow: 1;
+}
+
 table.general-info th {text-align: left;}
 
 table.evolution-list,
@@ -38,10 +50,11 @@ table.pokemon-list td[data-type="heart"]{background-color:#f8a8b8;}
 table.pokemon-list td[data-type="native"]{background-color:#78c850;}
 table.pokemon-list td[data-type="reason"]{background-color:#f85888;}
 
-table.pokemon-list tr[data-game="natural"]{background-color:#EAC5BF;} /* hsl(5/240, 50%, 200/240) */
-table.pokemon-list tr[data-game="alpha-sapphire"]{background-color:#BFE4EA;} /* hsl(125/240, 50%, 200/240) */
-table.pokemon-list tr[data-game="platinum"]{background-color:#C9D4DF;} /* hsl(140/240, 10%, 200/240) */
-table.pokemon-list tr[data-game="natural platinum"]{
+[data-game="natural"]{background-color:#EAC5BF;} /* hsl(5/240, 50%, 200/240) */
+[data-game="alpha-sapphire"]{background-color:#BFE4EA;} /* hsl(125/240, 50%, 200/240) */
+[data-game="platinum"]{background-color:#C9D4DF;} /* hsl(140/240, 10%, 200/240) */
+[data-game="white2"]{background-color:#DDDDCC;} /* hsl(40/240, 20%, 200/240) */
+[data-game="natural platinum"]{
 	background-color:#EAC5BF;
 	background: linear-gradient(to bottom, #EAC5BF 0%,#EAC5BF 50%,#C9D4DF 51%,#C9D4DF 100%);
 }

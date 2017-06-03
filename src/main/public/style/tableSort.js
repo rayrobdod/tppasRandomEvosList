@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
-	var tables = document.getElementsByTagName("table");
-	const SORT_INDICATOR = "↕";
+	let tables = document.getElementsByTagName("table");
+	const SORT_INDICATOR = " ↕";
 	
 	function toArray(x) {
 		var retVal = new Array()
@@ -11,13 +11,13 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 	
 	function sortTable(tableToSort, columnNo) {
-		var initial = toArray(tableToSort.tBodies[0].rows);
+		let initial = toArray(tableToSort.tBodies[0].rows);
 		function compareRows(a,b) {
 			if (a.cells[columnNo].dataset["sort"] < b.cells[columnNo].dataset["sort"]) { return -1; }
 			if (a.cells[columnNo].dataset["sort"] > b.cells[columnNo].dataset["sort"]) { return 1; }
 			else { return initial.indexOf(a) - initial.indexOf(b); }
 		}
-		var sortedArray = toArray(initial).sort(compareRows)
+		let sortedArray = toArray(initial).sort(compareRows)
 		
 		var newTableBody = document.createElement("tbody");
 		for(var i = 0; i < sortedArray.length; i++) {
@@ -33,7 +33,8 @@ document.addEventListener("DOMContentLoaded", function() {
 		for (j = 0; j < headerCells.length; j++) {
 			if (j != 2 && j != 3) {
 				function doThing(cellIndex) {
-					var c = headerCells[cellIndex];
+					let c = headerCells[cellIndex];
+					c.style.cursor = "pointer"
 					c.appendChild(document.createTextNode(SORT_INDICATOR));
 					c.addEventListener("click", function() {
 						sortTable(tab, cellIndex)
@@ -50,7 +51,8 @@ document.addEventListener("DOMContentLoaded", function() {
 			var headerCells = tab.tHead.rows[0].cells
 			for (j = 0; j < headerCells.length; j++) {
 					function doThing(cellIndex) {
-						var c = headerCells[cellIndex];
+						let c = headerCells[cellIndex];
+						c.style.cursor = "pointer"
 						c.appendChild(document.createTextNode(SORT_INDICATOR));
 						c.addEventListener("click", function() {
 							sortTable(tab, cellIndex)

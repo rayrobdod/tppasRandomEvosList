@@ -70,10 +70,13 @@ package possibleEvolutions {
 		gen6bst:Int = -1,
 		gen7bst:Int = -1
 	) {
-		def exists(implicit config:Configuration.Value):Boolean = config match {
-			case Configuration.RandPlat => this.dexNo <= 493
-			case Configuration.Gen5 => this.dexNo <= 649
-			case Configuration.Gen6 => this.dexNo <= 721
+		def exists(implicit config:Configuration.Value):Boolean = { 
+			val maxNo = config match {
+				case Configuration.RandPlat => 493
+				case Configuration.Gen5 => 649
+				case Configuration.Gen6 => 721
+			}
+			DexNo.missing < this.dexNo && this.dexNo <= maxNo 
 		}
 		
 		def types(implicit config:Configuration.Value):(String, String) = config match {
@@ -97,6 +100,7 @@ package possibleEvolutions {
 		val Natural = Value(0, "natural")
 		val AlphaSapphire = Value(1, "alpha-sapphire")
 		val Platinum = Value(2, "platinum")
+		val White2 = Value(3, "white2")
 	}
 	
 	object MonToMatch extends Enumeration {
@@ -111,12 +115,13 @@ package possibleEvolutions {
 		object Gen5 extends Value { val monToMatch = MonToMatch.BaseForm }
 		object Gen6 extends Value { val monToMatch = MonToMatch.EvolvedForm }
 		
-		val values:Set[Configuration.Value] = Set(RandPlat, Gen5, Gen6)
+		val values:Seq[Configuration.Value] = Seq(RandPlat, Gen5, Gen6)
 		
 		def forGame(game:EvosGame.Value):Configuration.Value = game match {
 			case EvosGame.Natural => Gen5
 			case EvosGame.AlphaSapphire => Gen6
 			case EvosGame.Platinum => RandPlat
+			case EvosGame.White2 => Gen5
 		}
 	}
 }
