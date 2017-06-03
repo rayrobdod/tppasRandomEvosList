@@ -24,7 +24,7 @@ object MyBuild {
 		perMonPages in Assets := {
 			val tarDir = (target in perMonPages in Assets).value
 			val allMons = monData.value
-			allMons.rawdata.map{_.dexNo}.map{x =>
+			allMons.allDexNos.map{x =>
 				(streams in perMonPages in Assets).value.log.info(x.toString)
 				val outFile = (tarDir / (x.toString + ".html")).toPath
 				val output = PageTemplates.perMonPage(x, allMons)(configuration.value).toString

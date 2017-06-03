@@ -27,7 +27,7 @@ object PageTemplates {
 						Elem(htmlBinding, "h1", Attributes(), Group(Text("Index"))),
 						Elem(htmlBinding, "div", Attributes(), prologue),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon List"))),
-						pokemonListTable(all.rawdata.tail, Map.empty, all.possibleEvosCount, all.possiblePrevosCount),
+						pokemonListTable(all.allPokemon.tail, Map.empty, all.possibleEvosCount, all.possiblePrevosCount),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Games List"))),
 						Elem(htmlBinding, "ul", Attributes(), Group.fromSeq(EvosGame.values.to[Seq].map{game =>
 							val name = game.toString
@@ -41,18 +41,11 @@ object PageTemplates {
 		)
 	}
 	
-	def perMonPage(checkno:Int, all:ListOfPokemon)(implicit config:Configuration.Value):Group[Node] = {
-		val checkMon = all.rawdata(checkno)
-		val evos = all.possibleEvolutions(config)(checkno)
-		val prevos = all.possiblePrevolutions(config)(checkno)
-		val realPrevos:Seq[(EvosGame.Value, Int)] = {
-			val allEvoPairs:Seq[(Int, EvosGame.Value, Int)] = all.rawdata.flatMap{mon =>
-				val a:Seq[(EvosGame.Value, Int)] = all.evolutions(mon.dexNo).toList.flatMap{_._2}
-				a.map{x => ((mon.dexNo, x._1, x._2))}
-			}
-			val relevantEvoPairs = allEvoPairs.filter{_._3 == checkno}
-			relevantEvoPairs.map{x => ((x._2, x._1))}
-		}
+	def perMonPage(checkno:DexNo, all:ListOfPokemon)(implicit config:Configuration.Value):Group[Node] = {
+		val checkMon = all.getPokemon(checkno)
+		val evos = all.possibleEvolutions(checkno)
+		val prevos = all.possiblePrevolutions(checkno)
+		val realPrevos:Map[EvosGame.Value, DexNo] = all.prevos(checkno)
 		
 		Group(xmlProcessingInstruction, Text("\n"), htmlDoctype, Text("\n"),
 			Elem(htmlBinding, "html", Attributes("lang" -> "en-US"), Group(
@@ -77,8 +70,8 @@ object PageTemplates {
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Evos"))),
 						Elem(htmlBinding, "div", Attributes(), Group.fromSeq(evos.flatMap{x:(String, Seq[Pokemon]) =>
 							val method = x._1
-							val naturalBst = all.rawdata(all.naturalEvos(checkMon.dexNo)(method)).bst
-							val realEvos = all.evolutions(checkMon.dexNo)(method).map{_._2}.map(all.rawdata)
+							val naturalBst = all.getPokemon(all.naturalEvos(checkMon.dexNo)(method)).bst
+							val realEvos = all.evolutions(checkMon.dexNo)(method).map{_._2}.map(all.getPokemon _)
 							
 							Seq(
 								Elem(htmlBinding, "h3", Attributes(), Group(Text(x._1))),
@@ -90,7 +83,7 @@ object PageTemplates {
 						}.toSeq)),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Prevos"))),
 						Elem(htmlBinding, "div", Attributes(), Group(Text(prevos.size.toString))),
-						pokemonListTable(prevos ++ realPrevos.map{_._2}.map(all.rawdata).filterNot{prevos.contains(_)}, realPrevos, all.possibleEvosCount, all.possiblePrevosCount)
+						pokemonListTable(prevos ++ realPrevos.map{_._2}.map(all.getPokemon _).filterNot{prevos.contains(_)}, realPrevos, all.possibleEvosCount, all.possiblePrevosCount)
 					))
 				))
 			))
@@ -99,9 +92,9 @@ object PageTemplates {
 	
 	def perGamePage(game:EvosGame.Value, all:ListOfPokemon)(implicit config:Configuration.Value):Group[Node] = {
 		
-		val evolutionList:Seq[(Pokemon, String, Pokemon)] = all.rawdata.flatMap{from =>
-			all.evolutions(from.dexNo).mapValues{x => x.find{_._1 == game}.map{_._2}.getOrElse(0)}.to[Seq]
-					.map{case (method, toNo) => ((from, method, all.rawdata(toNo)))}
+		val evolutionList:Seq[(Pokemon, String, Pokemon)] = all.allPokemon.flatMap{from =>
+			all.evolutions(from.dexNo).mapValues{x => x.find{_._1 == game}.map{_._2}.getOrElse(DexNo.missing)}.to[Seq]
+					.map{case (method, toNo) => ((from, method, all.getPokemon(toNo)))}
 		}
 		
 		Group(xmlProcessingInstruction, Text("\n"), htmlDoctype, Text("\n"),
@@ -132,12 +125,12 @@ object PageTemplates {
 							Elem(htmlBinding, "tbody", Attributes(), Group.fromSeq(
 								 evolutionList.map{case (from, method, to) =>
 									Elem(htmlBinding, "tr", Attributes(), Group(
-										Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(from.dexNo)), Group(Text(from.dexNo.toString))),
+										Elem(htmlBinding, "td", Attributes("data-sort" -> from.dexNo.toStringPadded), Group(Text(from.dexNo.toString))),
 										Elem(htmlBinding, "td", Attributes("data-sort" -> from.name), Group(
 											Elem(htmlBinding, "a", Attributes("href" -> (from.dexNo + ".html")), Group(Text(from.name)))
 										)),
 										Elem(htmlBinding, "td", Attributes("data-sort" -> method), Group(Text(method))),
-										Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(to.dexNo)), Group(Text(to.dexNo.toString))),
+										Elem(htmlBinding, "td", Attributes("data-sort" -> to.dexNo.toStringPadded), Group(Text(to.dexNo.toString))),
 										Elem(htmlBinding, "td", Attributes("data-sort" -> to.name), Group(
 											Elem(htmlBinding, "a", Attributes("href" -> (to.dexNo + ".html")), Group(Text(to.name)))
 										))
@@ -147,7 +140,7 @@ object PageTemplates {
 						)),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon that nothing evolves into"))),
 						pokemonListTable(
-							all.rawdata.filterNot(evolutionList.map{_._3}.toSet)
+							all.allPokemon.filterNot(evolutionList.map{_._3}.toSet)
 							, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
 						),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon that multiple things evolves into"))),
@@ -179,7 +172,7 @@ object PageTemplates {
 		))
 	}
 	
-	def pokemonListTable(x:Seq[Pokemon], realEvos:Iterable[(EvosGame.Value, Int)], possibleEvosCount:Int => Int, possiblePrevosCount:Int => Int)(implicit config:Configuration.Value):Node = {
+	def pokemonListTable(x:Seq[Pokemon], realEvos:Iterable[(EvosGame.Value, DexNo)], possibleEvosCount:DexNo => Int, possiblePrevosCount:DexNo => Int)(implicit config:Configuration.Value):Node = {
 		Elem(htmlBinding, "table", Attributes("class" -> "pokemon-list"), Group(
 			Elem(htmlBinding, "thead", Attributes(), Group(
 				Elem(htmlBinding, "tr", Attributes(), Group(
@@ -198,11 +191,11 @@ object PageTemplates {
 		))
 	}
 	
-	def pokemonTableRow(realEvos:Iterable[(EvosGame.Value, Int)], possibleEvosCount:Int => Int, possiblePrevosCount:Int => Int)(x:Pokemon)(implicit config:Configuration.Value):Node = {
+	def pokemonTableRow(realEvos:Iterable[(EvosGame.Value, DexNo)], possibleEvosCount:DexNo => Int, possiblePrevosCount:DexNo => Int)(x:Pokemon)(implicit config:Configuration.Value):Node = {
 		val game = realEvos.filter{_._2 == x.dexNo}.map{_._1}.to[Seq].distinct.map{_.toString}.mkString("", " ", "")
 		
 		Elem(htmlBinding, "tr", Attributes("data-game" -> game), Group(
-			Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(x.dexNo)), Group(Text(x.dexNo.toString))),
+			Elem(htmlBinding, "td", Attributes("data-sort" -> x.dexNo.toStringPadded), Group(Text(x.dexNo.toString))),
 			Elem(htmlBinding, "td", Attributes("data-sort" -> x.name), Group(
 				Elem(htmlBinding, "a", Attributes("href" -> (x.dexNo + ".html")), Group(Text(x.name)))
 			)),

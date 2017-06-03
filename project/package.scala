@@ -45,8 +45,21 @@ package object possibleEvolutions {
 
 package possibleEvolutions {
 	
+	final case class DexNo(private val value:Int) extends Ordered[DexNo] {
+		override def toString:String = value.toString
+		def toStringPadded:String = ("00000" + value).takeRight(5) 
+		
+		override def compare(rhs:DexNo) = this.value compare rhs.value
+		
+		def <=(x:Int) = this.value <= x
+	}
+	object DexNo {
+		val missing:DexNo = DexNo(0)
+		val undef:DexNo = DexNo(-1)
+	}
+	
 	final class Pokemon(
-		val dexNo:Int = -1,
+		val dexNo:DexNo = DexNo.undef,
 		val name:String = "",
 		naturalType1:String = "",
 		naturalType2:String = "",
