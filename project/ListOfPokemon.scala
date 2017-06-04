@@ -54,13 +54,14 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 				
 				// https://github.com/kwsch/pk3DS/blob/master/pk3DS/Subforms/Evolution.cs#L202
 				((checkNo, naturalEvoMons.mapValues{naturalEvoMon => allPokemon.filter{candidate =>
-					val typsMatch = {
-						val candidateType = candidate.types
-						val selfType = config.monToMatch match {
-							case MonToMatch.BaseForm => checkMon.types
-							case MonToMatch.EvolvedForm => naturalEvoMon.types 
+					val typsMatch = config.monToMatch match {
+						case MonToMatch.Neither => true
+						case MonToMatch.BaseForm => {
+							typesMatch(checkMon.types._1, checkMon.types._2, candidate.types._1, candidate.types._2)
 						}
-						typesMatch(selfType._1, selfType._2, candidateType._1, candidateType._2)
+						case MonToMatch.EvolvedForm => {
+							typesMatch(naturalEvoMon.types._1, naturalEvoMon.types._2, candidate.types._1, candidate.types._2)
+						}
 					}
 					val bstMatch = {
 						val candidateBst = candidate.bst

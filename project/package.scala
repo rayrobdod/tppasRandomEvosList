@@ -106,13 +106,14 @@ package possibleEvolutions {
 	object MonToMatch extends Enumeration {
 		val BaseForm = Value
 		val EvolvedForm = Value
+		val Neither = Value
 	}
 	
 	object Configuration {
 		sealed trait Value { def monToMatch:MonToMatch.Value }
 		
 		object RandPlat extends Value { val monToMatch = MonToMatch.BaseForm }
-		object Gen5 extends Value { val monToMatch = MonToMatch.BaseForm }
+		object Gen5 extends Value { val monToMatch = MonToMatch.Neither }
 		object Gen6 extends Value { val monToMatch = MonToMatch.EvolvedForm }
 		
 		val values:Seq[Configuration.Value] = Seq(RandPlat, Gen5, Gen6)
