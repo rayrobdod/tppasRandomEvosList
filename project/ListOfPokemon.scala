@@ -68,7 +68,8 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 						val selfBst = naturalEvoMon.bst
 						(candidateBst * 6 / 5 > selfBst) && (selfBst > candidateBst * 5 / 6)
 					}
-					typsMatch && bstMatch
+					val expGroupMatch = !config.expGroupMustMatch || candidate.expGrowth == checkMon.expGrowth
+					typsMatch && bstMatch && expGroupMatch
 				}}))
 			}.toMap))
 		}.toMap
@@ -108,12 +109,13 @@ object ListOfPokemon {
 	/** Constructs a ListOfPokemon from the csv files contained in the `datadir` */
 	def fromFiles(datadir:File):ListOfPokemon = {
 		val allPokemon:Seq[Pokemon] = {
+			import scala.collection.JavaConversions.iterableAsScalaIterable
 			def readListOfPokemon():Seq[Pokemon] = {
 				val inFile = new File(datadir, "listOfPokemon.csv")
 				val inReader = new CSVReader(Files.newBufferedReader(inFile.toPath, UTF_8))
-				val inData = inReader.readAll.toArray.to[Seq].map{_ match {
-					case Array(dexNo:String, name:String, bst1:String, bst2:String, bst6:String, bst7:String, type1:String, type2:String, rpType1:String, rpType2:String) => {
-						new Pokemon(DexNo(dexNo.toInt), name, type1, type2, rpType1, rpType2, bst1.toInt, bst2.toInt, bst6.toInt, bst7.toInt)
+				val inData = inReader.readAll.to[Seq].map{_ match {
+					case Array(dexNo:String, name:String, bst1:String, bst2:String, bst6:String, bst7:String, type1:String, type2:String, rpType1:String, rpType2:String, expGrowth:String) => {
+						new Pokemon(DexNo(dexNo.toInt), name, type1, type2, rpType1, rpType2, bst1.toInt, bst2.toInt, bst6.toInt, bst7.toInt, expGrowth)
 					}
 				}}
 				inReader.close()

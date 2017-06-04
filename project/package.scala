@@ -41,6 +41,21 @@ package object possibleEvolutions {
 		}}
 	}
 	
+	def appendRow(csvFile:File, row:Seq[String]):Unit = {
+		import scala.collection.JavaConversions.collectionAsScalaIterable
+		val inData:Seq[Seq[String]] = {
+			val inReader = new CSVReader(Files.newBufferedReader(csvFile.toPath, UTF_8))
+			val inData = inReader.readAll.to[Seq].map{_.to[Seq]}
+			inReader.close()
+			inData
+		}
+		val outData:Seq[Seq[String]] = inData.zip(row).map{case (in, r) => in :+ r}
+		
+		val outWriter = new CSVWriter(Files.newBufferedWriter(csvFile.toPath, UTF_8))
+		outData.foreach{line => outWriter.writeNext(line.to[Array])}
+		outWriter.close()
+	}
+	
 }
 
 package possibleEvolutions {
@@ -69,6 +84,7 @@ package possibleEvolutions {
 		gen2bst:Int = -1,
 		gen6bst:Int = -1,
 		gen7bst:Int = -1
+		, val expGrowth:String = ""
 	) {
 		def exists(implicit config:Configuration.Value):Boolean = { 
 			val maxNo = config match {
@@ -110,11 +126,23 @@ package possibleEvolutions {
 	}
 	
 	object Configuration {
-		sealed trait Value { def monToMatch:MonToMatch.Value }
+		sealed trait Value {
+			def monToMatch:MonToMatch.Value
+			def expGroupMustMatch:Boolean
+		}
 		
-		object RandPlat extends Value { val monToMatch = MonToMatch.BaseForm }
-		object Gen5 extends Value { val monToMatch = MonToMatch.Neither }
-		object Gen6 extends Value { val monToMatch = MonToMatch.EvolvedForm }
+		object RandPlat extends Value {
+			val expGroupMustMatch = true
+			val monToMatch = MonToMatch.BaseForm
+		}
+		object Gen5 extends Value {
+			val expGroupMustMatch = true
+			val monToMatch = MonToMatch.Neither
+		}
+		object Gen6 extends Value {
+			val expGroupMustMatch = false
+			val monToMatch = MonToMatch.EvolvedForm
+		}
 		
 		val values:Seq[Configuration.Value] = Seq(RandPlat, Gen5, Gen6)
 		

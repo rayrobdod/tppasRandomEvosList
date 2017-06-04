@@ -62,6 +62,7 @@ object PageTemplates {
 							monInfoTableRowType("Type1", checkMon.types._1),
 							monInfoTableRowType("Type2", checkMon.types._2),
 							monInfoTableRow("Base Stat Total", checkMon.bst.toString)
+							, monInfoTableRow("Experience Group", checkMon.expGrowth)
 						)),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Evos"))),
 						Elem(htmlBinding, "div", Attributes(), Group.fromSeq(evos.flatMap{case (method:String, possibleEvos:Seq[Pokemon]) =>
@@ -161,6 +162,23 @@ object PageTemplates {
 										val (from, _, to) = next
 										folding + (to -> (folding.getOrElse(to, Seq.empty) :+ from))
 									}.filter{_._2.size >= 2}.to[Seq].map{_._1}.filter{_.exists}.sortBy{_.dexNo}
+									, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
+								),
+								Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon whose evo isn't predicted"))),
+								pokemonListTable(
+									(for (
+										(prevoNo, prevonodata) <- all.evolutions;
+										(method, methoddata) <- prevonodata;
+										(game2, realEvoNo) <- methoddata if game2 == game
+									) yield {
+										val isPredicted = all.possibleEvolutions(prevoNo)(config)(method).map{_.dexNo} contains realEvoNo
+										
+										if (isPredicted) {
+											Seq.empty
+										} else {
+											Seq(prevoNo)
+										}
+									}).flatten.to[Seq].distinct.map{all.getPokemon _}
 									, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
 								)
 							) } else {
