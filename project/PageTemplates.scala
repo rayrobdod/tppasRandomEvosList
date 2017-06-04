@@ -215,6 +215,7 @@ object PageTemplates {
 					Elem(htmlBinding, "th", Attributes(), Group(Text("Type1"))),
 					Elem(htmlBinding, "th", Attributes(), Group(Text("Type2"))),
 					Elem(htmlBinding, "th", Attributes(), Group(Text("BST"))),
+					Elem(htmlBinding, "th", Attributes(), Group(Text("Exp Group"))),
 					Elem(htmlBinding, "th", Attributes(), Group(Text("Evos"))),
 					Elem(htmlBinding, "th", Attributes(), Group(Text("Prevos")))
 				))
@@ -239,6 +240,7 @@ object PageTemplates {
 			Elem(htmlBinding, "td", Attributes("data-sort" -> x.types._1.toLowerCase, "data-type" -> x.types._1.toLowerCase), Group(Text(x.types._1))),
 			Elem(htmlBinding, "td", Attributes("data-sort" -> x.types._2.toLowerCase, "data-type" -> x.types._2.toLowerCase), Group(Text(x.types._2))),
 			Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(x.bst)), Group(Text(x.bst.toString))),
+			Elem(htmlBinding, "td", Attributes("data-sort" -> x.expGrowth), Group(Text(x.expGrowth))),
 			Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(possibleEvosCount(x.dexNo))), Group(Text(possibleEvosCount(x.dexNo).toString))),
 			Elem(htmlBinding, "td", Attributes("data-sort" -> padStrWithZeros(possiblePrevosCount(x.dexNo))), Group(Text(possiblePrevosCount(x.dexNo).toString)))
 		))
