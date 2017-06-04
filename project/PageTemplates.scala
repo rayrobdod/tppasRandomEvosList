@@ -169,7 +169,7 @@ object PageTemplates {
 									(for (
 										(prevoNo, prevonodata) <- all.evolutions;
 										(method, methoddata) <- prevonodata;
-										(game2, realEvoNo) <- methoddata if game2 == game
+										realEvoNo <- methoddata.get(game)
 									) yield {
 										val isPredicted = all.possibleEvolutions(prevoNo)(config)(method).map{_.dexNo} contains realEvoNo
 										
@@ -180,7 +180,51 @@ object PageTemplates {
 										}
 									}).flatten.to[Seq].distinct.map{all.getPokemon _}
 									, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
-								)
+								),
+								Elem(htmlBinding, "h2", Attributes(), Group(Text("Pokémon whose evo matches vanilla"))),
+								pokemonListTable(
+									(for (
+										(prevoNo, prevonodata) <- all.evolutions;
+										(method, evolutions) <- prevonodata
+									) yield {
+										if (evolutions.get(EvosGame.Natural) == evolutions.get(game)) {
+											Seq(prevoNo)
+										} else {
+											Seq.empty
+										}
+									}).flatten.to[Seq].distinct.map{all.getPokemon _}
+									, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
+								),
+								Elem(htmlBinding, "h2", Attributes(), Group(Text("4 stage evolution chains"))),
+								Elem(htmlBinding, "ul", Attributes(), Group.fromSeq(
+									{
+										val singleEvoChain:Map[DexNo, DexNo] = (for (
+											(prevoNo, prevonodata) <- all.evolutions.to[Seq];
+											(_, methoddata) <- prevonodata;
+											evoNo <- methoddata.get(game)
+										) yield {
+											(prevoNo, evoNo)
+										}).toMap
+										
+										val threeEvoChain:Seq[(DexNo, DexNo, DexNo, DexNo)] = for (
+											(first, second) <- singleEvoChain.to[Seq];
+											third <- singleEvoChain.get(second);
+											fourth <- singleEvoChain.get(third)
+										) yield ((first, second, third, fourth))
+										
+										threeEvoChain.map{case (a,b,c,d) => 
+											Elem(htmlBinding, "li", Attributes(), Group(
+												Elem(htmlBinding, "a", Attributes("href" -> (a + ".html")), Group(Text(a + " " + all.getPokemon(a).name))),
+												Text(" → "),
+												Elem(htmlBinding, "a", Attributes("href" -> (b + ".html")), Group(Text(b + " " + all.getPokemon(b).name))),
+												Text(" → "),
+												Elem(htmlBinding, "a", Attributes("href" -> (c + ".html")), Group(Text(c + " " + all.getPokemon(c).name))),
+												Text(" → "),
+												Elem(htmlBinding, "a", Attributes("href" -> (d + ".html")), Group(Text(d + " " + all.getPokemon(d).name)))
+											))
+										}
+									}
+								))
 							) } else {
 								Group.empty
 							}
