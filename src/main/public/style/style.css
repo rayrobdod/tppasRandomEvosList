@@ -1,6 +1,10 @@
 ::selection{background:inherit;color:#c40029;}
 ::-moz-selection{background:inherit;color:#c40029;}
 
+h1, h2, h3, h4 {margin-left: 1rem; }
+h3 { margin-bottom: 0.75em; }
+h4 { margin-bottom: 0.5em; }
+
 ul.gamesList {
 	list-style:none;
 	font-size: larger;

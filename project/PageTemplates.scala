@@ -102,22 +102,29 @@ object PageTemplates {
 							
 							Seq(
 								Elem(htmlBinding, "h3", Attributes(), Group(Text(method))),
-								Elem(htmlBinding, "div", Attributes(), Group(Text(possibleEvos.size.toString))),
-								Elem(htmlBinding, "a", Attributes("href" -> veekunSearchLink), Group(Text("Veekun Version")))
+								Elem(htmlBinding, "div", Attributes(), Group(
+									Elem(htmlBinding, "a", Attributes("href" -> veekunSearchLink), Group(Text("Veekun search with same parameters")))
+								)),
+								Elem(htmlBinding, "div", Attributes(), Group(
+									Text("Number of candidates: "),
+									Text(possibleEvos.size.toString)
+								))
 							) ++
 							(if (! config.showSeedData) {Nil} else {Seq(
-								Elem(htmlBinding, "table", Attributes(), Group(
+								Elem(htmlBinding, "h4", Attributes(), Group(Text("Real Evo"))),
+								Elem(htmlBinding, "table", Attributes("class" -> "pokemon-list"), Group(
 									Elem(htmlBinding, "tbody", Attributes(), Group(
 										pokemonTableRow(realEvos, all.possibleEvosCount, all.possiblePrevosCount)(all.getPokemon(thisGamesRealEvo))
 									))
 								))
 							)}) ++
 							Seq(
+								Elem(htmlBinding, "h4", Attributes(), Group(Text("Prediction Candidates"))),
 								pokemonListTable(possibleEvos, realEvos, all.possibleEvosCount, all.possiblePrevosCount)
 							)
 						}.toSeq)),
 						Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Prevos"))),
-						Elem(htmlBinding, "div", Attributes(), Group(Text(prevos.size.toString))),
+						Elem(htmlBinding, "div", Attributes(), Group(Text("Number of candidates: " + prevos.size.toString))),
 						pokemonListTable(
 							  prevos ++ realPrevos.map{_._2}.map(all.getPokemon _).filterNot{prevos.contains(_)}
 							, realPrevos, all.possibleEvosCount, all.possiblePrevosCount
