@@ -86,37 +86,73 @@ package possibleEvolutions {
 		gen7bst:Int = -1
 		, val expGrowth:String = ""
 	) {
-		def exists(implicit config:Configuration.Value):Boolean = { 
+		def exists(implicit config:EvosGame.Value):Boolean = { 
 			val maxNo = config match {
-				case Configuration.RandPlat => 493
-				case Configuration.Gen5 => 649
-				case Configuration.Gen6 => 721
+				case EvosGame.Platinum => 493
+				case EvosGame.White2 => 649
+				case EvosGame.AlphaSapphire => 721
+				case EvosGame.Natural => 802
 			}
 			DexNo.missing < this.dexNo && this.dexNo <= maxNo 
 		}
 		
-		def types(implicit config:Configuration.Value):(String, String) = config match {
-			case Configuration.RandPlat => ((rpType1, rpType2))
-			case Configuration.Gen6 => ((naturalType1, naturalType2))
-			case Configuration.Gen5 => {
+		def types(implicit config:EvosGame.Value):(String, String) = config match {
+			case EvosGame.Platinum => ((rpType1, rpType2))
+			case EvosGame.AlphaSapphire | EvosGame.Natural => ((naturalType1, naturalType2))
+			case EvosGame.White2 => {
 				val _1 = (if (naturalType1 == "Fairy") {"Normal"} else {naturalType1})
 				val _2 = (if (naturalType2 == "Fairy") {_1} else {naturalType2})
 				((_1, _2))
 			}
 		}
 		
-		def bst(implicit config:Configuration.Value):Int = config match {
-			case Configuration.RandPlat => gen2bst
-			case Configuration.Gen5 => gen2bst
-			case Configuration.Gen6 => gen6bst
+		def bst(implicit config:EvosGame.Value):Int = config match {
+			case EvosGame.Natural => gen7bst
+			case EvosGame.Platinum => gen2bst
+			case EvosGame.White2 => gen2bst
+			case EvosGame.AlphaSapphire => gen6bst
 		}
 	}
 	
-	object EvosGame extends Enumeration {
-		val Natural = Value(0, "natural")
-		val AlphaSapphire = Value(1, "alpha-sapphire")
-		val Platinum = Value(2, "platinum")
-		val White2 = Value(3, "white2")
+	object EvosGame {
+		sealed trait Value {
+			def id:Int
+			def name:String
+			def monToMatch:MonToMatch.Value
+			def expGroupMustMatch:Boolean
+			
+			override def toString = this.name
+		}
+		
+		object Natural extends Value {
+			override def id:Int = 0
+			override def name:String = "natural"
+			override def monToMatch:MonToMatch.Value = MonToMatch.BaseForm
+			override def expGroupMustMatch:Boolean = true
+		}
+		
+		object AlphaSapphire extends Value {
+			override def id:Int = 1
+			override def name:String = "alpha-sapphire"
+			override def monToMatch:MonToMatch.Value = MonToMatch.EvolvedForm
+			override def expGroupMustMatch:Boolean = false
+		}
+		
+		object Platinum extends Value {
+			override def id:Int = 2
+			override def name:String = "platinum"
+			override def monToMatch:MonToMatch.Value = MonToMatch.BaseForm
+			override def expGroupMustMatch:Boolean = true
+		}
+		
+		object White2 extends Value {
+			override def id:Int = 3
+			override def name:String = "white2"
+			override def monToMatch:MonToMatch.Value = MonToMatch.Neither
+			override def expGroupMustMatch:Boolean = true
+		}
+		
+		def values:Seq[Value] = Seq(Natural, AlphaSapphire, Platinum, White2)
 	}
 	
 	object MonToMatch extends Enumeration {
@@ -125,32 +161,4 @@ package possibleEvolutions {
 		val Neither = Value
 	}
 	
-	object Configuration {
-		sealed trait Value {
-			def monToMatch:MonToMatch.Value
-			def expGroupMustMatch:Boolean
-		}
-		
-		object RandPlat extends Value {
-			val expGroupMustMatch = true
-			val monToMatch = MonToMatch.BaseForm
-		}
-		object Gen5 extends Value {
-			val expGroupMustMatch = true
-			val monToMatch = MonToMatch.Neither
-		}
-		object Gen6 extends Value {
-			val expGroupMustMatch = false
-			val monToMatch = MonToMatch.EvolvedForm
-		}
-		
-		val values:Seq[Configuration.Value] = Seq(RandPlat, Gen5, Gen6)
-		
-		def forGame(game:EvosGame.Value):Configuration.Value = game match {
-			case EvosGame.Natural => Gen5
-			case EvosGame.AlphaSapphire => Gen6
-			case EvosGame.Platinum => RandPlat
-			case EvosGame.White2 => Gen5
-		}
-	}
 }

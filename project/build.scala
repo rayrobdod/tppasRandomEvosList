@@ -24,7 +24,7 @@ object MyBuild {
 			val tarDir = (target in perMonPages in Assets).value
 			val allMons = monData.value
 			EvosGame.values.tail.to[Seq].flatMap{game =>
-				implicit val config = Configuration.forGame(game)
+				implicit val config = game
 				allMons.allDexNos.filter{dexNo => allMons.getPokemon(dexNo).exists}.map{x =>
 					(streams in perMonPages in Assets).value.log.info(game + "/" + x.toString)
 					val outFile = (tarDir / game.toString / (x.toString + ".html")).toPath

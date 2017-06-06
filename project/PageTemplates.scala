@@ -35,7 +35,7 @@ object PageTemplates {
 		)
 	}
 	
-	def perMonPage(checkno:DexNo, all:ListOfPokemon)(implicit config:Configuration.Value):Group[Node] = {
+	def perMonPage(checkno:DexNo, all:ListOfPokemon)(implicit config:EvosGame.Value):Group[Node] = {
 		val checkMon = all.getPokemon(checkno)
 		val evos = all.possibleEvolutions(checkno)
 		val prevos = all.possiblePrevolutions(checkno)
@@ -90,7 +90,7 @@ object PageTemplates {
 	}
 	
 	def perGamePage(game:EvosGame.Value, all:ListOfPokemon):Group[Node] = {
-		implicit val config = Configuration.forGame(game)
+		implicit val config = game
 		val showSeedData = EvosGame.White2 != game
 		
 		val evolutionList:Seq[(Pokemon, String, Pokemon)] = {
@@ -250,7 +250,7 @@ object PageTemplates {
 		))
 	}
 	
-	def pokemonListTable(x:Seq[Pokemon], realEvos:Iterable[(EvosGame.Value, DexNo)], possibleEvosCount:DexNo => Int, possiblePrevosCount:DexNo => Int)(implicit config:Configuration.Value):Node = {
+	private[this] def pokemonListTable(x:Seq[Pokemon], realEvos:Iterable[(EvosGame.Value, DexNo)], possibleEvosCount:DexNo => Int, possiblePrevosCount:DexNo => Int)(implicit config:EvosGame.Value):Node = {
 		Elem(htmlBinding, "table", Attributes("class" -> "pokemon-list"), Group(
 			Elem(htmlBinding, "thead", Attributes(), Group(
 				Elem(htmlBinding, "tr", Attributes(), Group(
@@ -273,7 +273,7 @@ object PageTemplates {
 		))
 	}
 	
-	def pokemonTableRow(realEvos:Iterable[(EvosGame.Value, DexNo)], possibleEvosCount:DexNo => Int, possiblePrevosCount:DexNo => Int)(x:Pokemon)(implicit config:Configuration.Value):Node = {
+	private[this] def pokemonTableRow(realEvos:Iterable[(EvosGame.Value, DexNo)], possibleEvosCount:DexNo => Int, possiblePrevosCount:DexNo => Int)(x:Pokemon)(implicit config:EvosGame.Value):Node = {
 		val game = realEvos.filter{_._2 == x.dexNo}.map{_._1}.to[Seq].distinct.sortBy{_.id}.map{_.toString}.mkString("", " ", "")
 		
 		Elem(htmlBinding, "tr", Attributes("data-game" -> game), Group(
@@ -290,6 +290,6 @@ object PageTemplates {
 		))
 	}
 	
-	def padStrWithZeros(x:Int) = ("00000" + x).takeRight(5)
+	private[this] def padStrWithZeros(x:Int) = ("00000" + x).takeRight(5)
 	
 }

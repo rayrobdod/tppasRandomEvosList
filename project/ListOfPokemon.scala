@@ -40,12 +40,12 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 		}}
 	}
 	
-	private[this] val possibleEvolutionsData:Map[Configuration.Value, Map[DexNo, Map[String, Seq[Pokemon]]]] = {
+	private[this] val possibleEvolutionsData:Map[EvosGame.Value, Map[DexNo, Map[String, Seq[Pokemon]]]] = {
 		def typesMatch(a1:String, a2:String, b1:String, b2:String) = {
 			a1 == b1 || a1 == b2 || a2 == b1 || a2 == b2
 		}
 		
-		Configuration.values.map{config =>
+		EvosGame.values.map{config =>
 			((config, allDexNos.map{checkNo =>
 				implicit val config2 = config
 				val naturalEvoNos:Map[String, DexNo] = naturalEvos(checkNo)
@@ -75,10 +75,10 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 		}.toMap
 	}
 	/** The possible evolutions that a randomizer can produce for the given mon */
-	def possibleEvolutions(checkNo:DexNo)(implicit config:Configuration.Value):Map[String, Seq[Pokemon]] = this.possibleEvolutionsData(config)(checkNo)
+	def possibleEvolutions(checkNo:DexNo)(implicit config:EvosGame.Value):Map[String, Seq[Pokemon]] = this.possibleEvolutionsData(config)(checkNo)
 	
-	private[this] val possiblePrevolutionsData:Map[Configuration.Value, Map[DexNo, Seq[Pokemon]]] = {
-		val retval = Configuration.values.map{config => ((config, allDexNos.map{dexNo => ((dexNo, MSeq.empty[Pokemon]))}.toMap))}.toMap
+	private[this] val possiblePrevolutionsData:Map[EvosGame.Value, Map[DexNo, Seq[Pokemon]]] = {
+		val retval = EvosGame.values.map{config => ((config, allDexNos.map{dexNo => ((dexNo, MSeq.empty[Pokemon]))}.toMap))}.toMap
 		
 		for (
 			(config, configdata) <- this.possibleEvolutionsData;
@@ -92,15 +92,15 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 		retval.mapValues{_.mapValues{_.to[Seq]}}
 	}
 	/** The possible prevolutions that a randomizer can produce for the given mon */
-	def possiblePrevolutions(checkNo:DexNo)(implicit config:Configuration.Value):Seq[Pokemon] = this.possiblePrevolutionsData(config)(checkNo)
+	def possiblePrevolutions(checkNo:DexNo)(implicit config:EvosGame.Value):Seq[Pokemon] = this.possiblePrevolutionsData(config)(checkNo)
 	
 	
-	private[this] val possibleEvosCountData:Map[Configuration.Value, Map[DexNo, Int]] = this.possibleEvolutionsData.mapValues{_.mapValues{x => x.values.flatten.toSet.size}}
-	private[this] val possiblePrevosCountData:Map[Configuration.Value, Map[DexNo, Int]] = this.possiblePrevolutionsData.mapValues{_.mapValues{x => x.size}}
+	private[this] val possibleEvosCountData:Map[EvosGame.Value, Map[DexNo, Int]] = this.possibleEvolutionsData.mapValues{_.mapValues{x => x.values.flatten.toSet.size}}
+	private[this] val possiblePrevosCountData:Map[EvosGame.Value, Map[DexNo, Int]] = this.possiblePrevolutionsData.mapValues{_.mapValues{x => x.size}}
 	/** The number of possible evolutions that a randomizer can produce for the given mon*/
-	def possibleEvosCount(dexno:DexNo)(implicit config:Configuration.Value):Int = this.possibleEvosCountData(config)(dexno)
+	def possibleEvosCount(dexno:DexNo)(implicit config:EvosGame.Value):Int = this.possibleEvosCountData(config)(dexno)
 	/** The number of possible prevolutions that a randomizer can produce for the given mon*/
-	def possiblePrevosCount(dexno:DexNo)(implicit config:Configuration.Value):Int = this.possiblePrevosCountData(config)(dexno)
+	def possiblePrevosCount(dexno:DexNo)(implicit config:EvosGame.Value):Int = this.possiblePrevosCountData(config)(dexno)
 	
 }
 
