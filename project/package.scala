@@ -120,6 +120,7 @@ package possibleEvolutions {
 			def name:String
 			def monToMatch:MonToMatch.Value
 			def expGroupMustMatch:Boolean
+			def showSeedData:Boolean
 			
 			override def toString = this.name
 		}
@@ -129,6 +130,7 @@ package possibleEvolutions {
 			override def name:String = "natural"
 			override def monToMatch:MonToMatch.Value = MonToMatch.BaseForm
 			override def expGroupMustMatch:Boolean = true
+			override def showSeedData:Boolean = true
 		}
 		
 		object AlphaSapphire extends Value {
@@ -136,6 +138,7 @@ package possibleEvolutions {
 			override def name:String = "alpha-sapphire"
 			override def monToMatch:MonToMatch.Value = MonToMatch.EvolvedForm
 			override def expGroupMustMatch:Boolean = false
+			override def showSeedData:Boolean = true
 		}
 		
 		object Platinum extends Value {
@@ -143,6 +146,7 @@ package possibleEvolutions {
 			override def name:String = "platinum"
 			override def monToMatch:MonToMatch.Value = MonToMatch.BaseForm
 			override def expGroupMustMatch:Boolean = true
+			override def showSeedData:Boolean = true
 		}
 		
 		object White2 extends Value {
@@ -150,6 +154,7 @@ package possibleEvolutions {
 			override def name:String = "white2"
 			override def monToMatch:MonToMatch.Value = MonToMatch.Neither
 			override def expGroupMustMatch:Boolean = true
+			override def showSeedData:Boolean = false
 		}
 		
 		def values:Seq[Value] = Seq(Natural, AlphaSapphire, Platinum, White2)
