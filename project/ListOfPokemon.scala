@@ -35,8 +35,8 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 	
 	/** A list of each Pokemon's evolutions in a vanila game */
 	val naturalEvos:Map[DexNo, Map[String, DexNo]] = {
-		evolutions.mapValues{_.mapValues{x =>
-			x.find{_._1 == EvosGame.Natural}.map{_._2}.getOrElse(DexNo.missing)
+		evolutions.mapValues{_.mapValues{
+			_.get(EvosGame.Natural).getOrElse(DexNo.missing)
 		}}
 	}
 	
@@ -49,11 +49,11 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 			((config, allDexNos.map{checkNo =>
 				implicit val config2 = config
 				val naturalEvoNos:Map[String, DexNo] = naturalEvos(checkNo)
-				val naturalEvoMons:Map[String, Pokemon] = naturalEvoNos.mapValues(this.getPokemon _)
+				val naturalEvoMons:Map[String, Pokemon] = naturalEvoNos.mapValues(this.getPokemon _).map{x => x}
 				val checkMon = this.getPokemon(checkNo)
 				
-				// https://github.com/kwsch/pk3DS/blob/master/pk3DS/Subforms/Evolution.cs#L202
 				((checkNo, naturalEvoMons.mapValues{naturalEvoMon => allPokemon.filter{candidate =>
+					// https://github.com/kwsch/pk3DS/blob/master/pk3DS/Subforms/Evolution.cs#L202
 					val typsMatch = config.monToMatch match {
 						case MonToMatch.Neither => true
 						case MonToMatch.BaseForm => {
@@ -70,7 +70,8 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 					}
 					val expGroupMatch = !config.expGroupMustMatch || candidate.expGrowth == checkMon.expGrowth
 					typsMatch && bstMatch && expGroupMatch
-				}}))
+				}}.map{x => x}))
+				// `map{x => x}` because `mapValues` creates a view, which is particularly suboptimal with a parameter function this complicated
 			}.toMap))
 		}.toMap
 	}
@@ -115,7 +116,8 @@ object ListOfPokemon {
 				val inReader = new CSVReader(Files.newBufferedReader(inFile.toPath, UTF_8))
 				val inData = inReader.readAll.to[Seq].map{_ match {
 					case Array(dexNo:String, name:String, bst1:String, bst2:String, bst6:String, bst7:String, type1:String, type2:String, rpType1:String, rpType2:String, expGrowth:String) => {
-						new Pokemon(DexNo(dexNo.toInt), name, type1, type2, rpType1, rpType2, bst1.toInt, bst2.toInt, bst6.toInt, bst7.toInt, expGrowth)
+						// 18 types; 6 exp groups; without interning they'd be represented by 802*5=4010 strings, rathter than 24. Still, it's not like ~100kB really matters, and there's no real speed improvement from interning
+						new Pokemon(DexNo(dexNo.toInt), name, type1.intern, type2.intern, rpType1.intern, rpType2.intern, bst1.toInt, bst2.toInt, bst6.toInt, bst7.toInt, expGrowth.intern)
 					}
 				}}
 				inReader.close()

@@ -96,14 +96,19 @@ package possibleEvolutions {
 			DexNo.missing < this.dexNo && this.dexNo <= maxNo 
 		}
 		
+		// Create the tuples only once, reducing GC churn
+		private[this] val rpTypes = ((rpType1, rpType2))
+		private[this] val natTypes = ((naturalType1, naturalType2))
+		private[this] val noFairyTypes = {
+			val _1 = (if (naturalType1 == "Fairy") {"Normal"} else {naturalType1})
+			val _2 = (if (naturalType2 == "Fairy") {_1} else {naturalType2})
+			((_1, _2))
+		}
+		
 		def types(implicit config:EvosGame.Value):(String, String) = config match {
-			case EvosGame.Platinum => ((rpType1, rpType2))
-			case EvosGame.AlphaSapphire | EvosGame.Natural => ((naturalType1, naturalType2))
-			case EvosGame.White2 => {
-				val _1 = (if (naturalType1 == "Fairy") {"Normal"} else {naturalType1})
-				val _2 = (if (naturalType2 == "Fairy") {_1} else {naturalType2})
-				((_1, _2))
-			}
+			case EvosGame.Platinum => rpTypes
+			case EvosGame.AlphaSapphire | EvosGame.Natural => natTypes
+			case EvosGame.White2 => noFairyTypes
 		}
 		
 		def bst(implicit config:EvosGame.Value):Int = config match {
