@@ -29,20 +29,22 @@ document.addEventListener("DOMContentLoaded", function() {
 	toArray(tables)
 		.filter(function(tab) {return tab.classList.contains("pokemon-list")})
 		.forEach(function(tab) {
-		var headerCells = tab.tHead.rows[0].cells
-		for (j = 0; j < headerCells.length; j++) {
-			if (j != 2 && j != 3) {
-				function doThing(cellIndex) {
-					let c = headerCells[cellIndex];
-					c.style.cursor = "pointer"
-					c.appendChild(document.createTextNode(SORT_INDICATOR));
-					c.addEventListener("click", function() {
-						sortTable(tab, cellIndex)
-					});
+			if (tab.tHead != null) {
+				var headerCells = tab.tHead.rows[0].cells
+				for (j = 0; j < headerCells.length; j++) {
+					if (j != 2 && j != 3) {
+						function doThing(cellIndex) {
+							let c = headerCells[cellIndex];
+							c.style.cursor = "pointer"
+							c.appendChild(document.createTextNode(SORT_INDICATOR));
+							c.addEventListener("click", function() {
+								sortTable(tab, cellIndex)
+							});
+						}
+						doThing(j)
+					}
 				}
-				doThing(j)
 			}
-		}
 	})
 
 	toArray(tables)
