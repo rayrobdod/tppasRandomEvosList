@@ -40,6 +40,8 @@ object PageTemplates {
 		val evos = all.possibleEvolutions(checkno)
 		val prevos = all.possiblePrevolutions(checkno)
 		val realPrevos = all.prevos(checkno)
+		val prevos2 = prevos.flatMap{mon => all.possiblePrevolutions(mon.dexNo)}.distinct
+		val realPrevos2 = realPrevos.flatMap{case (game, dexNo) => all.prevos(dexNo).filter(_._1 == game)}.distinct
 		
 		Group(xmlProcessingInstruction, Text("\n"), htmlDoctype, Text("\n"),
 			Elem(htmlBinding, "html", Attributes("lang" -> "en-US"), Group(
@@ -55,79 +57,68 @@ object PageTemplates {
 						Text(" > "),
 						Elem(htmlBinding, "a", Attributes("href" -> "index.html"), Group(Text("Game")))
 					)),
-					Elem(htmlBinding, "main", Attributes(), Group(
-						Elem(htmlBinding, "h1", Attributes(), Group(Text(checkMon.name))),
-						Elem(htmlBinding, "table", Attributes("class" -> "general-info"), Group(
-							monInfoTableRow("Number", checkMon.dexNo.toString),
-							monInfoTableRowType("Type1", checkMon.types._1),
-							monInfoTableRowType("Type2", checkMon.types._2),
-							monInfoTableRow("Base Stat Total", checkMon.bst.toString)
-							, monInfoTableRow("Experience Group", checkMon.expGrowth)
-						)),
-						Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Evos"))),
-						Elem(htmlBinding, "div", Attributes(), Group.fromSeq(evos.flatMap{case (method:String, possibleEvos:Seq[Pokemon]) =>
-							val naturalEvo = all.getPokemon(all.naturalEvos(checkMon.dexNo)(method))
-							val naturalBst = naturalEvo.bst
-							val realEvos = all.evolutions(checkMon.dexNo)(method)
-							val thisGamesRealEvo = realEvos.get(config).getOrElse(DexNo.missing)
-							
-							val veekunSearchLink = {
-								val growthRate = checkMon.expGrowth match {
-									case "Slow" => "1250000"
-									case "Medium Fast" => "1000000"
-									case "Fast" => "800000"
-									case "Medium Slow" => "1059860"
-									case "Erratic" => "600000"
-									case "Fluctuating" => "1640000"
-								}
-								val types = config.monToMatch match {
-									case MonToMatch.Neither => ""
-									case MonToMatch.BaseForm => {
-										val (type1, type2) = checkMon.types
-										s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
+					Elem(htmlBinding, "main", Attributes(), (
+						Group(
+							Elem(htmlBinding, "h1", Attributes(), Group(Text(checkMon.name))),
+							Elem(htmlBinding, "table", Attributes("class" -> "general-info"), Group(
+								monInfoTableRow("Number", checkMon.dexNo.toString),
+								monInfoTableRowType("Type1", checkMon.types._1),
+								monInfoTableRowType("Type2", checkMon.types._2),
+								monInfoTableRow("Base Stat Total", checkMon.bst.toString)
+								, monInfoTableRow("Experience Group", checkMon.expGrowth)
+							)),
+							Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Evos"))),
+							Elem(htmlBinding, "div", Attributes(), evos.flatMap{case (method:String, possibleEvos:Seq[Pokemon]) =>
+								val naturalEvo = all.getPokemon(all.naturalEvos(checkMon.dexNo)(method))
+								val naturalBst = naturalEvo.bst
+								val realEvos = all.evolutions(checkMon.dexNo)(method)
+								
+								val veekunSearchLink = {
+									val growthRate = checkMon.expGrowth match {
+										case "Slow" => "1250000"
+										case "Medium Fast" => "1000000"
+										case "Fast" => "800000"
+										case "Medium Slow" => "1059860"
+										case "Erratic" => "600000"
+										case "Fluctuating" => "1640000"
 									}
-									case MonToMatch.EvolvedForm => {
-										val (type1, type2) = naturalEvo.types
-										s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
+									val types = config.monToMatch match {
+										case MonToMatch.Neither => ""
+										case MonToMatch.BaseForm => {
+											val (type1, type2) = checkMon.types
+											s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
+										}
+										case MonToMatch.EvolvedForm => {
+											val (type1, type2) = naturalEvo.types
+											s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
+										}
 									}
+									
+									(
+										"http://veekun.com/dex/pokemon/search?" +
+										s"stat_total=${naturalBst * 5 / 6}-${naturalBst * 6 / 5}" +
+										(if (config.expGroupMustMatch) {s"&growth_rate=$growthRate"} else {""}) ++
+										types
+									)
 								}
 								
-								(
-									"http://veekun.com/dex/pokemon/search?" +
-									s"stat_total=${naturalBst * 5 / 6}-${naturalBst * 6 / 5}" +
-									(if (config.expGroupMustMatch) {s"&growth_rate=$growthRate"} else {""}) ++
-									types
-								)
-							}
-							
-							Seq(
-								Elem(htmlBinding, "h3", Attributes(), Group(Text(method))),
-								Elem(htmlBinding, "div", Attributes(), Group(
-									Elem(htmlBinding, "a", Attributes("href" -> veekunSearchLink), Group(Text("Veekun search with same parameters")))
-								)),
-								Elem(htmlBinding, "div", Attributes(), Group(
-									Text("Number of candidates: "),
-									Text(possibleEvos.size.toString)
-								))
-							) ++
-							(if (! config.showSeedData) {Nil} else {Seq(
-								Elem(htmlBinding, "h4", Attributes(), Group(Text("Real Evo"))),
-								Elem(htmlBinding, "table", Attributes("class" -> "pokemon-list"), Group(
-									Elem(htmlBinding, "tbody", Attributes(), Group(
-										pokemonTableRow(realEvos, all.possibleEvosCount, all.possiblePrevosCount)(all.getPokemon(thisGamesRealEvo))
+								Seq(
+									Elem(htmlBinding, "h3", Attributes(), Group(Text(method))),
+									Elem(htmlBinding, "div", Attributes(), Group(
+										Elem(htmlBinding, "a", Attributes("href" -> veekunSearchLink), Group(Text("Veekun search with same parameters")))
 									))
-								))
-							)}) ++
-							Seq(
-								Elem(htmlBinding, "h4", Attributes(), Group(Text("Prediction Candidates"))),
-								pokemonListTable(possibleEvos, realEvos, all.possibleEvosCount, all.possiblePrevosCount)
-							)
-						}.toSeq)),
-						Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Prevos"))),
-						Elem(htmlBinding, "div", Attributes(), Group(Text("Number of candidates: " + prevos.size.toString))),
-						pokemonListTable(
-							  prevos ++ realPrevos.map{_._2}.map(all.getPokemon _).filterNot{prevos.contains(_)}
-							, realPrevos, all.possibleEvosCount, all.possiblePrevosCount
+								) ++ (
+									monPredictionSection(possibleEvos, realEvos, all.possibleEvosCount, all.possiblePrevosCount, all.getPokemon)
+								)
+							}(Group.canBuildFromDeep))
+						) ++ Group(
+							Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Prevos")))
+						) ++ (
+							monPredictionSection(prevos, realPrevos, all.possibleEvosCount, all.possiblePrevosCount, all.getPokemon)
+						) ++ Group(
+							Elem(htmlBinding, "h2", Attributes(), Group(Text("Possible Prevos^2")))
+						) ++ (
+							monPredictionSection(prevos2, realPrevos2, all.possibleEvosCount, all.possiblePrevosCount, all.getPokemon)
 						)
 					))
 				))
@@ -280,6 +271,23 @@ object PageTemplates {
 		)
 	}
 	
+	private[this] def monPredictionSection(
+			  possible:Seq[Pokemon]
+			, observed:Iterable[(EvosGame.Value, DexNo)]
+			, possibleEvosCount:DexNo => Int
+			, possiblePrevosCount:DexNo => Int
+			, resolveDexNo:DexNo => Pokemon
+			)(implicit config:EvosGame.Value
+	):Group[Node] = Group(
+		Elem(htmlBinding, "div", Attributes(), Group(Text(s"Number of candidates: ${possible.size}"))),
+		(if (! config.showSeedData) {Text("")} else {Elem(htmlBinding, "h4", Attributes(), Group(Text("Observed")))}),
+		(if (! config.showSeedData) {Text("")} else {
+			val observedThisGame = observed.filter{_._1 == config}.map{_._2}.map(resolveDexNo).to[Seq]
+			pokemonListTable(observedThisGame, observed, possibleEvosCount, possiblePrevosCount)
+		}),
+		Elem(htmlBinding, "h4", Attributes(), Group(Text("Candidates"))),
+		pokemonListTable(possible, observed, possibleEvosCount, possiblePrevosCount)
+	)
 	
 	private[this] def monInfoTableRow(th:String, td:String):Node = {
 		Elem(htmlBinding, "tr", Attributes(), Group(
