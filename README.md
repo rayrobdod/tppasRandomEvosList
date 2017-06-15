@@ -28,6 +28,6 @@ would explain how Chansey was allowed to evolve into Wigglytuff.
 
 1. Get [sbt](http://www.scala-sbt.org/)
 2. Clone repo
-3. In the repo's root directory, run the command `sbt web-stage`
+3. In the repo's root directory, run the command `sbt webStage`
 4. Results are html files in the `target/web/stage` directory
 

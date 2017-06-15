@@ -1,12 +1,7 @@
 package com.rayrobdod.possibleEvolutions
 
-import sbt._
-import java.io.File
-import java.nio.file.Files
 import scala.collection.immutable.{Seq, Map}
 import scala.collection.mutable.{Buffer => MSeq}
-import com.opencsv.{CSVReader, CSVWriter}
-import java.nio.charset.StandardCharsets.UTF_8
 
 /**
  * @constructor
@@ -106,6 +101,10 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 }
 
 object ListOfPokemon {
+	import java.io.File
+	import java.nio.file.Files
+	import com.opencsv.{CSVReader, CSVWriter}
+	import java.nio.charset.StandardCharsets.UTF_8
 	
 	/** Constructs a ListOfPokemon from the csv files contained in the `datadir` */
 	def fromFiles(datadir:File):ListOfPokemon = {

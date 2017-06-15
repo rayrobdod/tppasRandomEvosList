@@ -19,7 +19,7 @@ object MyBuild {
 		(resourceDirectories in Assets) += (resourceManaged in Assets).value,
 		
 		target in perMonPages in Assets := (resourceManaged in Assets).value,
-		sourceDirectory in perMonPages in Assets := (baseDirectory).value / "src" / "data",
+		sourceDirectory in perMonPages in Assets := (baseDirectory).value / "src" / "main" / "data",
 		perMonPages in Assets := {
 			val tarDir = (target in perMonPages in Assets).value
 			val allMons = monData.value

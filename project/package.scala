@@ -1,6 +1,5 @@
 package com.rayrobdod
 
-import sbt._
 import java.io.File
 import java.nio.file.Files
 import com.opencsv.{CSVReader, CSVWriter}

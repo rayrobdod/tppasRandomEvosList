@@ -1,12 +1,6 @@
 package com.rayrobdod.possibleEvolutions
 
-import sbt._
-import java.nio.file.Files
-import java.util.Date
-import java.text.SimpleDateFormat
-import com.codecommit.antixml.{Group, Text, Elem, Attributes,
-		Node, NamespaceBinding, XMLConvertable, ProcInstr
-}
+import com.codecommit.antixml.{Group, Text, Elem, Attributes, Node}
 
 object PageTemplates {
 	
