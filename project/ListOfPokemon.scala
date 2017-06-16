@@ -2,6 +2,7 @@ package com.rayrobdod.possibleEvolutions
 
 import scala.collection.immutable.{Seq, Map}
 import scala.collection.mutable.{Buffer => MSeq}
+import com.rayrobdod.possibleEvolutions.DexNo.mapCanBuildFrom
 
 /**
  * @constructor
@@ -155,7 +156,7 @@ object ListOfPokemon {
 					))
 				}.toMap
 				((dexNo, evos))
-			}.toMap
+			}.toMap.map{x => x}
 		}
 		
 		new ListOfPokemon(allPokemon, evolutions)

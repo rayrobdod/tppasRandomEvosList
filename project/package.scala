@@ -66,6 +66,56 @@ package possibleEvolutions {
 	object DexNo {
 		val missing:DexNo = DexNo(0)
 		val undef:DexNo = DexNo(-1)
+		
+		implicit def mapCanBuildFrom[V : scala.reflect.ClassTag]:scala.collection.generic.CanBuildFrom[Map[DexNo, V], (DexNo, V), DexNoMap[V]] = new DexNoMapCanBuildFrom[V]
+		
+		final class DexNoMap[V] private[DexNo] (backing:Array[V])(implicit tag:scala.reflect.ClassTag[V])
+				extends scala.collection.immutable.Map[DexNo, V]
+				with scala.collection.immutable.MapLike[DexNo, V, DexNoMap[V]] {
+			
+			override def empty():DexNoMap[V] = new DexNoMap(new Array[V](0))
+			override def newBuilder():scala.collection.mutable.Builder[(DexNo, V), DexNoMap[V]] = new DexNoMapBuilder[V]
+			override def +[V1 >: V](kv:(DexNo, V1)):DexNoMap[V1] = ???
+			override def -(key:DexNo):DexNoMap[V] = ???
+			override def get(key:DexNo):Option[V] = Option(backing(key.value))
+			override def iterator:Iterator[(DexNo, V)] = {
+				new Iterator[(DexNo, V)]{
+					/** points at the index of the thing returned by the next call of `next` */
+					private var current:Int = -1
+					this.advance()
+					
+					def hasNext:Boolean = {
+						current < backing.length
+					}
+					def next():(DexNo, V) = {
+						val retval = ((DexNo(current), backing(current)))
+						this.advance()
+						retval
+					}
+					private def advance():Unit = {
+						current = current + 1
+						while (current < backing.length && backing(current) == null) {
+							current = current + 1
+						}
+					}
+				}
+			}
+			
+			// Things required for this to be a sorted set
+			// def ordering: Ordering[DexNo] = implicitly[Ordering[DexNo]]
+			// def rangeImpl(from:Option[DexNo], until:Option[DexNo]):DexNoMap[V] = ???
+		}
+		final class DexNoMapBuilder[V : scala.reflect.ClassTag] extends scala.collection.mutable.Builder[(DexNo, V), DexNoMap[V]] {
+			private[this] var backing = new Array[V](803)
+			
+			override def +=(kv:(DexNo, V)):DexNoMapBuilder.this.type = {backing(kv._1.value) = kv._2; this}
+			override def clear():Unit = {backing = new Array[V](803)}
+			override def result():DexNoMap[V] = new DexNoMap(backing)
+		}
+		final class DexNoMapCanBuildFrom[V : scala.reflect.ClassTag] extends scala.collection.generic.CanBuildFrom[Map[DexNo, V], (DexNo, V), DexNoMap[V]] {
+			def apply:scala.collection.mutable.Builder[(DexNo, V), DexNoMap[V]] = new DexNoMapBuilder
+			def apply(from:Map[DexNo,V]):scala.collection.mutable.Builder[(DexNo, V), DexNoMap[V]] = new DexNoMapBuilder
+		}
 	}
 	
 	final class Pokemon(
