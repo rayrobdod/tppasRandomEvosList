@@ -16,7 +16,7 @@ com.rayrobdod.possibleEvolutions.MyBuild.mySettings
 
 
 (unmanagedSourceDirectories in Compile) += baseDirectory.value / "project"
-libraryDependencies += ("com.rayrobdod" %% "anti-xml" % "0.7-SNAPSHOT-20150909")
+libraryDependencies += "com.lihaoyi" %% "scalatags" % "0.6.5"
 libraryDependencies += ("com.opencsv" % "opencsv" % "3.4")
 enablePlugins(JmhPlugin)
 (unmanagedSources in Compile) := (unmanagedSources in Compile).value.filter{_.getName != "build.scala"}
