@@ -4,40 +4,36 @@ import java.io.File
 import java.nio.file.Files
 import com.opencsv.{CSVReader, CSVWriter}
 import java.nio.charset.StandardCharsets.UTF_8
-import com.codecommit.antixml.{Group, Node, NamespaceBinding, ProcInstr}
 
 package object possibleEvolutions {
 	
-	val xmlProcessingInstruction = ProcInstr("xml", "version=\"1.0\" encoding=\"utf-8\"")
-	val htmlNamespace = "http://www.w3.org/1999/xhtml"
-	val htmlBinding = NamespaceBinding(htmlNamespace)
-	object htmlDoctype extends ProcInstr("DOCTYPE", "html") {
-		override val toString = "<!DOCTYPE html>"
-	}
+	val htmlDoctype = "<!DOCTYPE html>"
 	
-	def readPrologue(readmemdFile:File):Group[Node] = {
-		import com.codecommit.antixml.{Text, Elem, Attributes}
+	def readPrologue(readmemdFile:File):scalatags.Text.Frag = {
+		import scalatags.Text.StringFrag
+		import scalatags.Text.all.stringAttr
 		import scala.collection.JavaConversions._
 		val containsLink = """([^\[]*)\[(\w+)\]\(([\w\:\/\.]+)\)(.*)""".r
 		
-		val emptyParagraph = Elem(htmlBinding, "p")
+		val emptyParagraph = scalatags.Text.tags.p
 		
 		val lines = Files.readAllLines(readmemdFile.toPath, UTF_8)
 		val usedLines = lines.dropWhile{!_.startsWith("#")}.drop(1)
 				.takeWhile{!_.startsWith("##")}
 				.dropWhile{_ == "\n"}
 				.reverse.dropWhile{_ == "\n"}.reverse
-		usedLines.foldLeft(Group(emptyParagraph)){(folding, line) => line match {
+		scalatags.Text.all.frag(usedLines.foldLeft(Seq(emptyParagraph)){(folding, line) => line match {
+			case "" if folding.last == emptyParagraph => folding
 			case "" => folding :+ emptyParagraph
 			case containsLink(before, label, href, after) => {
-				folding.init :+ (folding.last addChild Text(" ") addChild Text(before)
-						addChild Elem(htmlBinding, "a", Attributes("href" -> href), Group(Text(label)))
-						addChild Text(after))
+				folding.init :+ (folding.last(StringFrag(" "), StringFrag(before),
+						scalatags.Text.tags.a(scalatags.Text.attrs.href := href)(StringFrag(label)),
+						StringFrag(after)))
 			}
 			case _ => {
-				folding.init :+ (folding.last addChild Text(" ") addChild Text(line))
+				folding.init :+ (folding.last(StringFrag(" "), StringFrag(line)))
 			}
-		}}
+		}}:_*)
 	}
 	
 	def appendRow(csvFile:File, row:Seq[String]):Unit = {
