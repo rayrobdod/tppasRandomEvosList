@@ -25,14 +25,14 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 			retval(evoDexno) += ((game, prevoDexno))
 		}
 		
-		retval.mapValues{_.to[Seq]}
+		retval.mapValues{_.to[Seq]}.map{x => x}
 	}
 	
 	/** A list of each Pokemon's evolutions in a vanila game */
 	val naturalEvos:Map[DexNo, Map[String, DexNo]] = {
 		evolutions.mapValues{_.mapValues{
 			_.get(EvosGame.Natural).getOrElse(DexNo.missing)
-		}}
+		}.map{x => x}}.map{x => x}
 	}
 	
 	private[this] val possibleEvolutionsData:Map[EvosGame.Value, Map[DexNo, Map[String, Seq[Pokemon]]]] = {
@@ -85,14 +85,14 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 			retval(config)(evo.dexNo) += this.getPokemon(prevoDexno)
 		}
 		
-		retval.mapValues{_.mapValues{_.to[Seq]}}
+		retval.mapValues{_.mapValues{_.to[Seq]}.map{x => x}}.map{x => x}
 	}
 	/** The possible prevolutions that a randomizer can produce for the given mon */
 	def possiblePrevolutions(checkNo:DexNo)(implicit config:EvosGame.Value):Seq[Pokemon] = this.possiblePrevolutionsData(config)(checkNo)
 	
 	
-	private[this] val possibleEvosCountData:Map[EvosGame.Value, Map[DexNo, Int]] = this.possibleEvolutionsData.mapValues{_.mapValues{x => x.values.flatten.toSet.size}}
-	private[this] val possiblePrevosCountData:Map[EvosGame.Value, Map[DexNo, Int]] = this.possiblePrevolutionsData.mapValues{_.mapValues{x => x.size}}
+	private[this] val possibleEvosCountData:Map[EvosGame.Value, Map[DexNo, Int]] = this.possibleEvolutionsData.mapValues{_.mapValues{x => x.values.flatten.toSet.size}.map{x => x}}.map{x => x}
+	private[this] val possiblePrevosCountData:Map[EvosGame.Value, Map[DexNo, Int]] = this.possiblePrevolutionsData.mapValues{_.mapValues{x => x.size}.map{x => x}}.map{x => x}
 	/** The number of possible evolutions that a randomizer can produce for the given mon*/
 	def possibleEvosCount(dexno:DexNo)(implicit config:EvosGame.Value):Int = this.possibleEvosCountData(config)(dexno)
 	/** The number of possible prevolutions that a randomizer can produce for the given mon*/
