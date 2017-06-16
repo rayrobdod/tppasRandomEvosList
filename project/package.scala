@@ -114,6 +114,10 @@ package possibleEvolutions {
 		}
 	}
 	
+	object Pokemon {
+		implicit val dexNoOrdering = Ordering.by{x:Pokemon => x.dexNo}
+	}
+	
 	object EvosGame {
 		sealed trait Value {
 			def id:Int

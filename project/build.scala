@@ -26,8 +26,8 @@ object MyBuild {
 			EvosGame.values.tail.to[Seq].flatMap{game =>
 				implicit val config = game
 				allMons.allDexNos.filter{dexNo => allMons.getPokemon(dexNo).exists}.map{x =>
-					(streams in perMonPages in Assets).value.log.info(game + "/" + x.toString)
-					val outFile = (tarDir / game.toString / (x.toString + ".html")).toPath
+					(streams in perMonPages in Assets).value.log.info(s"${game}/${x}")
+					val outFile = (tarDir / game.toString / s"${x}.html").toPath
 					val output = PageTemplates.perMonPage(x, allMons)(config).toString
 					val output2 = java.util.Collections.singleton(output)
 					Files.createDirectories(outFile.getParent)

@@ -20,7 +20,7 @@ class ListOfPokemonBench {
 	import ListOfPokemonBench._State
 	
 	@Benchmark
-	def possiblePrevosCount(state:_State) = {
+	def possibleEvosCount(state:_State) = {
 		implicit val config = EvosGame.White2
 		
 		state.accessOrder.map{state.data.possibleEvosCount _}.sum

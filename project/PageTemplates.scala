@@ -280,7 +280,7 @@ object PageTemplates {
 	}
 	
 	private[this] def pokemonListTable(
-			  x:Seq[Pokemon]
+			  x:Iterable[Pokemon]
 			, realEvos:Iterable[(EvosGame.Value, DexNo)]
 			, possibleEvosCount:DexNo => Int
 			, possiblePrevosCount:DexNo => Int
@@ -301,7 +301,8 @@ object PageTemplates {
 			  )
 			, tbody((
 				x
-					.sortBy{_.dexNo}
+					.to[Seq]
+					.sorted
 					.distinct
 					.map{(pokemonTableRow(realEvos, possibleEvosCount, possiblePrevosCount) _)}
 			):_*)

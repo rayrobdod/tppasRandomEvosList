@@ -8,10 +8,10 @@ import scala.collection.mutable.{Buffer => MSeq}
  * @param allPokemon A list of every Pokemon
  * @param evolutions A list of evolutions that have occured in a TPP randomized game
  */
-final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo, Map[String, Map[EvosGame.Value, DexNo]]]) {
+final class ListOfPokemon(val allPokemon:Iterable[Pokemon], val evolutions:Map[DexNo, Map[String, Map[EvosGame.Value, DexNo]]]) {
 	
 	def getPokemon(id:DexNo):Pokemon = allPokemon.find{_.dexNo == id}.get
-	val allDexNos:Seq[DexNo] = allPokemon.map{_.dexNo}
+	val allDexNos:Iterable[DexNo] = allPokemon.map{_.dexNo}
 	
 	/** A list of prevolutions that have occured in a TPP randomized game */
 	val prevos:Map[DexNo, Seq[(EvosGame.Value, DexNo)]] = {
@@ -65,7 +65,7 @@ final class ListOfPokemon(val allPokemon:Seq[Pokemon], val evolutions:Map[DexNo,
 					}
 					val expGroupMatch = !config.expGroupMustMatch || candidate.expGrowth == checkMon.expGrowth
 					typsMatch && bstMatch && expGroupMatch
-				}}.map{x => x}))
+				}.to[Seq]}.map{x => x}))
 				// `map{x => x}` because `mapValues` creates a view, which is particularly suboptimal with a parameter function this complicated
 			}.toMap))
 		}.toMap
