@@ -19,48 +19,48 @@ ul.gamesList > li {
 
 
 table.repeat-evolution-list td:nth-last-child(-n+4),
-table.multiple-prevos-list td:nth-last-child(-n+4) {text-align: center;}
+table.repeat-multiple-prevos-list td:nth-last-child(-n+4) {text-align: center;}
 
 table.general-info th {text-align: left;}
 
 table.repeat-evolution-list,
-table.multiple-prevos-list,
+table.repeat-multiple-prevos-list,
 table.evolution-list,
 table.pokemon-list {border-collapse:collapse;}
 table.repeat-evolution-list td,
-table.multiple-prevos-list td,
+table.repeat-multiple-prevos-list td,
 table.evolution-list td,
 table.pokemon-list td {border:1px solid black; padding:2px;}
 
-table.pokemon-list td[data-type="none"]{display:none;}
-table.pokemon-list td[data-type="bug"]{background-color:#a8b820}
-table.pokemon-list td[data-type="dark"]{background-color:#705848;color:white;}
-table.pokemon-list td[data-type="dragon"]{background-color:#7038f8}
-table.pokemon-list td[data-type="electric"]{background-color:#f8d030}
-table.pokemon-list td[data-type="fairy"]{background-color:#ee99ac}
-table.pokemon-list td[data-type="fighting"]{background-color:#c03028}
-table.pokemon-list td[data-type="fire"]{background-color:#f08030}
-table.pokemon-list td[data-type="flying"]{background-color:#a890f0}
-table.pokemon-list td[data-type="ghost"]{background-color:#705898;color:white}
-table.pokemon-list td[data-type="grass"]{background-color:#78c850}
-table.pokemon-list td[data-type="ground"],
-table.pokemon-list td[data-type="earth"]{background-color:#e0c068}
-table.pokemon-list td[data-type="ice"]{background-color:#98d8d8}
-table.pokemon-list td[data-type="dream"],
-table.pokemon-list td[data-type="normal"]{background-color:#a8a878}
-table.pokemon-list td[data-type="miasma"],
-table.pokemon-list td[data-type="poison"]{background-color:#a040a0;color:white}
-table.pokemon-list td[data-type="psychic"]{background-color:#f85888}
-table.pokemon-list td[data-type="rock"]{background-color:#b8a038}
-table.pokemon-list td[data-type="steel"]{background-color:#b8b8d0}
-table.pokemon-list td[data-type="unknown"]{background-color:#98c4b8}
-table.pokemon-list td[data-type="water"]{background-color:#6890f0}
-table.pokemon-list td[data-type="faith"]{background-color:#f8b010}
-table.pokemon-list td[data-type="wind"]{background-color: #d8e030}
-table.pokemon-list td[data-type="beast"]{background-color:#b8a038;}
-table.pokemon-list td[data-type="heart"]{background-color:#f8a8b8;}
-table.pokemon-list td[data-type="native"]{background-color:#78c850;}
-table.pokemon-list td[data-type="reason"]{background-color:#f85888;}
+[data-type="none"]{display:none;}
+[data-type="bug"]{background-color:#a8b820}
+[data-type="dark"]{background-color:#705848;color:white;}
+[data-type="dragon"]{background-color:#7038f8}
+[data-type="electric"]{background-color:#f8d030}
+[data-type="fairy"]{background-color:#ee99ac}
+[data-type="fighting"]{background-color:#c03028}
+[data-type="fire"]{background-color:#f08030}
+[data-type="flying"]{background-color:#a890f0}
+[data-type="ghost"]{background-color:#705898;color:white}
+[data-type="grass"]{background-color:#78c850}
+[data-type="ground"],
+[data-type="earth"]{background-color:#e0c068}
+[data-type="ice"]{background-color:#98d8d8}
+[data-type="dream"],
+[data-type="normal"]{background-color:#a8a878}
+[data-type="miasma"],
+[data-type="poison"]{background-color:#a040a0;color:white}
+[data-type="psychic"]{background-color:#f85888}
+[data-type="rock"]{background-color:#b8a038}
+[data-type="steel"]{background-color:#b8b8d0}
+[data-type="unknown"]{background-color:#98c4b8}
+[data-type="water"]{background-color:#6890f0}
+[data-type="faith"]{background-color:#f8b010}
+[data-type="wind"]{background-color: #d8e030}
+[data-type="beast"]{background-color:#b8a038;}
+[data-type="heart"]{background-color:#f8a8b8;}
+[data-type="native"]{background-color:#78c850;}
+[data-type="reason"]{background-color:#f85888;}
 
 [data-game="natural"]{background-color:#EAC5BF;} /* hsl(5/240, 50%, 200/240) */
 [data-game="alpha-sapphire"]{background-color:#BFE4EA;} /* hsl(125/240, 50%, 200/240) */

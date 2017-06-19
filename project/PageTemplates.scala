@@ -270,7 +270,7 @@ object PageTemplates {
 									, td(dataSort := evoNum.toStringPadded, all.getPokemon(evoNum).name)
 									, td(dataSort := method, method)
 									, frag( EvosGame.values.map{x =>
-										if (games contains x) {td(dataSort := "1", "✓")} else {td(dataSort := "0", "")}
+										if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
 									  }:_*)
 								)
 							}
@@ -303,7 +303,7 @@ object PageTemplates {
 								tr(
 									  td(dataSort := evoNum.toStringPadded, all.getPokemon(evoNum).name)
 									, frag( EvosGame.values.map{x =>
-										if (games contains x) {td(dataSort := "1", "✓")} else {td(dataSort := "0", "")}
+										if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
 									  }:_*)
 								)
 							}.to[Seq]
