@@ -215,6 +215,42 @@ object PageTemplates {
 							
 							pokemonListTable(mons, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount)
 						  }
+						, if (game.monToMatch == MonToMatch.Neither) {frag(
+							  h2("Pokémon with same-type evolutions")
+							, table(
+								thead(
+									th("From DexNo"), th("From Name"),
+									th("Shared Type"),
+									th("To DexNo"), th("To Name")
+								),
+								tbody({
+									evolutionList.flatMap{case (from, _, to) =>
+										val (a1, a2) = from.types
+										val (b1, b2) = to.types
+										
+										if (a1 == b1) {
+											Seq((from, to, a1))
+										} else if (a1 == b2) {
+											Seq((from, to, a1))
+										} else if (a2 == b1) {
+											Seq((from, to, a2))
+										} else if (a2 == b2) {
+											Seq((from, to, a2))
+										} else {
+											Seq.empty
+										}
+									}.map{case (from, to, typ) =>
+										tr(
+											  td(dataSort := from.dexNo.toStringPadded)(from.dexNo.toString)
+											, td(dataSort := from.name)(from.name)
+											, td(dataType := typ.toLowerCase, dataSort := typ)(typ)
+											, td(dataSort := to.dexNo.toStringPadded)(to.dexNo.toString)
+											, td(dataSort := to.name)(to.name)
+										)
+									}:_*
+								})
+							  )
+						  )} else {frag("")}
 						, h2("4 stage evolution chains")
 						, ul({
 							all.threeEvoChains.map{case (p1,p2,p3,p4) => 
