@@ -25,6 +25,15 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 		tableToSort.replaceChild(newTableBody, tableToSort.tBodies[0]);
 	}
+	
+	function makeColumnSortable(tableToSort, columnNo) {
+		let headerCell = tableToSort.tHead.rows[0].cells[columnNo]
+		headerCell.style.cursor = "pointer"
+		headerCell.appendChild(document.createTextNode(SORT_INDICATOR));
+		headerCell.addEventListener("click", function() {
+			sortTable(tableToSort, columnNo)
+		});
+	}
 
 	toArray(tables)
 		.filter(function(tab) {return tab.classList.contains("pokemon-list")})
@@ -33,15 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
 				var headerCells = tab.tHead.rows[0].cells
 				for (j = 0; j < headerCells.length; j++) {
 					if (j != 2 && j != 3) {
-						function doThing(cellIndex) {
-							let c = headerCells[cellIndex];
-							c.style.cursor = "pointer"
-							c.appendChild(document.createTextNode(SORT_INDICATOR));
-							c.addEventListener("click", function() {
-								sortTable(tab, cellIndex)
-							});
-						}
-						doThing(j)
+						makeColumnSortable(tab, j)
 					}
 				}
 			}
@@ -52,15 +53,25 @@ document.addEventListener("DOMContentLoaded", function() {
 		.forEach(function(tab) {
 			var headerCells = tab.tHead.rows[0].cells
 			for (j = 0; j < headerCells.length; j++) {
-					function doThing(cellIndex) {
-						let c = headerCells[cellIndex];
-						c.style.cursor = "pointer"
-						c.appendChild(document.createTextNode(SORT_INDICATOR));
-						c.addEventListener("click", function() {
-							sortTable(tab, cellIndex)
-						});
-					}
-					doThing(j)
+				makeColumnSortable(tab, j)
+			}
+		})
+
+	toArray(tables)
+		.filter(function(tab) {return tab.classList.contains("repeat-evolution-list")})
+		.forEach(function(tab) {
+			var headerCells = tab.tHead.rows[0].cells
+			for (j = 0; j < headerCells.length; j++) {
+				makeColumnSortable(tab, j)
+			}
+		})
+
+	toArray(tables)
+		.filter(function(tab) {return tab.classList.contains("repeat-multiple-prevos-list")})
+		.forEach(function(tab) {
+			var headerCells = tab.tHead.rows[0].cells
+			for (j = 0; j < headerCells.length; j++) {
+				makeColumnSortable(tab, j)
 			}
 		})
 })

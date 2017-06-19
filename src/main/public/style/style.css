@@ -17,10 +17,18 @@ ul.gamesList > li {
 	flex-grow: 1;
 }
 
+
+table.repeat-evolution-list td:nth-last-child(-n+4),
+table.multiple-prevos-list td:nth-last-child(-n+4) {text-align: center;}
+
 table.general-info th {text-align: left;}
 
+table.repeat-evolution-list,
+table.multiple-prevos-list,
 table.evolution-list,
 table.pokemon-list {border-collapse:collapse;}
+table.repeat-evolution-list td,
+table.multiple-prevos-list td,
 table.evolution-list td,
 table.pokemon-list td {border:1px solid black; padding:2px;}
 
@@ -61,4 +69,8 @@ table.pokemon-list td[data-type="reason"]{background-color:#f85888;}
 [data-game="natural platinum"]{
 	background-color:#EAC5BF;
 	background: linear-gradient(to bottom, #EAC5BF 0%,#EAC5BF 50%,#C9D4DF 51%,#C9D4DF 100%);
+}
+[data-game="alpha-sapphire platinum"]{
+	background-color:#BFE4EA;
+	background: linear-gradient(to bottom, #BFE4EA 0%,#BFE4EA 50%,#C9D4DF 51%,#C9D4DF 100%);
 }

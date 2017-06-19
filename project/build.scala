@@ -9,9 +9,12 @@ import com.typesafe.sbt.web.Import.Assets
 
 object MyBuild {
 	
+	private[this] val gameToMakePagesAbout = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
+	
 	val monData = TaskKey[ListOfPokemon]("monData")
 	val perMonPages = TaskKey[Seq[File]]("perMonPages")
 	val perGamePages = TaskKey[Seq[File]]("perGamePages")
+	val sharedPage = TaskKey[Seq[File]]("sharedPage")
 	val indexPage = TaskKey[Seq[File]]("indexPage")
 	
 	val mySettings = Seq(
@@ -23,7 +26,7 @@ object MyBuild {
 		perMonPages in Assets := {
 			val tarDir = (target in perMonPages in Assets).value
 			val allMons = monData.value
-			EvosGame.values.tail.to[Seq].flatMap{game =>
+			gameToMakePagesAbout.flatMap{game =>
 				implicit val config = game
 				allMons.allDexNos.filter{dexNo => allMons.getPokemon(dexNo).exists}.map{x =>
 					(streams in perMonPages in Assets).value.log.info(s"${game}/${x}")
@@ -40,8 +43,7 @@ object MyBuild {
 		perGamePages in Assets := {
 			val tarDir = (target in perMonPages in Assets).value
 			val allMons = monData.value
-			EvosGame.values.to[Seq].map{x =>
-				(streams in perMonPages in Assets).value.log.info(x.toString)
+			gameToMakePagesAbout.map{x =>
 				val outFile = (tarDir / x.toString / "index.html").toPath
 				val output = PageTemplates.perGamePage(x, allMons).toString
 				val output2 = java.util.Collections.singleton(output)
@@ -51,6 +53,18 @@ object MyBuild {
 			}
 		},
 		resourceGenerators in Assets += (perGamePages in Assets).taskValue,
+		sharedPage in Assets := {
+			val tarDir = (target in perMonPages in Assets).value
+			val baseDir = (baseDirectory).value
+			val allMons = monData.value
+			val outFile = (tarDir / "shared" / ("index.html")).toPath
+			val output = PageTemplates.sharedPage(allMons).toString
+			val output2 = java.util.Collections.singleton(output)
+			Files.createDirectories(outFile.getParent)
+			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
+			Seq(outFile.toFile)
+		},
+		resourceGenerators in Assets += (sharedPage in Assets).taskValue,
 		indexPage in Assets := {
 			val tarDir = (target in perMonPages in Assets).value
 			val baseDir = (baseDirectory).value
