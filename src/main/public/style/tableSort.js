@@ -36,42 +36,13 @@ document.addEventListener("DOMContentLoaded", function() {
 	}
 
 	toArray(tables)
-		.filter(function(tab) {return tab.classList.contains("pokemon-list")})
 		.forEach(function(tab) {
 			if (tab.tHead != null) {
 				var headerCells = tab.tHead.rows[0].cells
 				for (j = 0; j < headerCells.length; j++) {
-					if (j != 2 && j != 3) {
-						makeColumnSortable(tab, j)
-					}
+					makeColumnSortable(tab, j)
 				}
 			}
 	})
 
-	toArray(tables)
-		.filter(function(tab) {return tab.classList.contains("evolution-list")})
-		.forEach(function(tab) {
-			var headerCells = tab.tHead.rows[0].cells
-			for (j = 0; j < headerCells.length; j++) {
-				makeColumnSortable(tab, j)
-			}
-		})
-
-	toArray(tables)
-		.filter(function(tab) {return tab.classList.contains("repeat-evolution-list")})
-		.forEach(function(tab) {
-			var headerCells = tab.tHead.rows[0].cells
-			for (j = 0; j < headerCells.length; j++) {
-				makeColumnSortable(tab, j)
-			}
-		})
-
-	toArray(tables)
-		.filter(function(tab) {return tab.classList.contains("repeat-multiple-prevos-list")})
-		.forEach(function(tab) {
-			var headerCells = tab.tHead.rows[0].cells
-			for (j = 0; j < headerCells.length; j++) {
-				makeColumnSortable(tab, j)
-			}
-		})
 })

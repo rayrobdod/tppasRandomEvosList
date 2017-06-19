@@ -1,7 +1,7 @@
 package com.rayrobdod.possibleEvolutions
 
 import scalatags.Text.tags.{attr => _, frag => _, _}
-import scalatags.Text.attrs.{tag => _, modifier => _, _}
+import scalatags.Text.attrs.{tag => _, modifier => _, title => _, _}
 import scalatags.Text.implicits._
 
 object PageTemplates {
@@ -11,12 +11,13 @@ object PageTemplates {
 	private[this] val dataGame = data("game")
 	private[this] val dataSort = data("sort")
 	private[this] val dataType = data("type")
+	private[this] val title = tag("title")
 	
 	
 	def index(prologue:scalatags.Text.Frag):scalatags.Text.Frag = {
 		html(lang := "en-US")(
 			  head(
-				  title := ("Possible Evolutions")
+				  title("Possible Evolutions")
 				, link(rel := "stylesheet", href := "style/style.css")
 			  )
 			, body(
@@ -24,15 +25,15 @@ object PageTemplates {
 					  h1("Index")
 					, div(prologue)
 					, h2("Games List")
-					, ul(`class` := "gamesList")(li(dataGame := EvosGame.values.to[Seq].head.name)(a(href := "shared/index.html")("Shared")))
-					, ul(`class` := "gamesList")(modifier(
-						EvosGame.values.to[Seq].tail.map{game =>
+					, ul(`class` := "gamesList")(
+						  li(dataGame := EvosGame.values.to[Seq].head.name)(a(href := "shared/index.html")("Shared"))
+						, frag(EvosGame.values.to[Seq].tail.map{game =>
 							val name = game.toString
 							li(dataGame := name)(
 								a(href := (name + "/index.html"))(name)
 							)
-						}:_*
-					  ))
+						}:_*)
+					  )
 				)
 			  )
 		)
@@ -48,7 +49,7 @@ object PageTemplates {
 		
 		html(lang := "en.US")(
 			  head(
-				  title := s"Possible Evolutions - $config - ${checkMon.name}"
+				  title(s"Possible Evolutions - $config - ${checkMon.name}")
 				, link(rel := "stylesheet", href := "../style/style.css")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
@@ -61,12 +62,18 @@ object PageTemplates {
 				  )
 				, main(
 					  h1(checkMon.name)
-					, table(`class` := "general-info")(
-						  monInfoTableRow("Number", checkMon.dexNo.toString)
-						, monInfoTableRowType("Type1", checkMon.types._1)
-						, monInfoTableRowType("Type2", checkMon.types._2)
-						, monInfoTableRow("Base Stat Total", checkMon.bst.toString)
-						, monInfoTableRow("Experience Group", checkMon.expGrowth)
+					, dl(
+						dt("National Dex Number"),
+							dd(checkMon.dexNo.toString),
+						dt("Base Stat Total"),
+							dd(checkMon.bst.toString),
+						dt("Experience Group"),
+							dd(checkMon.expGrowth),
+						dt("Types"),
+							dd(dataType := checkMon.types._1.toLowerCase, checkMon.types._1),
+							if (checkMon.types._1 != checkMon.types._2) {
+								dd(dataType := checkMon.types._2.toLowerCase, checkMon.types._2)
+							} else {frag("")}
 					  )
 					, h2("Possible Evos")
 					, div(evos.flatMap{case (method:String, possibleEvos:Seq[Pokemon]) =>
@@ -123,17 +130,17 @@ object PageTemplates {
 		
 		val evolutionList:Seq[(Pokemon, String, Pokemon)] = {
 			for (
-				(prevoDexno, prevoDexnoInfo) <- all.evolutions;
+				(prevoDexno, prevoDexnoInfo) <- all.evolutions.to[Seq];
 				(method, methodInfo) <- prevoDexnoInfo;
 				(mGame, evoDexno) <- methodInfo if (game == mGame)
 			) yield {
 				((all.getPokemon(prevoDexno), method, all.getPokemon(evoDexno)))
 			}
-		}.to[Seq].sortBy{_._1.dexNo}
+		}.sortBy{_._1.dexNo}
 		
 		html(lang := "en-US")(
 			  head(
-				  title := s"Possible Evolutions - $game"
+				  title(s"Possible Evolutions - $game")
 				, link(rel := "stylesheet", href := "../style/style.css")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
@@ -148,7 +155,7 @@ object PageTemplates {
 				  	, pokemonListTable(all.allPokemon.tail.filter{_.exists}, Map.empty, all.possibleEvosCount, all.possiblePrevosCount)
 				  	)(if (game.showSeedData) {frag(
 				  		  h2("Evolutions")
-				  		, table(`class` := "evolution-list")(
+				  		, table(
 				  			  thead(
 				  				tr(
 									  th("From DexNo")
@@ -274,7 +281,7 @@ object PageTemplates {
 	def sharedPage(all:ListOfPokemon):scalatags.Text.Frag = {
 		html(lang := "en-US")(
 			  head(
-				  title := s"Possible Evolutions - Shared"
+				  title(s"Possible Evolutions - Shared")
 				, link(rel := "stylesheet", href := "../style/style.css")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
@@ -286,25 +293,32 @@ object PageTemplates {
 				, main(
 					  h1("Shared")
 					, h2("Repeat Evolutions")
-					, table(`class` := "repeat-evolution-list")(
-						  colgroup(colgroupSpan := "3")
+					, table(`class` := "checktable")(
+						  colgroup(colgroupSpan := "5")
 						, frag( EvosGame.values.map{x => colgroup(colgroupSpan := "1", dataGame := x.toString)}:_* )
 						, thead(tr(
-							  th("From")
-							, th("To")
+							  th("From Num")
+							, th("From")
 							, th("Method")
+							, th("To")
+							, th("To Num")
 							, frag( EvosGame.values.map{x => th(x.shortName)}:_* )
 						  ))
 						, tbody(frag({
 							for (
-								(prevoNum, prevoData) <- all.evolutions.to[Seq];
+								(prevoNum, prevoData) <- all.evolutions.to[Seq].sortBy{_._1};
 								(method, methodData) <- prevoData;
 								(evoNum, games) <- methodData.groupBy{_._2}.mapValues{_.map{_._1}.to[Seq]} if games.size >= 2
 							) yield {
+								val evoName = all.getPokemon(evoNum).name
+								val prevoName = all.getPokemon(prevoNum).name
+								
 								tr(
-									  td(dataSort := prevoNum.toStringPadded, all.getPokemon(prevoNum).name)
-									, td(dataSort := evoNum.toStringPadded, all.getPokemon(evoNum).name)
+									  td(dataSort := prevoNum.toStringPadded, prevoNum.toString)
+									, td(dataSort := prevoName, prevoName)
 									, td(dataSort := method, method)
+									, td(dataSort := evoNum.toStringPadded, evoNum.toString)
+									, td(dataSort := evoName, evoName)
 									, frag( EvosGame.values.map{x =>
 										if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
 									  }:_*)
@@ -313,16 +327,17 @@ object PageTemplates {
 						  }:_*))
 					  )
 					, h2("Pokémon with multiple prevos multiple times")
-					, table(`class` := "repeat-multiple-prevos-list")(
-						  colgroup(colgroupSpan := "1")
+					, table(`class` := "checktable")(
+						  colgroup(colgroupSpan := "2")
 						, frag( EvosGame.values.map{x => colgroup(colgroupSpan := "1", dataGame := x.toString)}:_* )
 						, thead(tr(
-							  th("Pokémon")
+							  th("DexNo")
+							, th("Pokémon")
 							, frag( EvosGame.values.map{x => th(x.shortName)}:_* )
 						  ))
 						, tbody(frag({
 							val evolutions = for (
-								(prevoNum, prevoData) <- all.evolutions.to[Seq];
+								(prevoNum, prevoData) <- all.evolutions.to[Seq].sortBy{_._1};
 								(method, methodData) <- prevoData;
 								(game, evoNo) <- methodData
 							) yield { ((prevoNum, game, evoNo)) }
@@ -336,8 +351,11 @@ object PageTemplates {
 								
 							multiplePrevolutions.map{ab =>
 								val (evoNum, games) = ab
+								val evoName = all.getPokemon(evoNum).name
+								
 								tr(
-									  td(dataSort := evoNum.toStringPadded, all.getPokemon(evoNum).name)
+									  td(dataSort := evoNum.toStringPadded, evoNum.toString)
+									, td(dataSort := evoName, evoName)
 									, frag( EvosGame.values.map{x =>
 										if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
 									  }:_*)
@@ -380,16 +398,6 @@ object PageTemplates {
 		  }
 	)
 	
-	private[this] def monInfoTableRow(m_th:String, m_td:String):scalatags.Text.TypedTag[String] = {
-		tr(th(m_th), td(m_td))
-	}
-	
-	private[this] def monInfoTableRowType(m_th:String, m_td:String):scalatags.Text.TypedTag[String] = {
-		tr(
-			  th(m_th)
-			, td(dataType := m_td.toLowerCase)(m_td)
-		)
-	}
 	
 	private[this] def pokemonListTable(
 			  x:Iterable[Pokemon]
@@ -425,16 +433,16 @@ object PageTemplates {
 		val game = realEvos.filter{_._2 == x.dexNo}.map{_._1}.to[Seq].distinct.sortBy{_.id}.mkString("", " ", "")
 		
 		tr(dataGame := game)(
-			  td(data("sort") := x.dexNo.toStringPadded)(x.dexNo.toString)
-			, td(data("sort") := x.name)(
+			  td(dataSort := x.dexNo.toStringPadded)(x.dexNo.toString)
+			, td(dataSort := x.name)(
 				a(href := s"${x.dexNo}.html")(x.name)
 			  )
-			, td(data("type") := x.types._1.toLowerCase)(x.types._1)
-			, td(data("type") := x.types._2.toLowerCase)(x.types._2) 
-			, td(data("sort") := padStrWithZeros(x.bst))(x.bst.toString)
-			, td(data("sort") := x.expGrowth)(x.expGrowth)
-			, td(data("sort") := padStrWithZeros(possibleEvosCount(x.dexNo)))(possibleEvosCount(x.dexNo).toString)
-			, td(data("sort") := padStrWithZeros(possiblePrevosCount(x.dexNo)))(possiblePrevosCount(x.dexNo).toString)
+			, td(dataSort := x.types._1, dataType := x.types._1.toLowerCase)(x.types._1)
+			, td(dataSort := x.types._2, dataType := x.types._2.toLowerCase)(x.types._2) 
+			, td(dataSort := padStrWithZeros(x.bst))(x.bst.toString)
+			, td(dataSort := x.expGrowth)(x.expGrowth)
+			, td(dataSort := padStrWithZeros(possibleEvosCount(x.dexNo)))(possibleEvosCount(x.dexNo).toString)
+			, td(dataSort := padStrWithZeros(possiblePrevosCount(x.dexNo)))(possiblePrevosCount(x.dexNo).toString)
 		)
 	}
 	

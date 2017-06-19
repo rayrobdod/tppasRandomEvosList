@@ -122,7 +122,7 @@ final class ListOfPokemon(val allPokemon:Iterable[Pokemon], val evolutions:Map[D
 			) yield ((first, second, third, fourth)))
 		}.toMap
 	}
-	def threeEvoChains(implicit config:EvosGame.Value):Seq[(DexNo, DexNo, DexNo, DexNo)] = this.threeEvoChainData(config)
+	def threeEvoChains(implicit config:EvosGame.Value):Seq[(DexNo, DexNo, DexNo, DexNo)] = this.threeEvoChainData(config).sortBy{_._1}
 	
 	private[this] val finalEvolutionData:Map[EvosGame.Value, Map[DexNo, Seq[DexNo]]] = {
 		def followEvoChain(x:DexNo, game:EvosGame.Value):Seq[DexNo] = {
