@@ -17,7 +17,7 @@ object PageTemplatesBench {
 }
 
 class PageTemplatesBench {
-	import ListOfPokemonBench._State
+	import PageTemplatesBench._State
 	
 	@Benchmark
 	def perMonPage(state:_State) = {
