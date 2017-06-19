@@ -142,6 +142,14 @@ final class ListOfPokemon(val allPokemon:Iterable[Pokemon], val evolutions:Map[D
 		}.toMap
 	}
 	def finalEvolutions(mon:DexNo)(implicit config:EvosGame.Value):Seq[DexNo] = finalEvolutionData(config).get(mon).getOrElse(Seq.empty)
+	
+	private[this] val firstStageMonsData:Map[EvosGame.Value, Set[DexNo]] = {
+		EvosGame.values.map{game =>
+			game -> (this.allDexNos.filter{no => this.getPokemon(no).exists(game)}.to[Set] -- abridgedEvosData(game).flatMap{_._2}.to[Set])
+		}.toMap
+	}
+	/** AKA Pokemon that nothing evolves into */
+	def firstStageMons(implicit config:EvosGame.Value):Set[DexNo] = firstStageMonsData(config)
 }
 
 object ListOfPokemon {

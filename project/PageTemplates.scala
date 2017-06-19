@@ -183,7 +183,7 @@ object PageTemplates {
 				  		  )
 						, h2("Pokémon that nothing evolves into")
 						, pokemonListTable(
-							all.allPokemon.filterNot(evolutionList.map{_._3}.toSet).filter{_.exists}
+							all.firstStageMons.map{all.getPokemon _}
 							, Seq.empty, all.possibleEvosCount, all.possiblePrevosCount
 						  )
 						, h2("Pokémon that multiple things evolve into")
@@ -362,6 +362,38 @@ object PageTemplates {
 								)
 							}.to[Seq]
 						  }:_*))
+					  )
+					, h2("Pokémon with no prevos multiple times")
+					, table(`class` := "checktable")(
+						  colgroup(colgroupSpan := "2")
+						, frag( EvosGame.values.map{x => colgroup(colgroupSpan := "1", dataGame := x.toString)}:_* )
+						, thead(tr(
+							  th("DexNo")
+							, th("Pokémon")
+							, frag( EvosGame.values.map{x => th(x.shortName)}:_* )
+						  ))
+						, tbody(frag({
+							all.allDexNos.flatMap{dexno =>
+								val games = EvosGame.values.filter{game =>
+									all.firstStageMons(game) contains dexno
+								}
+								
+								if (games.size < 2) {
+									Seq.empty
+								} else {
+									Seq((dexno, games))
+								}
+							}.map{case (dexNo, games) =>
+								val name = all.getPokemon(dexNo).name
+								tr(
+									  td(dataSort := dexNo.toStringPadded, dexNo.toString)
+									, td(dataSort := name, name)
+									, frag( EvosGame.values.map{x =>
+										if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
+									  }:_*)
+								)
+							}.toSeq:_*
+						  }))
 					  )
 				  )
 			  )
