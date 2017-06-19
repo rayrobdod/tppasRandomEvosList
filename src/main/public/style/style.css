@@ -1,6 +1,7 @@
 ::selection{background:inherit;color:#c40029;}
 ::-moz-selection{background:inherit;color:#c40029;}
 
+body { max-width: 40em; margin: auto; }
 h1, h2, h3, h4 {margin-left: 1rem; }
 h3 { margin-bottom: 0.75em; }
 h4 { margin-bottom: 0.5em; }
@@ -18,6 +19,7 @@ ul.gamesList {
 }
 ul.gamesList > li {
 	padding: 0.5em;
+	margin: 0;
 	text-align: center;
 	flex-grow: 1;
 }
@@ -25,7 +27,7 @@ ul.gamesList > li[data-game="natural"] {width:100%}
 
 /** Data tables */
 
-table {border-collapse:collapse;}
+table {border-collapse:collapse; width: 100%;}
 table th {padding:2px;}
 table td {border:1px solid black; padding:2px;}
 
