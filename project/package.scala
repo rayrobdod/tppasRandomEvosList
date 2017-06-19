@@ -192,6 +192,7 @@ package possibleEvolutions {
 		sealed trait Value {
 			def id:Int
 			def name:String
+			def shortName:String
 			def monToMatch:MonToMatch.Value
 			def expGroupMustMatch:Boolean
 			def showSeedData:Boolean
@@ -202,6 +203,7 @@ package possibleEvolutions {
 		object Natural extends Value {
 			override def id:Int = 0
 			override def name:String = "natural"
+			override def shortName:String = "nat"
 			override def monToMatch:MonToMatch.Value = MonToMatch.BaseForm
 			override def expGroupMustMatch:Boolean = true
 			override def showSeedData:Boolean = true
@@ -210,6 +212,7 @@ package possibleEvolutions {
 		object AlphaSapphire extends Value {
 			override def id:Int = 1
 			override def name:String = "alpha-sapphire"
+			override def shortName:String = "αS"
 			override def monToMatch:MonToMatch.Value = MonToMatch.EvolvedForm
 			override def expGroupMustMatch:Boolean = false
 			override def showSeedData:Boolean = true
@@ -218,6 +221,7 @@ package possibleEvolutions {
 		object Platinum extends Value {
 			override def id:Int = 2
 			override def name:String = "platinum"
+			override def shortName:String = "rP"
 			override def monToMatch:MonToMatch.Value = MonToMatch.BaseForm
 			override def expGroupMustMatch:Boolean = true
 			override def showSeedData:Boolean = true
@@ -226,6 +230,7 @@ package possibleEvolutions {
 		object White2 extends Value {
 			override def id:Int = 3
 			override def name:String = "white2"
+			override def shortName:String = "w2"
 			override def monToMatch:MonToMatch.Value = MonToMatch.Neither
 			override def expGroupMustMatch:Boolean = true
 			override def showSeedData:Boolean = false

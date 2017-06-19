@@ -37,6 +37,7 @@ final class ListOfPokemon(val allPokemon:Iterable[Pokemon], val evolutions:Map[D
 	}
 	
 	private[this] val possibleEvolutionsData:Map[EvosGame.Value, Map[DexNo, Map[String, Seq[Pokemon]]]] = {
+		/** True if either `a` value is equal to either `b` value */
 		def typesMatch(a1:String, a2:String, b1:String, b2:String) = {
 			a1 == b1 || a1 == b2 || a2 == b1 || a2 == b2
 		}
@@ -99,6 +100,57 @@ final class ListOfPokemon(val allPokemon:Iterable[Pokemon], val evolutions:Map[D
 	/** The number of possible prevolutions that a randomizer can produce for the given mon*/
 	def possiblePrevosCount(dexno:DexNo)(implicit config:EvosGame.Value):Int = this.possiblePrevosCountData(config)(dexno)
 	
+	private[this] val abridgedEvosData:Map[EvosGame.Value, Map[DexNo, Seq[DexNo]]] = {
+		EvosGame.values.map{game =>
+			game -> (for (
+				(prevoNo, prevonodata) <- this.evolutions.to[Seq];
+				(_, methoddata) <- prevonodata.to[Seq];
+				evoNo <- methoddata.get(game).to[Seq]
+			) yield {
+				(prevoNo, evoNo)
+			}).groupBy{_._1}.mapValues{_.map{_._2}}.map{x => x}
+		}.toMap
+	}
+	private[this] val threeEvoChainData:Map[EvosGame.Value, Seq[(DexNo, DexNo, DexNo, DexNo)]] = {
+		EvosGame.values.map{game =>
+			game -> (for (
+				(first, secondSeq) <- this.abridgedEvosData(game).to[Seq];
+				second <- secondSeq;
+				thirdSeq <- this.abridgedEvosData(game).get(second).to[Seq];
+				third <- thirdSeq;
+				fourthSeq <- this.abridgedEvosData(game).get(third).to[Seq];
+				fourth <- fourthSeq
+			) yield ((first, second, third, fourth)))
+		}.toMap
+	}
+	def threeEvoChains(implicit config:EvosGame.Value):Seq[(DexNo, DexNo, DexNo, DexNo)] = this.threeEvoChainData(config).sortBy{_._1}
+	
+	private[this] val finalEvolutionData:Map[EvosGame.Value, Map[DexNo, Seq[DexNo]]] = {
+		def followEvoChain(x:DexNo, game:EvosGame.Value):Seq[DexNo] = {
+			if (abridgedEvosData(game) contains x) {
+				val nexts = this.abridgedEvosData(game)(x)
+				nexts.flatMap{y => if (y == x) {Seq(x)} else {followEvoChain(y, game)}}
+			} else {
+				Seq(x)
+			}
+		}
+		EvosGame.values.map{game =>
+			game -> this.allDexNos
+					.map{startNum => startNum -> followEvoChain(startNum, game)}
+					.filter{x => Seq(x._1) != x._2}
+					.toMap
+					.map{x => x}
+		}.toMap
+	}
+	def finalEvolutions(mon:DexNo)(implicit config:EvosGame.Value):Seq[DexNo] = finalEvolutionData(config).get(mon).getOrElse(Seq.empty)
+	
+	private[this] val firstStageMonsData:Map[EvosGame.Value, Set[DexNo]] = {
+		EvosGame.values.map{game =>
+			game -> (this.allDexNos.filter{no => this.getPokemon(no).exists(game)}.to[Set] -- abridgedEvosData(game).flatMap{_._2}.to[Set])
+		}.toMap
+	}
+	/** AKA Pokemon that nothing evolves into */
+	def firstStageMons(implicit config:EvosGame.Value):Set[DexNo] = firstStageMonsData(config)
 }
 
 object ListOfPokemon {

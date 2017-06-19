@@ -1,58 +1,72 @@
 ::selection{background:inherit;color:#c40029;}
 ::-moz-selection{background:inherit;color:#c40029;}
 
+body { max-width: 40em; margin: auto; }
 h1, h2, h3, h4 {margin-left: 1rem; }
 h3 { margin-bottom: 0.75em; }
 h4 { margin-bottom: 0.5em; }
+dt { font-weight: bold; }
+dd[data-type] {width: 6em;}
+
+/** The list of games on the index page */
 
 ul.gamesList {
 	list-style:none;
 	font-size: larger;
 	padding: 0 2.5em;
 	display: flex;
+	flex-wrap: wrap;
 }
 ul.gamesList > li {
 	padding: 0.5em;
+	margin: 0;
 	text-align: center;
 	flex-grow: 1;
 }
+ul.gamesList > li[data-game="natural"] {width:100%}
 
-table.general-info th {text-align: left;}
+/** Data tables */
 
-table.evolution-list,
-table.pokemon-list {border-collapse:collapse;}
-table.evolution-list td,
-table.pokemon-list td {border:1px solid black; padding:2px;}
+table {border-collapse:collapse; width: 100%;}
+table th {padding:2px;}
+table td {border:1px solid black; padding:2px;}
 
-table.pokemon-list td[data-type="none"]{display:none;}
-table.pokemon-list td[data-type="bug"]{background-color:#a8b820}
-table.pokemon-list td[data-type="dark"]{background-color:#705848;color:white;}
-table.pokemon-list td[data-type="dragon"]{background-color:#7038f8}
-table.pokemon-list td[data-type="electric"]{background-color:#f8d030}
-table.pokemon-list td[data-type="fairy"]{background-color:#ee99ac}
-table.pokemon-list td[data-type="fighting"]{background-color:#c03028}
-table.pokemon-list td[data-type="fire"]{background-color:#f08030}
-table.pokemon-list td[data-type="flying"]{background-color:#a890f0}
-table.pokemon-list td[data-type="ghost"]{background-color:#705898;color:white}
-table.pokemon-list td[data-type="grass"]{background-color:#78c850}
-table.pokemon-list td[data-type="ground"],
-table.pokemon-list td[data-type="earth"]{background-color:#e0c068}
-table.pokemon-list td[data-type="ice"]{background-color:#98d8d8}
-table.pokemon-list td[data-type="dream"],
-table.pokemon-list td[data-type="normal"]{background-color:#a8a878}
-table.pokemon-list td[data-type="miasma"],
-table.pokemon-list td[data-type="poison"]{background-color:#a040a0;color:white}
-table.pokemon-list td[data-type="psychic"]{background-color:#f85888}
-table.pokemon-list td[data-type="rock"]{background-color:#b8a038}
-table.pokemon-list td[data-type="steel"]{background-color:#b8b8d0}
-table.pokemon-list td[data-type="unknown"]{background-color:#98c4b8}
-table.pokemon-list td[data-type="water"]{background-color:#6890f0}
-table.pokemon-list td[data-type="faith"]{background-color:#f8b010}
-table.pokemon-list td[data-type="wind"]{background-color: #d8e030}
-table.pokemon-list td[data-type="beast"]{background-color:#b8a038;}
-table.pokemon-list td[data-type="heart"]{background-color:#f8a8b8;}
-table.pokemon-list td[data-type="native"]{background-color:#78c850;}
-table.pokemon-list td[data-type="reason"]{background-color:#f85888;}
+table.checktable td:nth-last-child(-n+4) {text-align: center;}
+
+
+/** background (and foreground) color associated with each type */
+
+[data-type="none"]{display:none;}
+[data-type="bug"]{background-color:#a8b820}
+[data-type="dark"]{background-color:#705848;color:white;}
+[data-type="dragon"]{background-color:#7038f8}
+[data-type="electric"]{background-color:#f8d030}
+[data-type="fairy"]{background-color:#ee99ac}
+[data-type="fighting"]{background-color:#c03028}
+[data-type="fire"]{background-color:#f08030}
+[data-type="flying"]{background-color:#a890f0}
+[data-type="ghost"]{background-color:#705898;color:white}
+[data-type="grass"]{background-color:#78c850}
+[data-type="ground"],
+[data-type="earth"]{background-color:#e0c068}
+[data-type="ice"]{background-color:#98d8d8}
+[data-type="dream"],
+[data-type="normal"]{background-color:#a8a878}
+[data-type="miasma"],
+[data-type="poison"]{background-color:#a040a0;color:white}
+[data-type="psychic"]{background-color:#f85888}
+[data-type="rock"]{background-color:#b8a038}
+[data-type="steel"]{background-color:#b8b8d0}
+[data-type="unknown"]{background-color:#98c4b8}
+[data-type="water"]{background-color:#6890f0}
+[data-type="faith"]{background-color:#f8b010}
+[data-type="wind"]{background-color: #d8e030}
+[data-type="beast"]{background-color:#b8a038;}
+[data-type="heart"]{background-color:#f8a8b8;}
+[data-type="native"]{background-color:#78c850;}
+[data-type="reason"]{background-color:#f85888;}
+
+/** Background color associated with each game */
 
 [data-game="natural"]{background-color:#EAC5BF;} /* hsl(5/240, 50%, 200/240) */
 [data-game="alpha-sapphire"]{background-color:#BFE4EA;} /* hsl(125/240, 50%, 200/240) */
@@ -61,4 +75,8 @@ table.pokemon-list td[data-type="reason"]{background-color:#f85888;}
 [data-game="natural platinum"]{
 	background-color:#EAC5BF;
 	background: linear-gradient(to bottom, #EAC5BF 0%,#EAC5BF 50%,#C9D4DF 51%,#C9D4DF 100%);
+}
+[data-game="alpha-sapphire platinum"]{
+	background-color:#BFE4EA;
+	background: linear-gradient(to bottom, #BFE4EA 0%,#BFE4EA 50%,#C9D4DF 51%,#C9D4DF 100%);
 }
