@@ -153,6 +153,20 @@ object PageTemplates {
 				  )
 				, main(
 				  	  h1(game.toString)
+				  	, dl(
+				  		  dt("Type Match")
+				  		, dd(game.monToMatch match {
+				  			case MonToMatch.BaseForm => "Base Form"
+				  			case MonToMatch.EvolvedForm => "Natural Evolution"
+				  			case MonToMatch.Neither => "Off"
+				  		  })
+				  		, dt("Experience Group Match")
+				  		, dd(if (game.expGroupMustMatch) {"Yes"} else {"No"})
+				  		, dt("Natural Evolution Allowed")
+				  		, dd(if (game.naturalEvoAllowed) {"Yes"} else {"No"})
+				  		, dt("Base Stat Total Range")
+				  		, dd(game.bstMatchString)
+				  	  )
 				  	, h2("Pokémon List")
 				  	, pokemonListTable(all.allPokemon.tail.filter{_.exists}, Map.empty, all.possibleEvosCount, all.possiblePrevosCount)
 				  	)(if (game.showSeedData) {frag(
