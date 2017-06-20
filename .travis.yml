@@ -1,4 +1,8 @@
 language: scala
 
+install:
+   - sbt update
+
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION web-stage
+  - sbt web-stage
+  - sbt jmh:run\ -i\ 10\ -wi\ 5\ -f1\ -t1

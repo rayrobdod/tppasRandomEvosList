@@ -11,7 +11,7 @@ object PageTemplatesBench {
 		val accessOrder = (1 to 50).map{DexNo(_)}
 
 		val data = {
-			ListOfPokemon.fromFiles(new java.io.File("C:/Users/Raymond/Documents/Programming/HTML-JS/RandomizedEvolutions/src/main/data/"))
+			ListOfPokemon.fromFiles(new java.io.File("src/main/data/"))
 		}
 	}
 }
