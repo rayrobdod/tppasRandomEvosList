@@ -1,6 +1,6 @@
 # Randomized Evolution List
 
-Occasionally, [TwitchPlaysPokemon](http://www.twitch.tv/twitchplayspokemon)
+Occasionally, [Twitch Plays Pokémon](http://www.twitch.tv/twitchplayspokemon)
 hosts runs of games that have been randomized. Starting with Twitch Plays
 Randomized Alpha Sapphire in July of 2015, these randomized runs have
 included randomized evolutions: Changing the game's evolution tables such that a
