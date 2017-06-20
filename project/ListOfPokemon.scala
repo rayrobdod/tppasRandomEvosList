@@ -59,15 +59,12 @@ final class ListOfPokemon(val allPokemon:Iterable[Pokemon], val evolutions:Map[D
 							typesMatch(naturalEvoMon.types._1, naturalEvoMon.types._2, candidate.types._1, candidate.types._2)
 						}
 					}
-					// https://github.com/kwsch/pk3DS/blob/f0d69b517b8c86ea7a05a9af00bfa6d117de1661/pk3DS/Subforms/Evolution.cs#L198
-					// TODO: https://github.com/Dabomstew/universal-pokemon-randomizer/blob/49e1d38991ee5339400abfc482e08d4cdfc3aacd/src/com/dabomstew/pkrandom/romhandlers/AbstractRomHandler.java#L3011
-					val bstMatch = {
-						val candidateBst = candidate.bst
-						val selfBst = naturalEvoMon.bst
-						(candidateBst * 6 / 5 > selfBst) && (selfBst > candidateBst * 5 / 6)
-					}
+					val bstMatch = config.bstMatches(
+						naturalBst = naturalEvoMon.bst,
+						candidateBst = candidate.bst
+					)
 					val expGroupMatch = !config.expGroupMustMatch || candidate.expGrowth == checkMon.expGrowth
-					typsMatch && bstMatch && expGroupMatch
+					typsMatch && bstMatch && expGroupMatch && candidate.exists
 				}.to[Seq]}.map{x => x}))
 				// `map{x => x}` because `mapValues` creates a view, which is particularly suboptimal with a parameter function this complicated
 			}.toMap))
