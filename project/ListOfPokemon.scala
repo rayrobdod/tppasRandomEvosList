@@ -50,7 +50,6 @@ final class ListOfPokemon(val allPokemon:Iterable[Pokemon], val evolutions:Map[D
 				val checkMon = this.getPokemon(checkNo)
 				
 				((checkNo, naturalEvoMons.mapValues{naturalEvoMon => allPokemon.filter{candidate =>
-					// https://github.com/kwsch/pk3DS/blob/master/pk3DS/Subforms/Evolution.cs#L202
 					val typsMatch = config.monToMatch match {
 						case MonToMatch.Neither => true
 						case MonToMatch.BaseForm => {
@@ -60,6 +59,8 @@ final class ListOfPokemon(val allPokemon:Iterable[Pokemon], val evolutions:Map[D
 							typesMatch(naturalEvoMon.types._1, naturalEvoMon.types._2, candidate.types._1, candidate.types._2)
 						}
 					}
+					// https://github.com/kwsch/pk3DS/blob/f0d69b517b8c86ea7a05a9af00bfa6d117de1661/pk3DS/Subforms/Evolution.cs#L198
+					// TODO: https://github.com/Dabomstew/universal-pokemon-randomizer/blob/49e1d38991ee5339400abfc482e08d4cdfc3aacd/src/com/dabomstew/pkrandom/romhandlers/AbstractRomHandler.java#L3011
 					val bstMatch = {
 						val candidateBst = candidate.bst
 						val selfBst = naturalEvoMon.bst
@@ -151,6 +152,36 @@ final class ListOfPokemon(val allPokemon:Iterable[Pokemon], val evolutions:Map[D
 	}
 	/** AKA Pokemon that nothing evolves into */
 	def firstStageMons(implicit config:EvosGame.Value):Set[DexNo] = firstStageMonsData(config)
+	
+	private[this] val familiesData:Map[EvosGame.Value, Map[DexNo, Set[DexNo]]] = {
+		val retval = EvosGame.values.map{config => ((config, allDexNos.map{dexNo => ((dexNo, MSeq.empty[DexNo]))}.toMap))}.toMap
+		
+		EvosGame.values.foreach{game =>
+			this.allDexNos.filter{no => this.getPokemon(no).exists(game)}.foreach{prevoNum =>
+				var midNums:List[DexNo] = prevoNum :: Nil
+				var finalNums:List[DexNo] = Nil
+				
+				while (midNums.nonEmpty) {
+					val h :: t = midNums
+					midNums = t
+					
+					if (abridgedEvosData(game) contains h) {
+						midNums = abridgedEvosData(game)(h).to[List] ::: midNums
+						midNums = midNums.filterNot{_ == h}.filterNot{finalNums contains _}
+					} else {
+						finalNums = h :: finalNums
+					}
+				}
+				
+				finalNums.foreach{evoNum =>
+					retval(game)(evoNum) += prevoNum
+				}
+			}
+		}
+		
+		retval.mapValues{families => families.filter{_._2.nonEmpty}.mapValues{_.to[Set]}.map{x => x}}.toMap
+	}
+	def families(implicit config:EvosGame.Value):Map[DexNo, Set[DexNo]] = familiesData(config)
 }
 
 object ListOfPokemon {

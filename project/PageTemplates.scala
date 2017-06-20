@@ -273,6 +273,17 @@ object PageTemplates {
 								)
 							}
 						  }:_*)
+						, h2("Large evolution chain convergances")
+						, ul(
+							all.families.map{case (end, members) =>
+								if (members.size >= 6) {frag(
+									h4(a(href := s"${end}.html", all.getPokemon(end).name), " – ", members.size.toString),
+									ul(
+										members.to[Seq].map{member => li(member + " " + all.getPokemon(member).name)}:_*
+									)
+								)} else {frag("")}
+							}.to[Seq]:_*
+						  )
 					)} else {frag("")}
 				  )
 			  )
