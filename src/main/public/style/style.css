@@ -80,3 +80,11 @@ table.checktable td:nth-last-child(-n+4) {text-align: center;}
 	background-color:#BFE4EA;
 	background: linear-gradient(to bottom, #BFE4EA 0%,#BFE4EA 50%,#C9D4DF 51%,#C9D4DF 100%);
 }
+[data-game="alpha-sapphire white2"]{
+	background-color:#BFE4EA;
+	background: linear-gradient(to bottom, #BFE4EA 0%,#BFE4EA 50%,#DDDDCC 51%,#DDDDCC 100%);
+}
+[data-game="platinum white2"]{
+	background-color:#C9D4DF;
+	background: linear-gradient(to bottom, #C9D4DF 0%,#C9D4DF 50%,#DDDDCC 51%,#DDDDCC 100%);
+}

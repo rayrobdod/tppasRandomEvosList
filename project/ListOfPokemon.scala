@@ -195,8 +195,9 @@ object ListOfPokemon {
 			val natural = readEvoDataFile("naturalEvolutions.csv", EvosGame.Natural)
 			val alphaSapphire = readEvoDataFile("alphaSapphireEvolutions.csv", EvosGame.AlphaSapphire)
 			val platinum = readEvoDataFile("platinumEvolutions.csv", EvosGame.Platinum)
+			val white2 = readEvoDataFile("white2Evolutions.csv", EvosGame.White2)
 			
-			val summed:Seq[(DexNo, DexNo, String, EvosGame.Value)] = natural ++ alphaSapphire ++ platinum
+			val summed:Seq[(DexNo, DexNo, String, EvosGame.Value)] = natural ++ alphaSapphire ++ platinum ++ white2
 			
 			allDexNos.map{dexNo:DexNo =>
 				val methods = natural.filter{_._1 == dexNo}.map{_._3}

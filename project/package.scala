@@ -233,7 +233,7 @@ package possibleEvolutions {
 			override def shortName:String = "w2"
 			override def monToMatch:MonToMatch.Value = MonToMatch.Neither
 			override def expGroupMustMatch:Boolean = true
-			override def showSeedData:Boolean = false
+			override def showSeedData:Boolean = true
 		}
 		
 		def values:Seq[Value] = Seq(Natural, AlphaSapphire, Platinum, White2)
