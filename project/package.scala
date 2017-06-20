@@ -13,7 +13,7 @@ package object possibleEvolutions {
 		import scalatags.Text.StringFrag
 		import scalatags.Text.all.stringAttr
 		import scala.collection.JavaConversions._
-		val containsLink = """([^\[]*)\[(\w+)\]\(([\w\:\/\.]+)\)(.*)""".r
+		val containsLink = """([^\[]*)\[([ \w]+)\]\(([\w\:\/\.\-]+)\)(.*)""".r
 		
 		val emptyParagraph = scalatags.Text.tags.p
 		
