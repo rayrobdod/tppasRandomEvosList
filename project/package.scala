@@ -201,6 +201,8 @@ package possibleEvolutions {
 			def expGroupMustMatch:Boolean
 			/** True if the candidate's BST is close enough to the natural evolution's BST to be an acceptable candidate */
 			def bstMatches(naturalBst:Int, candidateBst:Int):Boolean
+			/** True if the natural evolution is allowed to be an acceptable candidate */
+			def naturalEvoAllowed:Boolean
 			
 			/** True if the game has logs to display and generate data about */
 			def showSeedData:Boolean
@@ -219,6 +221,7 @@ package possibleEvolutions {
 			override def monToMatch:MonToMatch.Value = MonToMatch.BaseForm
 			override def expGroupMustMatch:Boolean = true
 			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = true
+			override def naturalEvoAllowed:Boolean = true
 		}
 		
 		object AlphaSapphire extends Value {
@@ -230,6 +233,7 @@ package possibleEvolutions {
 			override def showSeedData:Boolean = true
 			// https://github.com/kwsch/pk3DS/blob/f0d69b517b8c86ea7a05a9af00bfa6d117de1661/pk3DS/Subforms/Evolution.cs#L198
 			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = (candidateBst * 6 / 5 > naturalBst) && (naturalBst > candidateBst * 5 / 6)
+			override def naturalEvoAllowed:Boolean = false
 		}
 		
 		object Platinum extends Value {
@@ -241,6 +245,7 @@ package possibleEvolutions {
 			override def showSeedData:Boolean = true
 			// https://github.com/Dabomstew/universal-pokemon-randomizer/blob/49e1d38991ee5339400abfc482e08d4cdfc3aacd/src/com/dabomstew/pkrandom/romhandlers/AbstractRomHandler.java#L3011
 			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = (naturalBst * 11 / 10 >= candidateBst) && (candidateBst >= naturalBst * 9 / 10)
+			override def naturalEvoAllowed:Boolean = true
 		}
 		
 		object White2 extends Value {
@@ -252,6 +257,7 @@ package possibleEvolutions {
 			override def showSeedData:Boolean = true
 			// https://github.com/Dabomstew/universal-pokemon-randomizer/blob/49e1d38991ee5339400abfc482e08d4cdfc3aacd/src/com/dabomstew/pkrandom/romhandlers/AbstractRomHandler.java#L3011
 			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = (naturalBst * 11 / 10 >= candidateBst) && (candidateBst >= naturalBst * 9 / 10)
+			override def naturalEvoAllowed:Boolean = false
 		}
 		
 		def values:Seq[Value] = Seq(Natural, AlphaSapphire, Platinum, White2)

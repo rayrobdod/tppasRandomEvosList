@@ -113,6 +113,7 @@ object PageTemplates {
 						
 						Seq(
 							  h3(method)
+							, div("Natural: ", naturalEvo.name, " (BST = ", naturalBst, ")")
 							, div(a(href := veekunSearchLink)("Veekun search with same parameters"))
 							, monPredictionSection(possibleEvos, realEvos, all.possibleEvosCount, all.possiblePrevosCount, all.getPokemon)
 						)

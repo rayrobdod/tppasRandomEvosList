@@ -64,7 +64,14 @@ final class ListOfPokemon(val allPokemon:Iterable[Pokemon], val evolutions:Map[D
 						candidateBst = candidate.bst
 					)
 					val expGroupMatch = !config.expGroupMustMatch || candidate.expGrowth == checkMon.expGrowth
-					typsMatch && bstMatch && expGroupMatch && candidate.exists
+					val candidateIsSelf = candidate == checkMon
+					val candidateIsNatural = candidate == naturalEvoMon
+					
+					typsMatch && bstMatch && expGroupMatch &&
+							!candidateIsSelf &&
+							candidate.exists &&
+							(config.naturalEvoAllowed || !candidateIsNatural)
+							
 				}.to[Seq]}.map{x => x}))
 				// `map{x => x}` because `mapValues` creates a view, which is particularly suboptimal with a parameter function this complicated
 			}.toMap))
