@@ -30,8 +30,8 @@ object MyBuild {
 				implicit val config = game
 				allMons.allDexNos.filter{dexNo => allMons.getPokemon(dexNo).exists}.map{x =>
 					(streams in perMonPages in Assets).value.log.info(s"${game}/${x}")
-					val outFile = (tarDir / game.toString / s"${x}.html").toPath
-					val output = PageTemplates.perMonPage(x, allMons)(config).toString
+					val outFile = (tarDir / game.name / s"${x}.html").toPath
+					val output = PageTemplates.perMonPage(x, allMons)(config).render
 					val output2 = java.util.Collections.singleton(output)
 					Files.createDirectories(outFile.getParent)
 					Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -44,8 +44,8 @@ object MyBuild {
 			val tarDir = (target in perMonPages in Assets).value
 			val allMons = monData.value
 			gameToMakePagesAbout.map{x =>
-				val outFile = (tarDir / x.toString / "index.html").toPath
-				val output = PageTemplates.perGamePage(x, allMons).toString
+				val outFile = (tarDir / x.name / "index.html").toPath
+				val output = PageTemplates.perGamePage(x, allMons).render
 				val output2 = java.util.Collections.singleton(output)
 				Files.createDirectories(outFile.getParent)
 				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -58,7 +58,7 @@ object MyBuild {
 			val baseDir = (baseDirectory).value
 			val allMons = monData.value
 			val outFile = (tarDir / "shared" / ("index.html")).toPath
-			val output = PageTemplates.sharedPage(allMons).toString
+			val output = PageTemplates.sharedPage(allMons).render
 			val output2 = java.util.Collections.singleton(output)
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -70,7 +70,7 @@ object MyBuild {
 			val baseDir = (baseDirectory).value
 			val allMons = monData.value
 			val outFile = (tarDir / ("index.html")).toPath
-			val output = PageTemplates.index(readPrologue(baseDir / "README.md")).toString
+			val output = PageTemplates.index(readPrologue(baseDir / "README.md")).render
 			val output2 = java.util.Collections.singleton(output)
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)

@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets.UTF_8
 
 package object possibleEvolutions {
 	
-	val htmlDoctype = "<!DOCTYPE html>"
+	val htmlDoctype = scalatags.Text.RawFrag("<!DOCTYPE html>\n")
 	
 	def readPrologue(readmemdFile:File):scalatags.Text.Frag = {
 		import scalatags.Text.StringFrag

@@ -16,7 +16,7 @@ object PageTemplates {
 	
 	
 	def index(prologue:scalatags.Text.Frag):scalatags.Text.Frag = {
-		html(lang := "en-US")(
+		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
 				  title("Possible Evolutions")
 				, link(rel := "stylesheet", href := "style/style.css")
@@ -37,7 +37,7 @@ object PageTemplates {
 					  )
 				)
 			  )
-		)
+		))
 	}
 	
 	def perMonPage(checkno:DexNo, all:ListOfPokemon)(implicit config:EvosGame.Value):scalatags.Text.Frag = {
@@ -48,7 +48,7 @@ object PageTemplates {
 		val prevos2 = prevos.flatMap{mon => all.possiblePrevolutions(mon.dexNo)}.distinct
 		val realPrevos2 = realPrevos.flatMap{case (game, dexNo) => all.prevos(dexNo).filter(_._1 == game)}.distinct
 		
-		html(lang := "en.US")(
+		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
 				  title(s"Possible Evolutions - $config - ${checkMon.name}")
 				, link(rel := "stylesheet", href := "../style/style.css")
@@ -124,7 +124,7 @@ object PageTemplates {
 					, monPredictionSection(prevos2, realPrevos2, all.possibleEvosCount, all.possiblePrevosCount, all.getPokemon)
 				)
 			)
-		)
+		))
 	}
 	
 	def perGamePage(game:EvosGame.Value, all:ListOfPokemon):scalatags.Text.Frag = {
@@ -140,7 +140,7 @@ object PageTemplates {
 			}
 		}.sortBy{_._1.dexNo}
 		
-		html(lang := "en-US")(
+		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
 				  title(s"Possible Evolutions - $game")
 				, link(rel := "stylesheet", href := "../style/style.css")
@@ -302,11 +302,11 @@ object PageTemplates {
 					)} else {frag("")}
 				  )
 			  )
-		)
+		))
 	}
 	
 	def sharedPage(all:ListOfPokemon):scalatags.Text.Frag = {
-		html(lang := "en-US")(
+		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
 				  title(s"Possible Evolutions - Shared")
 				, link(rel := "stylesheet", href := "../style/style.css")
@@ -424,7 +424,7 @@ object PageTemplates {
 					  )
 				  )
 			  )
-		)
+		))
 	}
 	
 	private[this] def monPredictionSection(
