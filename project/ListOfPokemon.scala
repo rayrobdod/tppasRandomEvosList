@@ -196,23 +196,7 @@ object ListOfPokemon {
 	
 	/** Constructs a ListOfPokemon from the csv files contained in the `datadir` */
 	def fromFiles(datadir:File):ListOfPokemon = {
-		val allPokemon:Seq[Pokemon] = {
-			import scala.collection.JavaConversions.iterableAsScalaIterable
-			def readListOfPokemon():Seq[Pokemon] = {
-				val inFile = new File(datadir, "listOfPokemon.csv")
-				val inReader = new CSVReader(Files.newBufferedReader(inFile.toPath, UTF_8))
-				val inData = inReader.readAll.to[Seq].map{_ match {
-					case Array(dexNo:String, name:String, bst1:String, bst2:String, bst6:String, bst7:String, type1:String, type2:String, rpType1:String, rpType2:String, expGrowth:String) => {
-						// 18 types; 6 exp groups; without interning they'd be represented by 802*5=4010 strings, rathter than 24. Still, it's not like ~100kB really matters, and there's no real speed improvement from interning
-						new Pokemon(DexNo(dexNo.toInt), name, type1.intern, type2.intern, rpType1.intern, rpType2.intern, bst1.toInt, bst2.toInt, bst6.toInt, bst7.toInt, expGrowth.intern)
-					}
-				}}
-				inReader.close()
-				inData
-			}
-			
-			readListOfPokemon()
-		}
+		val allPokemon:Seq[Pokemon] = AllPokemon.apply
 		val allDexNos:Seq[DexNo] = allPokemon.map{_.dexNo}
 		
 		val evolutions:Map[DexNo, Map[String, Map[EvosGame.Value, DexNo]]] = {
