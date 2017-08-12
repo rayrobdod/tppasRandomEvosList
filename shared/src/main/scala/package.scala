@@ -9,48 +9,6 @@ package object possibleEvolutions {
 	
 	val htmlDoctype = scalatags.Text.RawFrag("<!DOCTYPE html>\n")
 	
-	def readPrologue(readmemdFile:File):scalatags.Text.Frag = {
-		import scalatags.Text.StringFrag
-		import scalatags.Text.all.stringAttr
-		import scala.collection.JavaConversions._
-		val containsLink = """([^\[]*)\[([ é\w]+)\]\(([\w\:\/\.\-]+)\)(.*)""".r
-		
-		val emptyParagraph = scalatags.Text.tags.p
-		
-		val lines = Files.readAllLines(readmemdFile.toPath, UTF_8)
-		val usedLines = lines.dropWhile{!_.startsWith("#")}.drop(1)
-				.takeWhile{!_.startsWith("##")}
-				.dropWhile{_ == "\n"}
-				.reverse.dropWhile{_ == "\n"}.reverse
-		scalatags.Text.all.frag(usedLines.foldLeft(Seq(emptyParagraph)){(folding, line) => line match {
-			case "" if folding.last == emptyParagraph => folding
-			case "" => folding :+ emptyParagraph
-			case containsLink(before, label, href, after) => {
-				folding.init :+ (folding.last(StringFrag(" "), StringFrag(before),
-						scalatags.Text.tags.a(scalatags.Text.attrs.href := href)(StringFrag(label)),
-						StringFrag(after)))
-			}
-			case _ => {
-				folding.init :+ (folding.last(StringFrag(" "), StringFrag(line)))
-			}
-		}}:_*)
-	}
-	
-	def appendRow(csvFile:File, row:Seq[String]):Unit = {
-		import scala.collection.JavaConversions.collectionAsScalaIterable
-		val inData:Seq[Seq[String]] = {
-			val inReader = new CSVReader(Files.newBufferedReader(csvFile.toPath, UTF_8))
-			val inData = inReader.readAll.to[Seq].map{_.to[Seq]}
-			inReader.close()
-			inData
-		}
-		val outData:Seq[Seq[String]] = inData.zip(row).map{case (in, r) => in :+ r}
-		
-		val outWriter = new CSVWriter(Files.newBufferedWriter(csvFile.toPath, UTF_8))
-		outData.foreach{line => outWriter.writeNext(line.to[Array])}
-		outWriter.close()
-	}
-	
 }
 
 package possibleEvolutions {

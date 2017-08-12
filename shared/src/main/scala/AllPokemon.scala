@@ -3,7 +3,7 @@ package com.rayrobdod.possibleEvolutions
 import scala.collection.immutable.Seq
 
 object AllPokemon {
-	def apply = Seq(
+	def apply:Seq[Pokemon] = Seq(
 		  new Pokemon(dexNo = DexNo(0), name = "MissingNo", naturalType1 = "???", naturalType2 = "???", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 0, expGrowth = "???")
 		, new Pokemon(dexNo = DexNo(1), name = "Bulbasaur", naturalType1 = "Grass", naturalType2 = "Poison", rpType1 = "Bug", rpType2 = "Bug", gen1bst = 253, gen2bst = 318, gen6bst = 318, gen7bst = 318, expGrowth = "Medium Slow")
 		, new Pokemon(dexNo = DexNo(2), name = "Ivysaur", naturalType1 = "Grass", naturalType2 = "Poison", rpType1 = "Bug", rpType2 = "Bug", gen1bst = 325, gen2bst = 405, gen6bst = 405, gen7bst = 405, expGrowth = "Medium Slow")

@@ -40,7 +40,7 @@ object PageTemplates {
 		))
 	}
 	
-	def perMonPage(checkno:DexNo, all:ListOfPokemon)(implicit config:EvosGame.Value):scalatags.Text.Frag = {
+	def perMonPage(checkno:DexNo, all:Calculator)(implicit config:EvosGame.Value):scalatags.Text.Frag = {
 		val checkMon = all.getPokemon(checkno)
 		val evos = all.possibleEvolutions(checkno)
 		val prevos = all.possiblePrevolutions(checkno)
@@ -127,7 +127,7 @@ object PageTemplates {
 		))
 	}
 	
-	def perGamePage(game:EvosGame.Value, all:ListOfPokemon):scalatags.Text.Frag = {
+	def perGamePage(game:EvosGame.Value, all:Calculator):scalatags.Text.Frag = {
 		implicit val config = game
 		
 		val evolutionList:Seq[(Pokemon, String, Pokemon)] = {
@@ -305,7 +305,7 @@ object PageTemplates {
 		))
 	}
 	
-	def sharedPage(all:ListOfPokemon):scalatags.Text.Frag = {
+	def sharedPage(all:Calculator):scalatags.Text.Frag = {
 		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
 				  title(s"Possible Evolutions - Shared")

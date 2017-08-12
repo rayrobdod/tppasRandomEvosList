@@ -5,4 +5,4 @@ install:
 
 script:
   - sbt web-stage
-  - sbt jmh:run\ -i\ 10\ -wi\ 5\ -f1\ -t1
+  - sbt benchmark/jmh:run\ -i\ 10\ -wi\ 5\ -f1\ -t1

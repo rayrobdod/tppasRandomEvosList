@@ -5,16 +5,18 @@ import scala.collection.mutable.{Buffer => MSeq}
 import com.rayrobdod.possibleEvolutions.DexNo.mapCanBuildFrom
 
 /**
+ * 
+ * 
  * @constructor
  * @param allPokemon A list of every Pokemon
- * @param evolutions A list of evolutions that have occured in a TPP randomized game
+ * @param evolutions A list of evolutions that have occurred in a TPP randomized game
  */
-final class ListOfPokemon(val allPokemon:Iterable[Pokemon], val evolutions:Map[DexNo, Map[String, Map[EvosGame.Value, DexNo]]]) {
+final class Calculator(val allPokemon:Iterable[Pokemon], val evolutions:Map[DexNo, Map[String, Map[EvosGame.Value, DexNo]]]) {
 	
 	def getPokemon(id:DexNo):Pokemon = allPokemon.find{_.dexNo == id}.get
 	val allDexNos:Iterable[DexNo] = allPokemon.map{_.dexNo}
 	
-	/** A list of prevolutions that have occured in a TPP randomized game */
+	/** A list of prevolutions that have occurred in a TPP randomized game */
 	val prevos:Map[DexNo, Seq[(EvosGame.Value, DexNo)]] = {
 		val retval = allDexNos.map{dexNo => ((dexNo, MSeq.empty[(EvosGame.Value, DexNo)]))}.toMap
 		
@@ -188,14 +190,14 @@ final class ListOfPokemon(val allPokemon:Iterable[Pokemon], val evolutions:Map[D
 	def families(implicit config:EvosGame.Value):Map[DexNo, Set[DexNo]] = familiesData(config)
 }
 
-object ListOfPokemon {
+object Calculator {
 	import java.io.File
 	import java.nio.file.Files
 	import com.opencsv.{CSVReader, CSVWriter}
 	import java.nio.charset.StandardCharsets.UTF_8
 	
-	/** Constructs a ListOfPokemon from the csv files contained in the `datadir` */
-	def fromFiles(datadir:File):ListOfPokemon = {
+	/** Constructs a Calculator from the csv files contained in the `datadir` */
+	def fromFiles(datadir:File):Calculator = {
 		val allPokemon:Seq[Pokemon] = AllPokemon.apply
 		val allDexNos:Seq[DexNo] = allPokemon.map{_.dexNo}
 		
@@ -231,6 +233,6 @@ object ListOfPokemon {
 			}.toMap.map{x => x}
 		}
 		
-		new ListOfPokemon(allPokemon, evolutions)
+		new Calculator(allPokemon, evolutions)
 	}
 }
