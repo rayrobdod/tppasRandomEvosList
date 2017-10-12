@@ -11,9 +11,7 @@ object PageTemplatesBench {
 		val dexnos = (1 to 50).map{DexNo(_)}
 		val games = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
 
-		val data = {
-			ListOfPokemon.fromFiles(new java.io.File("src/main/data/"))
-		}
+		val predictors = games.map{game => ((game, new Predictor(game)))}
 	}
 }
 
@@ -22,18 +20,18 @@ class PageTemplatesBench {
 	
 	@Benchmark
 	def perMonPage(state:_State) = {
-		implicit val config = EvosGame.White2
+		val predictor = state.predictors.head
 		
-		state.dexnos.map{dexno => PageTemplates.perMonPage(dexno, state.data)}
+		state.dexnos.map{dexno => PageTemplates.perMonPage(dexno, predictor._2, predictor._1)}
 	}
 	
 	@Benchmark
 	def perGamePage(state:_State) = {
-		state.games.map{game => PageTemplates.perGamePage(game, state.data)}
+		state.predictors.map{case (a,b) => PageTemplates.perGamePage(b, a)}
 	}
 	
 	@Benchmark
 	def sharedPage(state:_State) = {
-		PageTemplates.sharedPage(state.data)
+		PageTemplates.sharedPage
 	}
 }

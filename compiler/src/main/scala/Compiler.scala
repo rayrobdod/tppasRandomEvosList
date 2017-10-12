@@ -10,10 +10,10 @@ object Compiler {
 		def /(x:String) = new File(f, x)
 	}
 	private[this] val gamesToMakePagesAbout = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
+	private[this] val predictors = gamesToMakePagesAbout.map{game => ((game, new Predictor(game)))}
 	
 	final case class Context(
-		  sourceDirectory:File
-		, targetDirectory:File
+		  targetDirectory:File
 	)
 	
 	final case class Result(
@@ -22,15 +22,13 @@ object Compiler {
 	
 	
 	def apply(ctx:Context):Result = {
-		val calculator = Calculator.fromFiles(ctx.sourceDirectory)
-		
 		val perMonPages:Seq[File] = {
-			gamesToMakePagesAbout.flatMap{game =>
+			predictors.flatMap{case (game, predictions) =>
 				implicit val config = game
-				calculator.allDexNos.filter{dexNo => calculator.getPokemon(dexNo).exists}.map{x =>
+				predictions.extantPokemon.map{_.dexNo}.map{x =>
 					System.out.println(s"${game.name}/${x}")
 					val outFile = (ctx.targetDirectory / game.name / s"${x}.html").toPath
-					val output = PageTemplates.perMonPage(x, calculator)(config).render
+					val output = PageTemplates.perMonPage(x, predictions, game).render
 					val output2 = java.util.Collections.singleton(output)
 					Files.createDirectories(outFile.getParent)
 					Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -40,9 +38,9 @@ object Compiler {
 		}
 		
 		val perGamePages:Seq[File] = {
-			gamesToMakePagesAbout.map{x =>
-				val outFile = (ctx.targetDirectory / x.name / "index.html").toPath
-				val output = PageTemplates.perGamePage(x, calculator).render
+			predictors.map{case (game, predictor) =>
+				val outFile = (ctx.targetDirectory / game.name / "index.html").toPath
+				val output = PageTemplates.perGamePage(predictor, game).render
 				val output2 = java.util.Collections.singleton(output)
 				Files.createDirectories(outFile.getParent)
 				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -52,7 +50,7 @@ object Compiler {
 		
 		val sharedPage:Seq[File] = {
 			val outFile = (ctx.targetDirectory / "shared" / "index.html").toPath
-			val output = PageTemplates.sharedPage(calculator).render
+			val output = PageTemplates.sharedPage.render
 			val output2 = java.util.Collections.singleton(output)
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)

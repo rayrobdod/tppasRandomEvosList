@@ -3,10 +3,10 @@ package evolutionData
 
 import scala.collection.immutable.Map
 
-object Natural extends EvolutionData {
-	val game:EvosGame.Value = EvosGame.Natural
+object Natural extends SeedData {
+	def game:EvosGame.Value = EvosGame.Natural
 	
-	lazy val apply:Map[DexNo, Map[String, DexNo]] = {
+	lazy val evolutions:Map[DexNo, Map[String, DexNo]] = {
 		val builder = new DexNo.DexNoMapBuilder[Map[String, DexNo]]
 		
 		builder += ((DexNo(  1), Map("Level Up [16]" -> DexNo(2)) ))
@@ -382,6 +382,7 @@ object Natural extends EvolutionData {
 		builder += ((DexNo(789), Map("Level Up [43]" -> DexNo(790)) ))
 		builder += ((DexNo(790), Map("Level Up in Sun [53]" -> DexNo(791), "Level Up in Moon [53]" -> DexNo(792)) ))
 		
+		builder.withDefault(Map.empty)
 		builder.result
 	}
 }
