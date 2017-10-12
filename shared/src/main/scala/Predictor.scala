@@ -7,7 +7,7 @@ import com.rayrobdod.possibleEvolutions.DexNo.mapCanBuildFrom
 /**
  * For a given game's settings, list the likely post-randomization evolutions
  */
-final class Predictor(val game:EvosGame.Value) {
+final class Predictor(game:EvosGame.Value) {
 	private[this] val naturalEvos = evolutionData.Natural.evolutions
 	private[this] val allPokemon:Iterable[Pokemon] = AllPokemon.apply
 	

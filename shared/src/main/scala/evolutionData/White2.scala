@@ -6,7 +6,7 @@ import scala.collection.immutable.Map
 object White2 extends SeedData {
 	def game:EvosGame.Value = EvosGame.White2
 	
-	def evolutions:Map[DexNo, Map[String, DexNo]] = {
+	lazy val evolutions:Map[DexNo, Map[String, DexNo]] = {
 		val builder = new DexNo.DexNoMapBuilder[Map[String, DexNo]]
 		
 		builder += ((DexNo(  1), Map("Level Up [16]" -> DexNo(496))))

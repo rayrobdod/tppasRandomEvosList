@@ -10,6 +10,7 @@ object Compiler {
 		def /(x:String) = new File(f, x)
 	}
 	private[this] val gamesToMakePagesAbout = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
+	private[this] val predictors = gamesToMakePagesAbout.map{game => ((game, new Predictor(game)))}
 	
 	final case class Context(
 		  sourceDirectory:File
@@ -40,8 +41,7 @@ object Compiler {
 		}
 		
 		val perGamePages:Seq[File] = {
-			gamesToMakePagesAbout.map{game =>
-				val predictor = new Predictor(game)
+			predictors.map{case (game, predictor) =>
 				val outFile = (ctx.targetDirectory / game.name / "index.html").toPath
 				val output = PageTemplates.perGamePage(predictor, game).render
 				val output2 = java.util.Collections.singleton(output)
@@ -53,7 +53,7 @@ object Compiler {
 		
 		val sharedPage:Seq[File] = {
 			val outFile = (ctx.targetDirectory / "shared" / "index.html").toPath
-			val output = PageTemplates.sharedPage(calculator).render
+			val output = PageTemplates.sharedPage.render
 			val output2 = java.util.Collections.singleton(output)
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)

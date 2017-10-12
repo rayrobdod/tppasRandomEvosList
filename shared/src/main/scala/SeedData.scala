@@ -102,4 +102,7 @@ abstract class SeedData {
 	}
 	/** Key: the evolution; Value: the immediate prevolutions */
 	final def prevos:Map[DexNo, Set[DexNo]] = this.prevosData
+	
+	/** Pokemon with multiple prevos */
+	final val multiplePrevos:Set[DexNo] = prevos.filter{_._2.size >= 2}.map{_._1}.to[Set]
 }

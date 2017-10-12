@@ -2,8 +2,8 @@ package com.rayrobdod
 
 import java.io.File
 import java.nio.file.Files
-import com.opencsv.{CSVReader, CSVWriter}
 import java.nio.charset.StandardCharsets.UTF_8
+import scala.collection.immutable.Seq
 
 package object possibleEvolutions {
 	

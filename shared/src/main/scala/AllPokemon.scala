@@ -808,4 +808,6 @@ object AllPokemon {
 		, new Pokemon(dexNo = DexNo(801), name = "Magearna", naturalType1 = "Steel", naturalType2 = "Fairy", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 600, expGrowth = "Slow")
 		, new Pokemon(dexNo = DexNo(802), name = "Marshadow", naturalType1 = "Fighting", naturalType2 = "Ghost", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 600, expGrowth = "Slow")
 	)
+	
+	def get(x:DexNo):Option[Pokemon] = this.apply.find{_.dexNo == x} 
 }
