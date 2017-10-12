@@ -1,8 +1,9 @@
+import com.rayrobdod.possibleEvolutions.SharedCrossType
 
 lazy val shared = crossProject.crossType(SharedCrossType)
 	.settings(name := "tppRandomEvos")
 	.settings(libraryDependencies ++= Seq(
-		  "com.lihaoyi" %% "scalatags" % "0.6.5"
+		  "com.lihaoyi" %%% "scalatags" % "0.6.7"
 	))
 	.settings(mySettings:_*)
 
@@ -51,7 +52,7 @@ lazy val mySettings = Seq(
 	organizationHomepage := Some(new URL("http://rayrobdod.name/")),
 	version := "SNAPSHOT",
 	javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked"),
-	scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
+	scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Ywarn-unused-import", "-Ywarn-unused", "-Xlint:_", "-Xfuture", "-Xcheckinit")
 )
 
 name := "aggregate"

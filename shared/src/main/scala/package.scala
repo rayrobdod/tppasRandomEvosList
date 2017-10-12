@@ -1,8 +1,5 @@
 package com.rayrobdod
 
-import java.io.File
-import java.nio.file.Files
-import java.nio.charset.StandardCharsets.UTF_8
 import scala.collection.immutable.Seq
 
 package object possibleEvolutions {
@@ -39,7 +36,7 @@ package possibleEvolutions {
 				with scala.collection.immutable.MapLike[DexNo, V, DexNoMap[V]] {
 			
 			override def stringPrefix:String = "DexNoMap"
-			override def empty():DexNoMap[V] = new DexNoMap(new Array[Option[V]](0))
+			override def empty:DexNoMap[V] = new DexNoMap(new Array[Option[V]](0))
 			override def +[V1 >: V](kv:(DexNo, V1)):DexNoMap[V1] = {
 				val newLength = backing.length max (kv._1.value + 1)
 				val backing2 = new Array[Option[V1]](newLength)

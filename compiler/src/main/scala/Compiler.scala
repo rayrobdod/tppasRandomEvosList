@@ -1,7 +1,7 @@
 package com.rayrobdod.possibleEvolutions
 
 import java.io.File
-import java.nio.file.{Path, Files}
+import java.nio.file.Files
 import java.nio.charset.StandardCharsets.UTF_8
 import scala.collection.immutable.Seq
 
@@ -24,7 +24,6 @@ object Compiler {
 	def apply(ctx:Context):Result = {
 		val perMonPages:Seq[File] = {
 			predictors.flatMap{case (game, predictions) =>
-				implicit val config = game
 				predictions.extantPokemon.map{_.dexNo}.map{x =>
 					System.out.println(s"${game.name}/${x}")
 					val outFile = (ctx.targetDirectory / game.name / s"${x}.html").toPath

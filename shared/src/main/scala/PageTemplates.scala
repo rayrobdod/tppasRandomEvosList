@@ -4,7 +4,6 @@ import scala.collection.immutable.Seq
 import scalatags.Text.tags.{attr => _, frag => _, _}
 import scalatags.Text.attrs.{tag => _, modifier => _, title => _, _}
 import scalatags.Text.implicits._
-import com.rayrobdod.possibleEvolutions.DexNo.mapCanBuildFrom
 
 object PageTemplates {
 	private[this] val main = tag("main")
