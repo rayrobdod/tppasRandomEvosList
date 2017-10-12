@@ -32,11 +32,11 @@ final class Predictor(game:EvosGame.Value) {
 			
 			((checkNo, naturalEvoMons.mapValues{naturalEvoMon => allPokemon.filter{candidate =>
 				val typsMatch = config.monToMatch match {
-					case MonToMatch.Neither => true
-					case MonToMatch.BaseForm => {
+					case MonTypeToMatch.Neither => true
+					case MonTypeToMatch.BaseForm => {
 						typesMatch(checkMon.types._1, checkMon.types._2, candidate.types._1, candidate.types._2)
 					}
-					case MonToMatch.EvolvedForm => {
+					case MonTypeToMatch.EvolvedForm => {
 						typesMatch(naturalEvoMon.types._1, naturalEvoMon.types._2, candidate.types._1, candidate.types._2)
 					}
 				}

@@ -16,13 +16,7 @@ final class Pokemon(
 	, val expGrowth:String = ""
 ) {
 	def exists(implicit config:EvosGame.Value):Boolean = { 
-		val maxNo = config match {
-			case EvosGame.Platinum => 493
-			case EvosGame.White2 => 649
-			case EvosGame.AlphaSapphire => 721
-			case EvosGame.Natural => 802
-		}
-		DexNo.missing < this.dexNo && this.dexNo <= maxNo 
+		DexNo.missing < this.dexNo && this.dexNo <= config.maxKnownDexno 
 	}
 	
 	// Create the tuples only once, reducing GC churn
@@ -34,17 +28,17 @@ final class Pokemon(
 		((_1, _2))
 	}
 	
-	def types(implicit config:EvosGame.Value):(String, String) = config match {
-		case EvosGame.Platinum => rpTypes
-		case EvosGame.AlphaSapphire | EvosGame.Natural => natTypes
-		case EvosGame.White2 => noFairyTypes
+	def types(implicit config:EvosGame.Value):(String, String) = config.typeType match {
+		case MonTypeType.RandPlat => rpTypes
+		case MonTypeType.Natural => natTypes
+		case MonTypeType.NoFairy => noFairyTypes
 	}
 	
-	def bst(implicit config:EvosGame.Value):Int = config match {
-		case EvosGame.Natural => gen7bst
-		case EvosGame.Platinum => gen2bst
-		case EvosGame.White2 => gen2bst
-		case EvosGame.AlphaSapphire => gen6bst
+	def bst(implicit config:EvosGame.Value):Int = config.bstType match {
+		case MonBstType.Gen1 => gen1bst
+		case MonBstType.Gen2 => gen2bst
+		case MonBstType.Gen6 => gen6bst
+		case MonBstType.Gen7 => gen7bst
 	}
 }
 

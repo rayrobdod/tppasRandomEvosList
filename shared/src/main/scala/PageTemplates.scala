@@ -107,12 +107,12 @@ object PageTemplates {
 								case "Fluctuating" => "1640000"
 							}
 							val types = config.monToMatch match {
-								case MonToMatch.Neither => ""
-								case MonToMatch.BaseForm => {
+								case MonTypeToMatch.Neither => ""
+								case MonTypeToMatch.BaseForm => {
 									val (type1, type2) = checkMon.types
 									s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
 								}
-								case MonToMatch.EvolvedForm => {
+								case MonTypeToMatch.EvolvedForm => {
 									val (type1, type2) = naturalEvo.types
 									s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
 								}
@@ -164,9 +164,9 @@ object PageTemplates {
 				  	, dl(
 				  		  dt("Type Match")
 				  		, dd(game.monToMatch match {
-				  			case MonToMatch.BaseForm => "Base Form"
-				  			case MonToMatch.EvolvedForm => "Natural Evolution"
-				  			case MonToMatch.Neither => "Off"
+				  			case MonTypeToMatch.BaseForm => "Base Form"
+				  			case MonTypeToMatch.EvolvedForm => "Natural Evolution"
+				  			case MonTypeToMatch.Neither => "Off"
 				  		  })
 				  		, dt("Experience Group Match")
 				  		, dd(if (game.expGroupMustMatch) {"Yes"} else {"No"})
@@ -252,7 +252,7 @@ object PageTemplates {
 							
 							pokemonListTable(mons, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount)
 						  }
-						, if (game.monToMatch == MonToMatch.Neither) {frag(
+						, if (game.monToMatch == MonTypeToMatch.Neither) {frag(
 							  h2("Pokémon with same-type evolutions")
 							, table(
 								thead(
