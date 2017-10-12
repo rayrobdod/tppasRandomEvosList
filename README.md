@@ -41,8 +41,8 @@ pages will only display the results assuming a successful first pass.
 * Most of the data is in [/src/main/data/](/src/main/data/).
   * [listOfPokemon.csv](/src/main/data/listOfPokemon.csv) is data about each Pokémon species - name, dex number, BST, type, etc.
   * The `**Evolutions.csv` files describe the evolutions observed in each game. 
-* The page templates are in [/project/PageTemplates.scala](/project/PageTemplates.scala)
+* The page templates are in [/shared/../PageTemplates.scala](/shared/src/main/scala/PageTemplates.scala)
   and mostly use [ScalaTags](http://www.lihaoyi.com/scalatags/).
-* The model classes are in [/project/package.scala](/project/package.scala).
-* The computations are in [/project/ListOfPokemon.scala](/project/ListOfPokemon.scala).
-* Static css and js files are located in [/src/main/public/](/src/main/public/).
+* The model classes are in [/shared/../package.scala](/shared/src/main/scala/package.scala).
+* The computations are in [/shared/../Calculator.scala](/shared/src/main/scala/Calculator.scala).
+* Static css and js files are located in [/website/src/main/public/](/website/src/main/public/).

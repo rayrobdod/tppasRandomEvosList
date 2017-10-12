@@ -1,22 +1,57 @@
-name := "tppasRandomEvosList"
 
-organization := "com.rayrobdod"
+lazy val shared = crossProject.crossType(SharedCrossType)
+	.settings(name := "tppRandomEvos")
+	.settings(libraryDependencies ++= Seq(
+		  "com.lihaoyi" %% "scalatags" % "0.6.5"
+	))
+	.settings(mySettings:_*)
 
-organizationHomepage := Some(new URL("http://rayrobdod.name/"))
+// Needed, so sbt finds the projects
+lazy val sharedJVM = shared.jvm
+lazy val sharedJS = shared.js
 
-version := "SNAPSHOT"
+lazy val benchmark = project
+	.dependsOn(sharedJVM)
+	.enablePlugins(JmhPlugin)
+	.settings(name := "tppRandomEvos-benchmark")
+	.settings(mySettings:_*)
 
-pipelineStages := Nil
+lazy val compiler = project
+	.dependsOn(sharedJVM)
+	.settings(name := "tppRandomEvos-compiler")
+	.settings(mySettings:_*)
+	.settings(com.rayrobdod.possibleEvolutions.GenPrologue.settings)
 
-enablePlugins(com.typesafe.sbt.web.SbtWeb)
+lazy val website = project
+	.enablePlugins(com.typesafe.sbt.web.SbtWeb)
+	.settings(name := "tppRandomEvos-website")
+	.settings(pipelineStages := Nil)
+	.settings(mySettings:_*)
+	.settings(
+		TaskKey[Seq[File]]("generateHtmlFiles") in Assets := {
+			val target = (resourceManaged in Assets).value
+			
+			val cp:Seq[java.net.URL] = (fullClasspath in Compile in compiler).value.files.map{_.toURI.toURL}
+			val loader = new java.net.URLClassLoader(cp.toArray, this.getClass.getClassLoader)
+			val contextClazz = loader.loadClass("com.rayrobdod.possibleEvolutions.Compiler$Context")
+			val contextConstructor = contextClazz.getConstructor(loader.loadClass("java.io.File"))
+			val contextInstance:java.lang.Object = contextConstructor.newInstance(target).asInstanceOf[Object]
+			val compilerClazz = loader.loadClass("com.rayrobdod.possibleEvolutions.Compiler")
+			val compilerMethod = compilerClazz.getMethod("apply", contextClazz)
+			val result = compilerMethod.invoke(null, contextInstance)
+			
+			result.getClass.getMethod("files").invoke(result).asInstanceOf[Array[_]].toSeq.map{_.asInstanceOf[File]}
+		},
+		managedResourceDirectories in Assets += (resourceManaged in Assets).value,
+		resourceGenerators in Assets += (TaskKey[Seq[File]]("generateHtmlFiles") in Assets).taskValue
+	)
 
-com.rayrobdod.possibleEvolutions.MyBuild.mySettings
+lazy val mySettings = Seq(
+	organization := "com.rayrobdod",
+	organizationHomepage := Some(new URL("http://rayrobdod.name/")),
+	version := "SNAPSHOT",
+	javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked"),
+	scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
+)
 
-
-
-
-(unmanagedSourceDirectories in Compile) += baseDirectory.value / "project"
-libraryDependencies += "com.lihaoyi" %% "scalatags" % "0.6.5"
-libraryDependencies += ("com.opencsv" % "opencsv" % "3.4")
-enablePlugins(JmhPlugin)
-(unmanagedSources in Compile) := (unmanagedSources in Compile).value.filter{_.getName != "build.scala"}
+name := "aggregate"

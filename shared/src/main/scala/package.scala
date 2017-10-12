@@ -2,54 +2,12 @@ package com.rayrobdod
 
 import java.io.File
 import java.nio.file.Files
-import com.opencsv.{CSVReader, CSVWriter}
 import java.nio.charset.StandardCharsets.UTF_8
+import scala.collection.immutable.Seq
 
 package object possibleEvolutions {
 	
 	val htmlDoctype = scalatags.Text.RawFrag("<!DOCTYPE html>\n")
-	
-	def readPrologue(readmemdFile:File):scalatags.Text.Frag = {
-		import scalatags.Text.StringFrag
-		import scalatags.Text.all.stringAttr
-		import scala.collection.JavaConversions._
-		val containsLink = """([^\[]*)\[([ é\w]+)\]\(([\w\:\/\.\-]+)\)(.*)""".r
-		
-		val emptyParagraph = scalatags.Text.tags.p
-		
-		val lines = Files.readAllLines(readmemdFile.toPath, UTF_8)
-		val usedLines = lines.dropWhile{!_.startsWith("#")}.drop(1)
-				.takeWhile{!_.startsWith("##")}
-				.dropWhile{_ == "\n"}
-				.reverse.dropWhile{_ == "\n"}.reverse
-		scalatags.Text.all.frag(usedLines.foldLeft(Seq(emptyParagraph)){(folding, line) => line match {
-			case "" if folding.last == emptyParagraph => folding
-			case "" => folding :+ emptyParagraph
-			case containsLink(before, label, href, after) => {
-				folding.init :+ (folding.last(StringFrag(" "), StringFrag(before),
-						scalatags.Text.tags.a(scalatags.Text.attrs.href := href)(StringFrag(label)),
-						StringFrag(after)))
-			}
-			case _ => {
-				folding.init :+ (folding.last(StringFrag(" "), StringFrag(line)))
-			}
-		}}:_*)
-	}
-	
-	def appendRow(csvFile:File, row:Seq[String]):Unit = {
-		import scala.collection.JavaConversions.collectionAsScalaIterable
-		val inData:Seq[Seq[String]] = {
-			val inReader = new CSVReader(Files.newBufferedReader(csvFile.toPath, UTF_8))
-			val inData = inReader.readAll.to[Seq].map{_.to[Seq]}
-			inReader.close()
-			inData
-		}
-		val outData:Seq[Seq[String]] = inData.zip(row).map{case (in, r) => in :+ r}
-		
-		val outWriter = new CSVWriter(Files.newBufferedWriter(csvFile.toPath, UTF_8))
-		outData.foreach{line => outWriter.writeNext(line.to[Array])}
-		outWriter.close()
-	}
 	
 }
 
@@ -62,10 +20,13 @@ package possibleEvolutions {
 		override def compare(rhs:DexNo) = this.value compare rhs.value
 		
 		def <=(x:Int) = this.value <= x
+		def to(rhs:DexNo) = (this.value to rhs.value).map{x => DexNo(x)}
 	}
 	object DexNo {
 		val missing:DexNo = DexNo(0)
 		val undef:DexNo = DexNo(-1)
+		val maxPlusOneInt:Int = 803
+		val maxPlusOne:DexNo = DexNo(maxPlusOneInt)
 		
 		implicit def mapCanBuildFrom[V]:scala.collection.generic.CanBuildFrom[Map[DexNo, V], (DexNo, V), DexNoMap[V]] = new DexNoMapCanBuildFrom[V]
 		
@@ -126,11 +87,18 @@ package possibleEvolutions {
 			// def rangeImpl(from:Option[DexNo], until:Option[DexNo]):DexNoMap[V] = ???
 		}
 		final class DexNoMapBuilder[V] extends scala.collection.mutable.Builder[(DexNo, V), DexNoMap[V]] {
-			private[this] var backing = Array.fill[Option[V]](803)(None)
+			private[this] var backing = Array.fill[Option[V]](DexNo.maxPlusOneInt)(None)
 			
 			override def +=(kv:(DexNo, V)):DexNoMapBuilder.this.type = {backing(kv._1.value) = Option(kv._2); this}
-			override def clear():Unit = {backing = Array.fill[Option[V]](803)(None)}
+			override def clear():Unit = {backing = Array.fill[Option[V]](DexNo.maxPlusOneInt)(None)}
 			override def result():DexNoMap[V] = new DexNoMap(backing)
+			
+			/** Set every value that is currently unassigned to `v` */
+			def withDefault(v:V):Unit = {
+				(0 until DexNo.maxPlusOneInt).foreach{idx =>
+					if (backing(idx) == None) {backing(idx) = Some(v)}
+				}
+			}
 		}
 		final class DexNoMapCanBuildFrom[V] extends scala.collection.generic.CanBuildFrom[Map[DexNo, V], (DexNo, V), DexNoMap[V]] {
 			def apply:scala.collection.mutable.Builder[(DexNo, V), DexNoMap[V]] = new DexNoMapBuilder
@@ -208,7 +176,7 @@ package possibleEvolutions {
 			def bstMatchString:String
 			
 			/** True if the game has logs to display and generate data about */
-			def showSeedData:Boolean
+			def seedData:Option[SeedData]
 			
 			override def toString = this.name
 		}
@@ -218,7 +186,7 @@ package possibleEvolutions {
 			override def name:String = "natural"
 			override def shortName:String = "nat"
 			
-			override def showSeedData:Boolean = true
+			override def seedData:Option[SeedData] = Option(evolutionData.Natural)
 			
 			// Prediction pages aren't built for natural evolutions, so the values used here don't matter
 			override def monToMatch:MonToMatch.Value = MonToMatch.BaseForm
@@ -234,7 +202,7 @@ package possibleEvolutions {
 			override def shortName:String = "αS"
 			override def monToMatch:MonToMatch.Value = MonToMatch.EvolvedForm
 			override def expGroupMustMatch:Boolean = false
-			override def showSeedData:Boolean = true
+			override def seedData:Option[SeedData] = Option(evolutionData.AlphaSapphire)
 			// https://github.com/kwsch/pk3DS/blob/f0d69b517b8c86ea7a05a9af00bfa6d117de1661/pk3DS/Subforms/Evolution.cs#L198
 			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = (candidateBst * 6 / 5 > naturalBst) && (naturalBst > candidateBst * 5 / 6)
 			override def bstMatchString:String = "From ×5/6 to ×6/5"
@@ -247,7 +215,7 @@ package possibleEvolutions {
 			override def shortName:String = "rP"
 			override def monToMatch:MonToMatch.Value = MonToMatch.BaseForm
 			override def expGroupMustMatch:Boolean = true
-			override def showSeedData:Boolean = true
+			override def seedData:Option[SeedData] = Option(evolutionData.Platinum)
 			// https://github.com/Dabomstew/universal-pokemon-randomizer/blob/49e1d38991ee5339400abfc482e08d4cdfc3aacd/src/com/dabomstew/pkrandom/romhandlers/AbstractRomHandler.java#L3011
 			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = (naturalBst * 11 / 10 >= candidateBst) && (candidateBst >= naturalBst * 9 / 10)
 			override def bstMatchString:String = "From 90% to 110%"
@@ -260,7 +228,7 @@ package possibleEvolutions {
 			override def shortName:String = "w2"
 			override def monToMatch:MonToMatch.Value = MonToMatch.Neither
 			override def expGroupMustMatch:Boolean = true
-			override def showSeedData:Boolean = true
+			override def seedData:Option[SeedData] = Option(evolutionData.White2)
 			// https://github.com/Dabomstew/universal-pokemon-randomizer/blob/49e1d38991ee5339400abfc482e08d4cdfc3aacd/src/com/dabomstew/pkrandom/romhandlers/AbstractRomHandler.java#L3011
 			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = (naturalBst * 11 / 10 >= candidateBst) && (candidateBst >= naturalBst * 9 / 10)
 			override def bstMatchString:String = "From 90% to 110%"
