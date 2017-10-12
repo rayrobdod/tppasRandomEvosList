@@ -20,9 +20,9 @@ class PageTemplatesBench {
 	
 	@Benchmark
 	def perMonPage(state:_State) = {
-		implicit val config = EvosGame.White2
+		val predictor = state.predictors.head
 		
-		state.dexnos.map{dexno => PageTemplates.perMonPage(dexno, state.data)}
+		state.dexnos.map{dexno => PageTemplates.perMonPage(dexno, predictor._2, predictor._1)}
 	}
 	
 	@Benchmark

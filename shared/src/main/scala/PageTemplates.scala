@@ -41,13 +41,28 @@ object PageTemplates {
 		))
 	}
 	
-	def perMonPage(checkno:DexNo, all:Calculator)(implicit config:EvosGame.Value):scalatags.Text.Frag = {
-		val checkMon = all.getPokemon(checkno)
-		val evos = all.possibleEvolutions(checkno)
-		val prevos = all.possiblePrevolutions(checkno)
-		val realPrevos = all.prevos(checkno)
-		val prevos2 = prevos.flatMap{mon => all.possiblePrevolutions(mon.dexNo)}.distinct
-		val realPrevos2 = realPrevos.flatMap{case (game, dexNo) => all.prevos(dexNo).filter(_._1 == game)}.distinct
+	def perMonPage(
+			  monNo:DexNo
+			, predictions:Predictor
+			, game:EvosGame.Value
+	):scalatags.Text.Frag = {
+		implicit val config = game
+		
+		val checkMon = AllPokemon.get(monNo).get
+		val evos:Map[String, Seq[Pokemon]] = predictions.possibleEvolutions(monNo)
+		val realEvos:Map[EvosGame.Value, Map[String,DexNo]] = EvosGame.values.flatMap{g => g.seedData.map{s => ((g, s.evolutions.getOrElse(monNo, Map.empty)))}}.toMap
+		val prevos = predictions.possiblePrevolutions(monNo)
+		val realPrevos = EvosGame.values.flatMap{g => g.seedData.map{s => ((g, s.prevos.getOrElse(monNo, Set.empty)))}}.flatMap{case (a,bs) => bs.map{b => ((a,b))}}
+		val prevos2 = prevos.flatMap{mon => predictions.possiblePrevolutions(mon.dexNo)}.distinct
+		val realPrevos2 = {
+			for (
+				seedData <- game.seedData.to[Seq];
+				(game, prevo) <- realPrevos;
+				prevo2 <- seedData.prevos.getOrElse(prevo, Set.empty)
+			) yield {
+				(game, prevo2)
+			}
+		}.distinct
 		
 		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
@@ -79,9 +94,9 @@ object PageTemplates {
 					  )
 					, h2("Possible Evos")
 					, div(evos.flatMap{case (method:String, possibleEvos:Seq[Pokemon]) =>
-						val naturalEvo = all.getPokemon(all.naturalEvos(checkMon.dexNo)(method))
+						val naturalEvo = predictions.getPokemon(realEvos(EvosGame.Natural)(method))
 						val naturalBst = naturalEvo.bst
-						val realEvos = all.evolutions(checkMon.dexNo)(method)
+						val realEvosMethod = realEvos.flatMap{case (a,bs) => bs.get(method).map{b => ((a, b))}}
 						
 						val veekunSearchLink = {
 							val growthRate = checkMon.expGrowth match {
@@ -116,13 +131,13 @@ object PageTemplates {
 							  h3(method)
 							, div("Natural: ", naturalEvo.name, " (BST = ", naturalBst, ")")
 							, div(a(href := veekunSearchLink)("Veekun search with same parameters"))
-							, monPredictionSection(possibleEvos, realEvos, all.possibleEvosCount, all.possiblePrevosCount, all.getPokemon)
+							, monPredictionSection(possibleEvos, realEvosMethod, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon)
 						)
 					  }.to[Seq]:_*)
 					, h2("Possible Prevos")
-					, monPredictionSection(prevos, realPrevos, all.possibleEvosCount, all.possiblePrevosCount, all.getPokemon)
+					, monPredictionSection(prevos, realPrevos, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon)
 					, h2("Possible Prevos^2")
-					, monPredictionSection(prevos2, realPrevos2, all.possibleEvosCount, all.possiblePrevosCount, all.getPokemon)
+					, monPredictionSection(prevos2, realPrevos2, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon)
 				)
 			)
 		))

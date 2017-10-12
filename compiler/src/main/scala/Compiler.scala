@@ -26,12 +26,12 @@ object Compiler {
 		val calculator = Calculator.fromFiles(ctx.sourceDirectory)
 		
 		val perMonPages:Seq[File] = {
-			gamesToMakePagesAbout.flatMap{game =>
+			predictors.flatMap{case (game, predictions) =>
 				implicit val config = game
 				calculator.allDexNos.filter{dexNo => calculator.getPokemon(dexNo).exists}.map{x =>
 					System.out.println(s"${game.name}/${x}")
 					val outFile = (ctx.targetDirectory / game.name / s"${x}.html").toPath
-					val output = PageTemplates.perMonPage(x, calculator)(config).render
+					val output = PageTemplates.perMonPage(x, predictions, game).render
 					val output2 = java.util.Collections.singleton(output)
 					Files.createDirectories(outFile.getParent)
 					Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
