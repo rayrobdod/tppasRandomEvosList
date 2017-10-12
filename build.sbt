@@ -3,7 +3,6 @@ lazy val shared = crossProject.crossType(SharedCrossType)
 	.settings(name := "tppRandomEvos")
 	.settings(libraryDependencies ++= Seq(
 		  "com.lihaoyi" %% "scalatags" % "0.6.5"
-		, "com.opencsv" % "opencsv" % "3.4"
 	))
 	.settings(mySettings:_*)
 
@@ -30,14 +29,13 @@ lazy val website = project
 	.settings(mySettings:_*)
 	.settings(
 		TaskKey[Seq[File]]("generateHtmlFiles") in Assets := {
-			val input = new File("""C:\Users\Raymond\Documents\Programming\HTML-JS\RandomizedEvolutions\shared\data""")
 			val target = (resourceManaged in Assets).value
 			
 			val cp:Seq[java.net.URL] = (fullClasspath in Compile in compiler).value.files.map{_.toURI.toURL}
 			val loader = new java.net.URLClassLoader(cp.toArray, this.getClass.getClassLoader)
 			val contextClazz = loader.loadClass("com.rayrobdod.possibleEvolutions.Compiler$Context")
-			val contextConstructor = contextClazz.getConstructor(loader.loadClass("java.io.File"), loader.loadClass("java.io.File"))
-			val contextInstance:java.lang.Object = contextConstructor.newInstance(input, target).asInstanceOf[Object]
+			val contextConstructor = contextClazz.getConstructor(loader.loadClass("java.io.File"))
+			val contextInstance:java.lang.Object = contextConstructor.newInstance(target).asInstanceOf[Object]
 			val compilerClazz = loader.loadClass("com.rayrobdod.possibleEvolutions.Compiler")
 			val compilerMethod = compilerClazz.getMethod("apply", contextClazz)
 			val result = compilerMethod.invoke(null, contextInstance)

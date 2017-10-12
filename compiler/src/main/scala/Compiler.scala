@@ -13,8 +13,7 @@ object Compiler {
 	private[this] val predictors = gamesToMakePagesAbout.map{game => ((game, new Predictor(game)))}
 	
 	final case class Context(
-		  sourceDirectory:File
-		, targetDirectory:File
+		  targetDirectory:File
 	)
 	
 	final case class Result(
@@ -23,12 +22,10 @@ object Compiler {
 	
 	
 	def apply(ctx:Context):Result = {
-		val calculator = Calculator.fromFiles(ctx.sourceDirectory)
-		
 		val perMonPages:Seq[File] = {
 			predictors.flatMap{case (game, predictions) =>
 				implicit val config = game
-				calculator.allDexNos.filter{dexNo => calculator.getPokemon(dexNo).exists}.map{x =>
+				predictions.extantPokemon.map{_.dexNo}.map{x =>
 					System.out.println(s"${game.name}/${x}")
 					val outFile = (ctx.targetDirectory / game.name / s"${x}.html").toPath
 					val output = PageTemplates.perMonPage(x, predictions, game).render
