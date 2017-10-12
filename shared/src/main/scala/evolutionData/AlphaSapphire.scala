@@ -3,15 +3,15 @@ package evolutionData
 
 import scala.collection.immutable.Map
 
-object AlphaSapphire extends EvolutionData {
-	val game:EvosGame.Value = EvosGame.AlphaSapphire
+object AlphaSapphire extends SeedData {
+	def game:EvosGame.Value = EvosGame.AlphaSapphire
 	
-	lazy val apply:Map[DexNo, Map[String, DexNo]] = {
+	def evolutions:Map[DexNo, Map[String, DexNo]] = {
 		val builder = new DexNo.DexNoMapBuilder[Map[String, DexNo]]
 		
 		builder += ((DexNo( 63), Map("Level Up [16]" -> DexNo( 65))))
 		builder += ((DexNo(190), Map("Level Up with Move [Double Hit]" -> DexNo(428))))
-		builder += ((DexNo(698), Map("Level Up (@) at Night [39]" -> DexNo(639))))
+		builder += ((DexNo(698), Map("Level Up at Night [39]" -> DexNo(639))))
 		builder += ((DexNo(347), Map("Level Up [40]" -> DexNo(127))))
 		builder += ((DexNo(566), Map("Level Up [37]" -> DexNo(697))))
 		builder += ((DexNo(304), Map("Level Up [32]" -> DexNo(681))))
@@ -323,7 +323,7 @@ object AlphaSapphire extends EvolutionData {
 		builder += ((DexNo(535), Map("Level Up [25]" -> DexNo(224))))
 		builder += ((DexNo(602), Map("Level Up [39]" -> DexNo(642))))
 		builder += ((DexNo(236), Map("Level Up (Attack < Defense) [20]" -> DexNo(237), "Level Up (Attack > Defense) [20]" -> DexNo(620), "Level Up (Attack = Defense) [20]" -> DexNo( 62))))
-		builder += ((DexNo(696), Map("Level Up (@) at Night [39]" -> DexNo(635))))
+		builder += ((DexNo(696), Map("Level Up at Night [39]" -> DexNo(635))))
 		builder += ((DexNo(583), Map("Level Up [47]" -> DexNo(460))))
 		builder += ((DexNo(582), Map("Level Up [35]" -> DexNo(364))))
 		builder += ((DexNo(543), Map("Level Up [22]" -> DexNo(168))))
@@ -351,6 +351,7 @@ object AlphaSapphire extends EvolutionData {
 		builder += ((DexNo( 41), Map("Level Up [22]" -> DexNo(169))))
 		builder += ((DexNo(634), Map("Level Up [64]" -> DexNo(373))))
 
+		builder.withDefault(Map.empty)
 		builder.result
 	}
 }

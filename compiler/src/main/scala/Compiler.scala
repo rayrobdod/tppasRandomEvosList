@@ -40,9 +40,10 @@ object Compiler {
 		}
 		
 		val perGamePages:Seq[File] = {
-			gamesToMakePagesAbout.map{x =>
-				val outFile = (ctx.targetDirectory / x.name / "index.html").toPath
-				val output = PageTemplates.perGamePage(x, calculator).render
+			gamesToMakePagesAbout.map{game =>
+				val predictor = new Predictor(game)
+				val outFile = (ctx.targetDirectory / game.name / "index.html").toPath
+				val output = PageTemplates.perGamePage(predictor, game).render
 				val output2 = java.util.Collections.singleton(output)
 				Files.createDirectories(outFile.getParent)
 				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)

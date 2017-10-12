@@ -12,7 +12,7 @@ object PageTemplatesBench {
 		val games = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
 
 		val data = {
-			ListOfPokemon.fromFiles(new java.io.File("src/main/data/"))
+			AllPokemon.apply
 		}
 	}
 }

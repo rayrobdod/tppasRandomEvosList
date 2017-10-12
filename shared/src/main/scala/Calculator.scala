@@ -11,6 +11,7 @@ import com.rayrobdod.possibleEvolutions.DexNo.mapCanBuildFrom
  * @param allPokemon A list of every Pokemon
  * @param evolutions A list of evolutions that have occurred in a TPP randomized game
  */
+@deprecated("", "Predictor")
 final class Calculator(val allPokemon:Iterable[Pokemon], val evolutions:Map[DexNo, Map[String, Map[EvosGame.Value, DexNo]]]) {
 	
 	def getPokemon(id:DexNo):Pokemon = allPokemon.find{_.dexNo == id}.get
@@ -197,21 +198,20 @@ object Calculator {
 	import java.nio.charset.StandardCharsets.UTF_8
 	
 	/** Constructs a Calculator from the csv files contained in the `datadir` */
+	@deprecated("", "things aren't in files anymore")
 	def fromFiles(datadir:File):Calculator = {
 		val allPokemon:Seq[Pokemon] = AllPokemon.apply
 		val allDexNos:Seq[DexNo] = allPokemon.map{_.dexNo}
 		
 		val evolutions:Map[DexNo, Map[String, Map[EvosGame.Value, DexNo]]] = {
-			def readEvoDataFile(fileName:String, game:EvosGame.Value):Seq[(DexNo, DexNo, String, EvosGame.Value)] = {
-				val f = new File(datadir, fileName)
-				val r = new CSVReader(Files.newBufferedReader(f.toPath, UTF_8))
-				val data = r.readAll.toArray.to[Seq].map{_ match {
-					case Array(inNo:String, inName:String, outNo:String, outName:String, method:String) => {
-						((DexNo(inNo.toInt), DexNo(outNo.toInt), method, game))
-					}
-				}}
-				r.close()
-				data
+			def readEvoDataFile(blah:String, game:EvosGame.Value):Seq[(DexNo, DexNo, String, EvosGame.Value)] = {
+				for(
+					seedData <- game.seedData.to[Seq];
+					(inNo, inData) <- seedData.evolutions;
+					(method, outNo) <- inData
+				) yield {
+					((inNo, outNo, method, game))
+				}
 			}
 			val natural = readEvoDataFile("naturalEvolutions.csv", EvosGame.Natural)
 			val alphaSapphire = readEvoDataFile("alphaSapphireEvolutions.csv", EvosGame.AlphaSapphire)
