@@ -4,8 +4,6 @@ import scala.collection.immutable.Seq
 
 package object possibleEvolutions {
 	
-	val htmlDoctype = scalatags.Text.RawFrag("<!DOCTYPE html>\n")
-	
 }
 
 package possibleEvolutions {

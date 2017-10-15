@@ -1,11 +1,22 @@
 package com.rayrobdod.possibleEvolutions
 
 import scala.collection.immutable.Seq
-import scalatags.Text.tags.{attr => _, frag => _, _}
-import scalatags.Text.attrs.{tag => _, modifier => _, title => _, _}
-import scalatags.Text.implicits._
+import scalatags.generic.Bundle
+import scalatags.generic.Frag
 
-object PageTemplates {
+object PageTemplatesText extends PageTemplates(
+	  scalatags.Text
+	, scalatags.Text.implicits.raw("<!DOCTYPE html>\n")
+)
+
+class PageTemplates[Builder, Output <: FragT, FragT](
+	  bundle:Bundle[Builder, Output, FragT]
+	, htmlDoctype:Frag[Builder, FragT]
+) {
+	import bundle.tags.{attr => _, frag => _, _}
+	import bundle.attrs.{tag => _, modifier => _, title => _, _}
+	import bundle.implicits._
+
 	private[this] val main = tag("main")
 	private[this] val defer = attr("defer")
 	private[this] val colgroupSpan = attr("span")
@@ -15,7 +26,7 @@ object PageTemplates {
 	private[this] val title = tag("title")
 	
 	
-	def index(prologue:scalatags.Text.Frag):scalatags.Text.Frag = {
+	def index(prologue:scalatags.generic.Frag[Builder,FragT]):scalatags.generic.Frag[Builder,FragT] = {
 		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
 				  title("Possible Evolutions")
@@ -44,7 +55,7 @@ object PageTemplates {
 			  monNo:DexNo
 			, predictions:Predictor
 			, game:EvosGame.Value
-	):scalatags.Text.Frag = {
+	):scalatags.generic.Frag[Builder,FragT] = {
 		implicit val config = game
 		
 		val checkMon = AllPokemon.get(monNo).get
@@ -145,7 +156,7 @@ object PageTemplates {
 	def perGamePage(
 			  predictions:Predictor
 			, game:EvosGame.Value
-	):scalatags.Text.Frag = {
+	):scalatags.generic.Frag[Builder,FragT] = {
 		implicit val config:EvosGame.Value = game
 		
 		frag(htmlDoctype, html(lang := "en-US")(
@@ -331,7 +342,7 @@ object PageTemplates {
 		))
 	}
 	
-	def sharedPage:scalatags.Text.Frag = {
+	def sharedPage:scalatags.generic.Frag[Builder,FragT] = {
 		val seedDatas:Seq[SeedData] = EvosGame.values.flatMap{_.seedData}
 		val nameHeaders = seedDatas.map{_.game.shortName}.map{x => th(x)}
 		
@@ -466,7 +477,7 @@ object PageTemplates {
 			, possiblePrevosCount:DexNo => Int
 			, resolveDexNo:DexNo => Pokemon
 			)(implicit config:EvosGame.Value
-	):scalatags.Text.Frag = frag(
+	):scalatags.generic.Frag[Builder,FragT] = frag(
 		  div(s"Number of candidates: ${possible.size}")
 		, config.seedData.map{seedData => frag(
 			  h4("Observed")
@@ -496,7 +507,7 @@ object PageTemplates {
 			, possibleEvosCount:DexNo => Int
 			, possiblePrevosCount:DexNo => Int
 			)(implicit config:EvosGame.Value
-	):scalatags.Text.TypedTag[String] = {
+	):scalatags.generic.Frag[Builder,FragT] = {
 		table(`class` := "pokemon-list")(
 			  thead(
 				tr(
@@ -526,7 +537,7 @@ object PageTemplates {
 			, possiblePrevosCount:DexNo => Int
 			)(x:Pokemon
 			)(implicit config:EvosGame.Value
-	):scalatags.Text.TypedTag[String] = {
+	):scalatags.generic.Frag[Builder,FragT] = {
 		val game = realEvos.filter{_._2 == x.dexNo}.map{_._1}.to[Seq].distinct.sortBy{_.id}.mkString("", " ", "")
 		
 		tr(dataGame := game)(

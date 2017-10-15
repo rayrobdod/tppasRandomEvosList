@@ -27,7 +27,7 @@ object Compiler {
 				predictions.extantPokemon.map{_.dexNo}.map{x =>
 					System.out.println(s"${game.name}/${x}")
 					val outFile = (ctx.targetDirectory / game.name / s"${x}.html").toPath
-					val output = PageTemplates.perMonPage(x, predictions, game).render
+					val output = PageTemplatesText.perMonPage(x, predictions, game).render
 					val output2 = java.util.Collections.singleton(output)
 					Files.createDirectories(outFile.getParent)
 					Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -39,7 +39,7 @@ object Compiler {
 		val perGamePages:Seq[File] = {
 			predictors.map{case (game, predictor) =>
 				val outFile = (ctx.targetDirectory / game.name / "index.html").toPath
-				val output = PageTemplates.perGamePage(predictor, game).render
+				val output = PageTemplatesText.perGamePage(predictor, game).render
 				val output2 = java.util.Collections.singleton(output)
 				Files.createDirectories(outFile.getParent)
 				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -49,7 +49,7 @@ object Compiler {
 		
 		val sharedPage:Seq[File] = {
 			val outFile = (ctx.targetDirectory / "shared" / "index.html").toPath
-			val output = PageTemplates.sharedPage.render
+			val output = PageTemplatesText.sharedPage.render
 			val output2 = java.util.Collections.singleton(output)
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -59,7 +59,7 @@ object Compiler {
 		val indexPage:Seq[File] = {
 			val prologue = IndexPrologue.apply
 			val outFile = (ctx.targetDirectory / "index.html").toPath
-			val output = PageTemplates.index(prologue).render
+			val output = PageTemplatesText.index(prologue).render
 			val output2 = java.util.Collections.singleton(output)
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)

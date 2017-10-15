@@ -22,16 +22,16 @@ class PageTemplatesBench {
 	def perMonPage(state:_State) = {
 		val predictor = state.predictors.head
 		
-		state.dexnos.map{dexno => PageTemplates.perMonPage(dexno, predictor._2, predictor._1)}
+		state.dexnos.map{dexno => PageTemplatesText.perMonPage(dexno, predictor._2, predictor._1)}
 	}
 	
 	@Benchmark
 	def perGamePage(state:_State) = {
-		state.predictors.map{case (a,b) => PageTemplates.perGamePage(b, a)}
+		state.predictors.map{case (a,b) => PageTemplatesText.perGamePage(b, a)}
 	}
 	
 	@Benchmark
 	def sharedPage(state:_State) = {
-		PageTemplates.sharedPage
+		PageTemplatesText.sharedPage
 	}
 }
