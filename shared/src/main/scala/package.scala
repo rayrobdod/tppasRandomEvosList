@@ -177,7 +177,7 @@ package possibleEvolutions {
 		}
 		final case class Custom(min:Double, max:Double) extends Value {
 			def apply(naturalBst:Int, candidateBst:Int):Boolean = {
-				(naturalBst * min >= candidateBst) && (candidateBst >= naturalBst * max)
+				(naturalBst * max >= candidateBst) && (candidateBst >= naturalBst * min)
 			}
 			def description = s"From $min to $max"
 		}
