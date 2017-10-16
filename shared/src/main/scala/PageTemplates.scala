@@ -44,7 +44,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							li(dataGame := name)(
 								a(href := (name + "/index.html"))(name)
 							)
-						}:_*)
+						  }:_*)
+						, li(dataGame := "theoretical")(a(href := "theoretical/index.html")("Theoretical"))
 					  )
 				)
 			  )
@@ -168,36 +169,60 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			  )
 			, body(
 				  header(
-				  	a(href := "../index.html")("Back to Index")
+					a(href := "../index.html")("Back to Index")
 				  )
 				, main(
-				  	  h1(game.toString)
-				  	, dl(
-				  		  dt("Type Match")
-				  		, dd(game.monToMatch match {
-				  			case MonTypeToMatch.BaseForm => "Base Form"
-				  			case MonTypeToMatch.EvolvedForm => "Natural Evolution"
-				  			case MonTypeToMatch.Neither => "Off"
-				  		  })
-				  		, dt("Experience Group Match")
-				  		, dd(if (game.expGroupMustMatch) {"Yes"} else {"No"})
-				  		, dt("Natural Evolution Allowed")
-				  		, dd(if (game.naturalEvoAllowed) {"Yes"} else {"No"})
-				  		, dt("Base Stat Total Range")
-				  		, dd(game.bstMatchString)
-				  	  )
-				  	, h2("Pokémon List")
-				  	, pokemonListTable(
-				  		  predictions.extantPokemon
-				  		, Map.empty
-				  		, predictions.possibleEvosCount
-				  		, predictions.possiblePrevosCount
-				  	)
-				  	)(game.seedData.map{seedData => frag(
-				  		  h2("Evolutions")
-				  		, table(
-				  			  thead(
-				  				tr(
+					  h1(game.toString)
+					, dl(
+						  dt("Pokémon")
+						, dd(game.maxKnownDexno match {
+							case DexNo(151) => "Gen 1"
+							case DexNo(251) => "Gen 2"
+							case DexNo(386) => "Gen 3"
+							case DexNo(493) => "Gen 4"
+							case DexNo(649) => "Gen 5"
+							case DexNo(721) => "Gen 6"
+							case DexNo(802) => "Gen 7"
+							case DexNo(x) => s"Up to $x inclusive"
+						  })
+						, dt("Base Stat Totals")
+						, dd(game.bstType match {
+							case MonBstType.Gen1 => "Gen 1"
+							case MonBstType.Gen2 => "Gen 2 - 5"
+							case MonBstType.Gen6 => "Gen 6"
+							case MonBstType.Gen7 => "Gen 7"
+						  })
+						, dt("Pokémon Types")
+						, dd(game.typeType match {
+							case MonTypeType.Natural => "Natural (Gen 6+)"
+							case MonTypeType.NoFairy => "Natural (Gen 2-5)"
+							case MonTypeType.RandPlat => "Randomized Platinum's Types"
+						  })
+						, dt("Type Match")
+						, dd(game.monToMatch match {
+							case MonTypeToMatch.BaseForm => "Base Form"
+							case MonTypeToMatch.EvolvedForm => "Natural Evolution"
+							case MonTypeToMatch.Neither => "Off"
+						  })
+						, dt("Experience Group Match")
+						, dd(if (game.expGroupMustMatch) {"Yes"} else {"No"})
+						, dt("Natural Evolution Allowed")
+						, dd(if (game.naturalEvoAllowed) {"Yes"} else {"No"})
+						, dt("Base Stat Total Range")
+						, dd(game.bstMatchString)
+					  )
+					, h2("Pokémon List")
+					, pokemonListTable(
+						  predictions.extantPokemon
+						, Map.empty
+						, predictions.possibleEvosCount
+						, predictions.possiblePrevosCount
+					)
+					)(game.seedData.map{seedData => frag(
+						  h2("Evolutions")
+						, table(
+							  thead(
+								tr(
 									  th("From DexNo")
 									, th("From Name")
 									, th("Method")
@@ -225,7 +250,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 									)
 								}):_*
 							  )
-				  		  )
+						  )
 						, h2("Pokémon that nothing evolves into")
 						, pokemonListTable(
 							  seedData.firstStageMons.map{predictions.getPokemon _}
@@ -470,6 +495,130 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		))
 	}
 	
+	def theoreticalPage:scalatags.generic.Frag[Builder,FragT] = {
+		
+		def checkbox(labelStr:String, idStr:String) = div(
+			  input(`type` := "checkbox", name := idStr, id := idStr)
+			, label(labelStr, `for` := idStr)
+		)
+		def options(labelStr:String, idStr:String, optionStrs:Seq[(String, String)]) = fieldset(
+			  legend(labelStr)
+			, ul(
+				optionStrs.zipWithIndex.map{case ((labelStr, valueStr), idx) => li(
+					  input(`type` := "radio", id := s"${idStr}_${valueStr}", name := idStr, value := valueStr, if (idx == 0) {checked := "checked"} else {""})
+					, label(labelStr, `for` := s"${idStr}_${valueStr}")
+				)}:_*
+			  )
+		)
+		
+		frag(htmlDoctype, html(lang := "en-US")(
+			  head(
+				  title(s"Possible Evolutions - Theoretical")
+				, link(rel := "stylesheet", href := "../style/style.css")
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/theoreticalPage.js")(" ")
+				, script(defer := "defer", `type` := "text/javascript")(raw("""
+				  |document.addEventListener("DOMContentLoaded", function() {
+				  |	function forEach(coll, fun) {
+				  |		for (i = 0; i < coll.length; i++) {
+				  |			fun(coll[i]);
+				  |		}
+				  |	}
+				  |
+				  |	function syncBstEnabled() {
+				  |		var checked = document.getElementById("bstdifference_custom").checked;
+				  |		document.getElementById("bstdifference_min").disabled = !checked;
+				  |		document.getElementById("bstdifference_max").disabled = !checked;
+				  |	}
+				  |	
+				  |	syncBstEnabled();
+				  |	forEach(document.querySelectorAll("input[name=\"bstdifference\"]"), function(input) {
+				  |		input.addEventListener("change", syncBstEnabled);
+				  |	});
+				  |})
+				  |""".stripMargin.replace("\n", "").replace("\r", "").replace("\t", "")))
+			  )
+			, body(
+				  header(
+					a(href := "../index.html")("Back to Index")
+				  )
+				, main(
+					  p(
+					  	"Note that these calculations are done in the browser,so if ",
+					  	"scripting is disabled this won't be able to work."
+					  )
+					, h1("Settings")
+					, form(`id` := "theoretical-game-properties",
+						  h2("Baseline Information")
+						, options("Generation", "generation", Seq(
+							  "Gen1" -> "151"
+							, "Gen2" -> "251"
+							, "Gen3" -> "386"
+							, "Gen4" -> "493"
+							, "Gen5" -> "649"
+							, "Gen6" -> "721"
+							, "Gen7" -> "802"
+						  ))
+						, options("Types", "monTypeType", Seq(
+							  "Normal" -> MonTypeType.Natural.id.toString
+							, "Normal Sans Fairy" -> MonTypeType.NoFairy.id.toString
+							, "Random Platinum" -> MonTypeType.RandPlat.id.toString
+						  ))
+						, options("BST Values", "monBstType", Seq(
+							  "Gen1" -> MonBstType.Gen1.id.toString
+							, "Gen2-5" -> MonBstType.Gen2.id.toString
+							, "Gen6" -> MonBstType.Gen6.id.toString
+							, "Gen7" -> MonBstType.Gen7.id.toString
+						  ))
+						, h2("Evolution Restrictions")
+						, checkbox("Experience Group Match", "expGroup")
+						, checkbox("Natural Evolution Allowed", "naturalEvolution")
+						, options("New evolution must match", "monTypeToMatch", Seq(
+							  "Neither" -> MonTypeToMatch.Neither.id.toString
+							, "Base Form" -> MonTypeToMatch.BaseForm.id.toString
+							, "Evolved Form" -> MonTypeToMatch.EvolvedForm.id.toString
+						  ))
+						, fieldset(
+							  legend("Allowed difference in BST")
+							, ul(
+							  	  li(
+									  input(`type` := "radio", id := "bstdifference_any", name := "bstdifference", value := "any", checked := "checked")
+									, label("Any", `for` := "bstdifference_any")
+								  )
+							  	, li(
+									  input(`type` := "radio", id := "bstdifference_pk", name := "bstdifference", value := "pk")
+									, label("5/6 to 6/5 (Like pk3DS)", `for` := "bstdifference_pk")
+								  )
+							  	, li(
+									  input(`type` := "radio", id := "bstdifference_ur", name := "bstdifference", value := "ur")
+									, label("9/10 to 11/10 (like Universal Randomizer)", `for` := "bstdifference_ur")
+								  )
+								, fieldset(
+									legend(
+										  input(`type` := "radio", id := "bstdifference_custom", name := "bstdifference", value := "custom")
+										, label("Custom", `for` := "bstdifference_custom")
+									)
+									, div(
+										  label("Minimum: ", `for` := "bstdifference_min")
+										, input(`type` := "number", name := "bstdifference_min", id := "bstdifference_min", step := 0.1, max := 1, min := 0, value := "0.9")
+									  )
+									, div(
+										  label("Maximum: ", `for` := "bstdifference_max")
+										, input(`type` := "number", name := "bstdifference_max", id := "bstdifference_max", step := 0.1, max := 10, min := 1, value := "1.1")
+									  )
+								)
+							)
+						  )
+						, h2("Generate")
+						, button("Generate", `type` := "button", id := "generate")
+					  )
+				  )
+			  )
+		))
+	}
+	
+	
 	private[this] def monPredictionSection(    
 			  possible:Seq[Pokemon]
 			, observed:Iterable[(EvosGame.Value, DexNo)]
@@ -501,7 +650,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	)
 	
 	
-	private[this] def pokemonListTable(
+	def pokemonListTable(
 			  x:Iterable[Pokemon]
 			, realEvos:Iterable[(EvosGame.Value, DexNo)]
 			, possibleEvosCount:DexNo => Int

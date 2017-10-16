@@ -109,6 +109,26 @@ package possibleEvolutions {
 			override def typeType:MonTypeType.Value = MonTypeType.NoFairy
 		}
 		
+		final case class Custom(
+			  val maxKnownDexno:DexNo
+			, val bstType:MonBstType.Value
+			, val typeType:MonTypeType.Value
+			, val monToMatch:MonTypeToMatch.Value
+			, val bstMatchFunction:BstMatchFunction.Value
+			, val expGroupMustMatch:Boolean
+			, val naturalEvoAllowed:Boolean
+		) extends Value {
+			override def id:Int = -1
+			override def name:String = "custom"
+			override def shortName:String = "cm"
+			override def seedData:Option[SeedData] = None
+			
+			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = {
+				bstMatchFunction.apply(naturalBst, candidateBst)
+			}
+			override def bstMatchString:String = bstMatchFunction.description
+		}
+		
 		def values:Seq[Value] = Seq(Natural, AlphaSapphire, Platinum, White2)
 	}
 	
@@ -132,6 +152,36 @@ package possibleEvolutions {
 		val Gen2 = Value
 		val Gen6 = Value
 		val Gen7 = Value
+	}
+	
+	object BstMatchFunction {
+		sealed trait Value {
+			def apply(naturalBst:Int, candidateBst:Int):Boolean
+			def description:String
+		}
+		object `Any` extends Value {
+			def apply(naturalBst:Int, candidateBst:Int):Boolean = true
+			def description = "Any"
+		}
+		object Pk3ds extends Value {
+			def apply(naturalBst:Int, candidateBst:Int):Boolean = {
+				(candidateBst * 6 / 5 > naturalBst) && (naturalBst > candidateBst * 5 / 6)
+			}
+			def description = "From ×5/6 to ×6/5"
+		}
+		object UniversalRandomizer extends Value {
+			def apply(naturalBst:Int, candidateBst:Int):Boolean = {
+				(naturalBst * 11 / 10 >= candidateBst) && (candidateBst >= naturalBst * 9 / 10)
+			}
+			def description = "From 90% to 110%"
+		}
+		final case class Custom(min:Double, max:Double) extends Value {
+			def apply(naturalBst:Int, candidateBst:Int):Boolean = {
+				(naturalBst * min >= candidateBst) && (candidateBst >= naturalBst * max)
+			}
+			def description = s"From $min to $max"
+		}
+		
 	}
 	
 }

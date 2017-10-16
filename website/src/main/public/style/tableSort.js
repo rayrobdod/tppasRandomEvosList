@@ -2,6 +2,11 @@ document.addEventListener("DOMContentLoaded", function() {
 	let tables = document.getElementsByTagName("table");
 	const SORT_INDICATOR = " ↕";
 	
+	function forEach(coll, fun) {
+		for (i = 0; i < coll.length; i++) {
+			fun(coll[i])
+		}
+	}
 	function toArray(x) {
 		var retVal = new Array()
 		for (i = 0; i < x.length; i++) {
@@ -34,15 +39,14 @@ document.addEventListener("DOMContentLoaded", function() {
 			sortTable(tableToSort, columnNo)
 		});
 	}
-
-	toArray(tables)
-		.forEach(function(tab) {
-			if (tab.tHead != null) {
-				var headerCells = tab.tHead.rows[0].cells
-				for (j = 0; j < headerCells.length; j++) {
-					makeColumnSortable(tab, j)
-				}
+	
+	forEach(tables, function(tab) {
+		if (tab.tHead != null) {
+			var headerCells = tab.tHead.rows[0].cells
+			for (j = 0; j < headerCells.length; j++) {
+				makeColumnSortable(tab, j)
 			}
+		}
 	})
 
 })

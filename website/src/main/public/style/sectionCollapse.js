@@ -3,12 +3,10 @@ document.addEventListener("DOMContentLoaded", function() {
 	const SHOWN_INDICATOR = "▼ "
 	const HIDEN_INDICATOR = "▶ "
 	
-	function toArray(x) {
-		var retVal = new Array()
-		for (i = 0; i < x.length; i++) {
-			retVal.push(x[i])
+	function forEach(coll, fun) {
+		for (i = 0; i < coll.length; i++) {
+			fun(coll[i])
 		}
-		return retVal
 	}
 	
 	function toggleSectionVisible(header) {
@@ -20,13 +18,12 @@ document.addEventListener("DOMContentLoaded", function() {
 		header.dataset["shown"] = !isShown
 	}
 	
-	toArray(headers)
-		.forEach(function(header) {
-			header.dataset["shown"] = true
-			header.style.cursor = "pointer"
-			header.innerText = SHOWN_INDICATOR + header.innerText
-			header.addEventListener("click", function() {
-				toggleSectionVisible(header)
-			});
-		})
+	forEach(headers, function(header) {
+		header.dataset["shown"] = true
+		header.style.cursor = "pointer"
+		header.innerText = SHOWN_INDICATOR + header.innerText
+		header.addEventListener("click", function() {
+			toggleSectionVisible(header)
+		});
+	})
 })

@@ -23,6 +23,13 @@ lazy val compiler = project
 	.settings(mySettings:_*)
 	.settings(com.rayrobdod.possibleEvolutions.GenPrologue.settings)
 
+lazy val theoreticalPage = project
+	.enablePlugins(ScalaJSPlugin)
+	.dependsOn(sharedJS)
+	.settings(name := "tppRandomEvos-theoretical")
+	.settings(scalaJSUseMainModuleInitializer := true)
+	.settings(mySettings:_*)
+
 lazy val website = project
 	.enablePlugins(com.typesafe.sbt.web.SbtWeb)
 	.settings(name := "tppRandomEvos-website")
@@ -45,6 +52,19 @@ lazy val website = project
 		},
 		managedResourceDirectories in Assets += (resourceManaged in Assets).value,
 		resourceGenerators in Assets += (TaskKey[Seq[File]]("generateHtmlFiles") in Assets).taskValue
+	)
+	.settings(
+		TaskKey[Seq[File]]("theoreticalPageJs") in Assets := {
+			val relativeScriptLocation = "style/theoreticalPage.js"
+			val target = (resourceManaged in Assets).value / relativeScriptLocation
+			val src = (fastOptJS in Compile in theoreticalPage).value.data
+			
+			sbt.IO.createDirectory(target.getParentFile)
+			sbt.IO.copyFile(src, target)
+			Seq(target)
+		},
+		managedResourceDirectories in Assets += (resourceManaged in Assets).value,
+		resourceGenerators in Assets += (TaskKey[Seq[File]]("theoreticalPageJs") in Assets).taskValue
 	)
 
 lazy val mySettings = Seq(
