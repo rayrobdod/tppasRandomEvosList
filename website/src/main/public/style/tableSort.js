@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+function makeTablesSortable() {
 	let tables = document.getElementsByTagName("table");
 	const SORT_INDICATOR = " ↕";
 	
@@ -49,4 +49,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		}
 	})
 
-})
+}
+
+document.addEventListener("DOMContentLoaded", makeTablesSortable)

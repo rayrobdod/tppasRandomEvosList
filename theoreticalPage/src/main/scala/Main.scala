@@ -97,6 +97,8 @@ object Main {
 				, predictor.possiblePrevosCount _
 			).render
 		)
+		
+		SortableTableFunction.makeTablesSortable()
 	}
 	
 	private[this] def isNotForm(x:org.scalajs.dom.raw.Node):Boolean = x match {
@@ -114,6 +116,12 @@ object Main {
 		def toScala:scala.collection.immutable.Seq[org.scalajs.dom.raw.Node] = {
 			(0 until coll.length).map{idx => coll(idx)}
 		}
+	}
+	
+	@scala.scalajs.js.native
+	@scala.scalajs.js.annotation.JSGlobalScope
+	object SortableTableFunction extends scala.scalajs.js.Object {
+		def makeTablesSortable():Unit = scala.scalajs.js.native
 	}
 	
 }
