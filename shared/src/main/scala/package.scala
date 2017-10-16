@@ -29,13 +29,13 @@ package possibleEvolutions {
 			def monToMatch:MonTypeToMatch.Value
 			/** True if the candidate must have the same EXP group as the prevo to be an acceptable candidate */
 			def expGroupMustMatch:Boolean
-			/** True if the candidate's BST is close enough to the natural evolution's BST to be an acceptable candidate */
-			def bstMatches(naturalBst:Int, candidateBst:Int):Boolean
 			/** True if the natural evolution is allowed to be an acceptable candidate */
 			def naturalEvoAllowed:Boolean
-			
-			/** A textual description of the bstMatches method's function */
-			def bstMatchString:String
+			/**
+			 * A function that compares a natural and candidate Pokemon to determine whether
+			 * the candidate is an acceptable evolution candidate
+			 */
+			def bstMatchFunction:BstMatchFunction.Value
 			
 			/** True if the game has logs to display and generate data about */
 			def seedData:Option[SeedData]
@@ -53,8 +53,7 @@ package possibleEvolutions {
 			// Prediction pages aren't built for natural evolutions, so the values used here don't matter
 			override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.BaseForm
 			override def expGroupMustMatch:Boolean = true
-			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = true
-			override def bstMatchString:String = "Any"
+			override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Any
 			override def naturalEvoAllowed:Boolean = true
 			override def maxKnownDexno:DexNo = DexNo(802)
 			override def bstType:MonBstType.Value = MonBstType.Gen7
@@ -68,9 +67,7 @@ package possibleEvolutions {
 			override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.EvolvedForm
 			override def expGroupMustMatch:Boolean = false
 			override def seedData:Option[SeedData] = Option(evolutionData.AlphaSapphire)
-			// https://github.com/kwsch/pk3DS/blob/f0d69b517b8c86ea7a05a9af00bfa6d117de1661/pk3DS/Subforms/Evolution.cs#L198
-			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = (candidateBst * 6 / 5 > naturalBst) && (naturalBst > candidateBst * 5 / 6)
-			override def bstMatchString:String = "From ×5/6 to ×6/5"
+			override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Pk3ds
 			override def naturalEvoAllowed:Boolean = false
 			override def maxKnownDexno:DexNo = DexNo(721)
 			override def bstType:MonBstType.Value = MonBstType.Gen6
@@ -84,9 +81,7 @@ package possibleEvolutions {
 			override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.BaseForm
 			override def expGroupMustMatch:Boolean = true
 			override def seedData:Option[SeedData] = Option(evolutionData.Platinum)
-			// https://github.com/Dabomstew/universal-pokemon-randomizer/blob/49e1d38991ee5339400abfc482e08d4cdfc3aacd/src/com/dabomstew/pkrandom/romhandlers/AbstractRomHandler.java#L3011
-			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = (naturalBst * 11 / 10 >= candidateBst) && (candidateBst >= naturalBst * 9 / 10)
-			override def bstMatchString:String = "From 90% to 110%"
+			override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.UniversalRandomizer
 			override def naturalEvoAllowed:Boolean = true
 			override def maxKnownDexno:DexNo = DexNo(493)
 			override def bstType:MonBstType.Value = MonBstType.Gen2
@@ -100,9 +95,7 @@ package possibleEvolutions {
 			override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.Neither
 			override def expGroupMustMatch:Boolean = true
 			override def seedData:Option[SeedData] = Option(evolutionData.White2)
-			// https://github.com/Dabomstew/universal-pokemon-randomizer/blob/49e1d38991ee5339400abfc482e08d4cdfc3aacd/src/com/dabomstew/pkrandom/romhandlers/AbstractRomHandler.java#L3011
-			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = (naturalBst * 11 / 10 >= candidateBst) && (candidateBst >= naturalBst * 9 / 10)
-			override def bstMatchString:String = "From 90% to 110%"
+			override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.UniversalRandomizer
 			override def naturalEvoAllowed:Boolean = false
 			override def maxKnownDexno:DexNo = DexNo(649)
 			override def bstType:MonBstType.Value = MonBstType.Gen2
@@ -122,11 +115,6 @@ package possibleEvolutions {
 			override def name:String = "custom"
 			override def shortName:String = "cm"
 			override def seedData:Option[SeedData] = None
-			
-			override def bstMatches(naturalBst:Int, candidateBst:Int):Boolean = {
-				bstMatchFunction.apply(naturalBst, candidateBst)
-			}
-			override def bstMatchString:String = bstMatchFunction.description
 		}
 		
 		def values:Seq[Value] = Seq(Natural, AlphaSapphire, Platinum, White2)
@@ -156,7 +144,9 @@ package possibleEvolutions {
 	
 	object BstMatchFunction {
 		sealed trait Value {
+			/** True if the candidate's BST is close enough to the natural evolution's BST to be an acceptable candidate */
 			def apply(naturalBst:Int, candidateBst:Int):Boolean
+			/** A textual description of the bstMatches method's function */
 			def description:String
 		}
 		object `Any` extends Value {
@@ -164,12 +154,14 @@ package possibleEvolutions {
 			def description = "Any"
 		}
 		object Pk3ds extends Value {
+			// https://github.com/kwsch/pk3DS/blob/f0d69b517b8c86ea7a05a9af00bfa6d117de1661/pk3DS/Subforms/Evolution.cs#L198
 			def apply(naturalBst:Int, candidateBst:Int):Boolean = {
 				(candidateBst * 6 / 5 > naturalBst) && (naturalBst > candidateBst * 5 / 6)
 			}
 			def description = "From ×5/6 to ×6/5"
 		}
 		object UniversalRandomizer extends Value {
+			// https://github.com/Dabomstew/universal-pokemon-randomizer/blob/49e1d38991ee5339400abfc482e08d4cdfc3aacd/src/com/dabomstew/pkrandom/romhandlers/AbstractRomHandler.java#L3011
 			def apply(naturalBst:Int, candidateBst:Int):Boolean = {
 				(naturalBst * 11 / 10 >= candidateBst) && (candidateBst >= naturalBst * 9 / 10)
 			}

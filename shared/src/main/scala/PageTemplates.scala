@@ -209,7 +209,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						, dt("Natural Evolution Allowed")
 						, dd(if (game.naturalEvoAllowed) {"Yes"} else {"No"})
 						, dt("Base Stat Total Range")
-						, dd(game.bstMatchString)
+						, dd(game.bstMatchFunction.description)
 					  )
 					, h2("Pokémon List")
 					, pokemonListTable(

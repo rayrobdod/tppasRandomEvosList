@@ -1,7 +1,5 @@
 package com.rayrobdod.possibleEvolutions
 
-import scala.collection.immutable.Seq
-
 final class Pokemon(
 	  val dexNo:DexNo = DexNo.undef
 	, val name:String = ""

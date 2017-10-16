@@ -1,7 +1,5 @@
 package com.rayrobdod.possibleEvolutions
 
-import scala.collection.immutable.Seq
-
 final case class DexNo(private val value:Int) extends Ordered[DexNo] {
 	override def toString:String = value.toString
 	def toStringPadded:String = ("00000" + value).takeRight(5) 

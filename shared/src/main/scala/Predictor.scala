@@ -40,7 +40,7 @@ final class Predictor(game:EvosGame.Value) {
 						typesMatch(naturalEvoMon.types._1, naturalEvoMon.types._2, candidate.types._1, candidate.types._2)
 					}
 				}
-				val bstMatch = config.bstMatches(
+				val bstMatch = config.bstMatchFunction(
 					naturalBst = naturalEvoMon.bst,
 					candidateBst = candidate.bst
 				)
