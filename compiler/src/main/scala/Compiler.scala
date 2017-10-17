@@ -10,6 +10,7 @@ object Compiler {
 		def /(x:String) = new File(f, x)
 	}
 	private[this] val gamesToMakePagesAbout = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
+	private[this] val seedDatas = evolutionData.Natural +: gamesToMakePagesAbout.flatMap{_.seedData}
 	private[this] val predictors = gamesToMakePagesAbout.map{game => ((game, new Predictor(game)))}
 	
 	final case class Context(
@@ -29,7 +30,7 @@ object Compiler {
 					predictions.extantPokemon.map{_.dexNo}.map{x =>
 						System.out.println(s"${game.name}/${x}")
 						val outFile = (ctx.targetDirectory / game.name / s"${x}.html").toPath
-						val output = PageTemplatesText.perMonPage(x, predictions, game).render
+						val output = PageTemplatesText.perMonPage(x, predictions, game, seedDatas).render
 						val output2 = java.util.Collections.singleton(output)
 						Files.createDirectories(outFile.getParent)
 						Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -54,7 +55,7 @@ object Compiler {
 		
 		val sharedPage:Seq[File] = {
 			val outFile = (ctx.targetDirectory / "shared" / "index.html").toPath
-			val output = PageTemplatesText.sharedPage.render
+			val output = PageTemplatesText.sharedPage(seedDatas).render
 			val output2 = java.util.Collections.singleton(output)
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -64,7 +65,7 @@ object Compiler {
 		val indexPage:Seq[File] = {
 			val prologue = IndexPrologue.apply
 			val outFile = (ctx.targetDirectory / "index.html").toPath
-			val output = PageTemplatesText.index(prologue).render
+			val output = PageTemplatesText.index(prologue, gamesToMakePagesAbout.map{_.name}).render
 			val output2 = java.util.Collections.singleton(output)
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)

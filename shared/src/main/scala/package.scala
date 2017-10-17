@@ -1,9 +1,6 @@
 package com.rayrobdod
 
-import scala.collection.immutable.Seq
-
 package object possibleEvolutions {
-	
 }
 
 package possibleEvolutions {
@@ -116,8 +113,6 @@ package possibleEvolutions {
 			override def shortName:String = "cm"
 			override def seedData:Option[SeedData] = None
 		}
-		
-		def values:Seq[Value] = Seq(Natural, AlphaSapphire, Platinum, White2)
 	}
 	
 	/** Which pokemon the randomized evolution's type must match */

@@ -1,6 +1,7 @@
 package com.rayrobdod.possibleEvolutions
 package benchmark
 
+import scala.collection.immutable.Seq
 import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.annotations.State
 
@@ -10,6 +11,7 @@ object PageTemplatesBench {
 	class _State {
 		val dexnos = (1 to 50).map{DexNo(_)}
 		val games = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
+		val seedDatas = games.flatMap{_.seedData}
 
 		val predictors = games.map{game => ((game, new Predictor(game)))}
 	}
@@ -22,7 +24,7 @@ class PageTemplatesBench {
 	def perMonPage(state:_State) = {
 		val predictor = state.predictors.head
 		
-		state.dexnos.map{dexno => PageTemplatesText.perMonPage(dexno, predictor._2, predictor._1)}
+		state.dexnos.map{dexno => PageTemplatesText.perMonPage(dexno, predictor._2, predictor._1, state.seedDatas)}
 	}
 	
 	@Benchmark
@@ -32,6 +34,6 @@ class PageTemplatesBench {
 	
 	@Benchmark
 	def sharedPage(state:_State) = {
-		PageTemplatesText.sharedPage
+		PageTemplatesText.sharedPage(state.seedDatas)
 	}
 }

@@ -26,7 +26,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	private[this] val title = tag("title")
 	
 	
-	def index(prologue:scalatags.generic.Frag[Builder,FragT]):scalatags.generic.Frag[Builder,FragT] = {
+	def index(prologue:scalatags.generic.Frag[Builder,FragT], gameNames:Seq[String]):scalatags.generic.Frag[Builder,FragT] = {
 		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
 				  title("Possible Evolutions")
@@ -38,9 +38,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, div(prologue)
 					, h2("Games List")
 					, ul(`class` := "gamesList")(
-						  li(dataGame := EvosGame.values.to[Seq].head.name)(a(href := "shared/index.html")("Shared"))
-						, frag(EvosGame.values.to[Seq].tail.map{game =>
-							val name = game.toString
+						  li(dataGame := "natural")(a(href := "shared/index.html")("Shared"))
+						, frag(gameNames.map{name =>
 							li(dataGame := name)(
 								a(href := (name + "/index.html"))(name)
 							)
@@ -56,14 +55,15 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			  monNo:DexNo
 			, predictions:Predictor
 			, game:EvosGame.Value
+			, seedDatas:Seq[SeedData]
 	):scalatags.generic.Frag[Builder,FragT] = {
 		implicit val config = game
 		
 		val checkMon = AllPokemon.get(monNo).get
 		val evos:Map[String, Seq[Pokemon]] = predictions.possibleEvolutions(monNo)
-		val realEvos:Map[EvosGame.Value, Map[String,DexNo]] = EvosGame.values.flatMap{g => g.seedData.map{s => ((g, s.evolutions.getOrElse(monNo, Map.empty)))}}.toMap
+		val realEvos:Map[EvosGame.Value, Map[String,DexNo]] = seedDatas.map{s => ((s.game, s.evolutions.getOrElse(monNo, Map.empty)))}.toMap
 		val prevos = predictions.possiblePrevolutions(monNo)
-		val realPrevos = EvosGame.values.flatMap{g => g.seedData.map{s => ((g, s.prevos.getOrElse(monNo, Set.empty)))}}.flatMap{case (a,bs) => bs.map{b => ((a,b))}}
+		val realPrevos = seedDatas.map{s => ((s.game, s.prevos.getOrElse(monNo, Set.empty)))}.flatMap{case (a,bs) => bs.map{b => ((a,b))}}
 		val prevos2 = prevos.flatMap{mon => predictions.possiblePrevolutions(mon.dexNo)}.distinct
 		val realPrevos2 = {
 			for (
@@ -367,8 +367,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		))
 	}
 	
-	def sharedPage:scalatags.generic.Frag[Builder,FragT] = {
-		val seedDatas:Seq[SeedData] = EvosGame.values.flatMap{_.seedData}
+	def sharedPage(seedDatas:Seq[SeedData]):scalatags.generic.Frag[Builder,FragT] = {
 		val nameHeaders = seedDatas.map{_.game.shortName}.map{x => th(x)}
 		
 		frag(htmlDoctype, html(lang := "en-US")(
@@ -387,7 +386,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h2("Repeat Evolutions")
 					, table(`class` := "checktable")(
 						  colgroup(colgroupSpan := "5")
-						, frag( EvosGame.values.map{x => colgroup(colgroupSpan := "1", dataGame := x.toString)}:_* )
+						, frag( seedDatas.map{x => colgroup(colgroupSpan := "1", dataGame := x.game.toString)}:_* )
 						, thead(tr(
 							  th("From Num")
 							, th("From")
@@ -435,7 +434,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h2("Pokémon with multiple prevos multiple times")
 					, table(`class` := "checktable")(
 						  colgroup(colgroupSpan := "2")
-						, frag( EvosGame.values.map{x => colgroup(colgroupSpan := "1", dataGame := x.toString)}:_* )
+						, frag( seedDatas.map{x => colgroup(colgroupSpan := "1", dataGame := x.game.toString)}:_* )
 						, thead(tr(
 							  th("DexNo")
 							, th("Pokémon")
@@ -464,7 +463,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h2("Pokémon with no prevos multiple times")
 					, table(`class` := "checktable")(
 						  colgroup(colgroupSpan := "2")
-						, frag( EvosGame.values.map{x => colgroup(colgroupSpan := "1", dataGame := x.toString)}:_* )
+						, frag( seedDatas.map{x => colgroup(colgroupSpan := "1", dataGame := x.game.toString)}:_* )
 						, thead(tr(
 							  th("DexNo")
 							, th("Pokémon")
