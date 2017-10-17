@@ -3,6 +3,7 @@ package com.rayrobdod.possibleEvolutions
 import scala.collection.immutable.Seq
 import scalatags.generic.Bundle
 import scalatags.generic.Frag
+import com.rayrobdod.possibleEvolutions.DexNo.mapCanBuildFrom
 
 object PageTemplatesText extends PageTemplates(
 	  scalatags.Text
@@ -495,6 +496,86 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 									frag("")
 								}
 							}
+						  }:_*))
+					  )
+				  )
+			  )
+		))
+	}
+	
+	def sharedEeveePage(seedDatas:Seq[SeedData]):scalatags.generic.Frag[Builder,FragT] = {
+		val eeveeDexNo = new DexNo(133)
+		val nameHeaders = seedDatas.map{_.game.shortName}.map{x => th(x)}
+		
+		val methodIcons:Map[String, String] = Map(
+			"Used Item [Water Stone]" -> "🌊", // ☂
+			"Used Item [Thunder Stone]" -> "💡", // ☈
+			"Used Item [Fire Stone]" -> "🔥",
+			"Level Up at Morning" -> "☀",
+			"Level Up at Night" -> "☽",
+			"Level Up at Forest" -> "🍂",
+			"Level Up at Cold" -> "❄", //⛇. ☃
+			"Level Up with 50 Affection + MoveType [Fairy]" -> "❤" //♥
+		)
+		val methodSorting:Map[String, String] = Map(
+			"Used Item [Water Stone]" -> "1",
+			"Used Item [Thunder Stone]" -> "2",
+			"Used Item [Fire Stone]" -> "3",
+			"Level Up at Morning" -> "4",
+			"Level Up at Night" -> "5",
+			"Level Up at Forest" -> "6",
+			"Level Up at Cold" -> "7",
+			"Level Up with 50 Affection + MoveType [Fairy]" -> "8"
+		)
+		
+		frag(htmlDoctype, html(lang := "en-US")(
+			  head(
+				  title(s"Possible Evolutions - Shared - Eevee")
+				, meta(charset := "utf-8")
+				, link(rel := "stylesheet", href := "../style/style.css")
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
+			  )
+			, body(
+				  header(
+					a(href := "../index.html")("Back to Index")
+					, " > "
+					, a(href := "index.html")("Game")
+				  )
+				, main(
+					  h1("Eevee")
+					, h2("Evolutions")
+					, table(`class` := "checktable")(
+						  colgroup(colgroupSpan := "2")
+						, frag( seedDatas.map{x => colgroup(colgroupSpan := "1", dataGame := x.game.toString)}:_* )
+						, thead(tr(
+							th("To Num"),
+							th("To"),
+							frag( nameHeaders:_* )
+						  ))
+						, tbody(frag({
+							val eeveeEvos:Map[DexNo, Map[SeedData, Seq[String]]] = {
+								val a:Seq[(DexNo, SeedData, String)] = for (
+									seedData <- seedDatas;
+									(method, toNo) <- seedData.evolutions(eeveeDexNo)
+								) yield {(toNo, seedData, method)}
+								a.groupBy{_._1}.mapValues{_.groupBy{_._2}.mapValues{_.map{_._3}}.map{x => x}}.map{x => x}
+							}
+							def nameOf(dexNo:DexNo) = AllPokemon.get(dexNo).map{_.name}.getOrElse{"???"}
+							
+							eeveeEvos.to[Seq].map{case (toNo, gameMethods) => tr(
+								td(dataSort := toNo.toString, toNo.toString),
+								td(dataSort := nameOf(toNo), nameOf(toNo)),
+								frag(seedDatas.map{game =>
+									val methods = gameMethods.getOrElse(game, Seq.empty)
+									val sortStr = {
+										val a = methods.map{method => methodSorting.getOrElse(method, "-1")}.mkString
+										if (a == "") {"999"} else {a}
+									}
+									val iconStr = methods.map{method => methodIcons.getOrElse(method, "?")}.mkString
+									td(dataSort := sortStr, iconStr)
+								}:_*)
+							)}
 						  }:_*))
 					  )
 				  )

@@ -62,6 +62,15 @@ object Compiler {
 			Seq(outFile.toFile)
 		}
 		
+		val sharedEeveePage:Seq[File] = {
+			val outFile = (ctx.targetDirectory / "shared" / "133.html").toPath
+			val output = PageTemplatesText.sharedEeveePage(seedDatas).render
+			val output2 = java.util.Collections.singleton(output)
+			Files.createDirectories(outFile.getParent)
+			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
+			Seq(outFile.toFile)
+		}
+		
 		val indexPage:Seq[File] = {
 			val prologue = IndexPrologue.apply
 			val outFile = (ctx.targetDirectory / "index.html").toPath
@@ -82,7 +91,7 @@ object Compiler {
 		}
 		
 		Result(
-			files = (indexPage ++: sharedPage ++: theoreticalPage ++: perGamePages ++: perMonPages).toArray
+			files = (indexPage ++: sharedPage ++: theoreticalPage ++: perGamePages ++: perMonPages ++: sharedEeveePage).toArray
 		)
 	}
 }
