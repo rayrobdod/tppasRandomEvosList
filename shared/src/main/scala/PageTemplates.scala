@@ -129,10 +129,18 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 									s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
 								}
 							}
+							val bstRange = config.bstMatchFunction match {
+								case BstMatchFunction.Any => ""
+								case BstMatchFunction.Pk3ds => s"stat_total=${naturalBst * 5 / 6}-${naturalBst * 6 / 5}"
+								case BstMatchFunction.UniversalRandomizer => s"stat_total=${naturalBst * 9 / 10}-${naturalBst * 11 / 10}"
+								case BstMatchFunction.Custom(min, max) => s"stat_total=${(naturalBst * min).intValue}-${(naturalBst * max).intValue}"
+							}
+							val generation = s"&id=<=${config.maxKnownDexno}"
 							
 							(
 								"http://veekun.com/dex/pokemon/search?" +
-								s"stat_total=${naturalBst * 5 / 6}-${naturalBst * 6 / 5}" +
+								bstRange +
+								generation +
 								(if (config.expGroupMustMatch) {s"&growth_rate=$growthRate"} else {""}) ++
 								types
 							)
