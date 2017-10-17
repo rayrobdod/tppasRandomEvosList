@@ -30,6 +30,7 @@ lazy val theoreticalPage = project
 	.settings(scalaJSUseMainModuleInitializer := true)
 	.settings(mySettings:_*)
 
+val perMonPages = taskKey[Boolean]("Whether to create the rather numerous per-mon html pages")
 lazy val website = project
 	.enablePlugins(com.typesafe.sbt.web.SbtWeb)
 	.settings(name := "tppRandomEvos-website")
@@ -37,13 +38,14 @@ lazy val website = project
 	.settings(mySettings:_*)
 	.settings(
 		TaskKey[Seq[File]]("generateHtmlFiles") in Assets := {
+			val genMonPagesValue:java.lang.Boolean = (perMonPages in TaskKey[Seq[File]]("generateHtmlFiles") in Assets).value
 			val target = (resourceManaged in Assets).value
 			
 			val cp:Seq[java.net.URL] = (fullClasspath in Compile in compiler).value.files.map{_.toURI.toURL}
 			val loader = new java.net.URLClassLoader(cp.toArray, this.getClass.getClassLoader)
 			val contextClazz = loader.loadClass("com.rayrobdod.possibleEvolutions.Compiler$Context")
-			val contextConstructor = contextClazz.getConstructor(loader.loadClass("java.io.File"))
-			val contextInstance:java.lang.Object = contextConstructor.newInstance(target).asInstanceOf[Object]
+			val contextConstructor = contextClazz.getConstructor(loader.loadClass("java.lang.Boolean"), loader.loadClass("java.io.File"))
+			val contextInstance:java.lang.Object = contextConstructor.newInstance(genMonPagesValue, target).asInstanceOf[Object]
 			val compilerClazz = loader.loadClass("com.rayrobdod.possibleEvolutions.Compiler")
 			val compilerMethod = compilerClazz.getMethod("apply", contextClazz)
 			val result = compilerMethod.invoke(null, contextInstance)
@@ -57,7 +59,7 @@ lazy val website = project
 		TaskKey[Seq[File]]("theoreticalPageJs") in Assets := {
 			val relativeScriptLocation = "style/theoreticalPage.js"
 			val target = (resourceManaged in Assets).value / relativeScriptLocation
-			val src = (fastOptJS in Compile in theoreticalPage).value.data
+			val src = new File((scalaJSLinkedFile in Compile in theoreticalPage).value.path)
 			
 			sbt.IO.createDirectory(target.getParentFile)
 			sbt.IO.copyFile(src, target)
@@ -76,3 +78,5 @@ lazy val mySettings = Seq(
 )
 
 name := "aggregate"
+scalaJSStage in Global := org.scalajs.sbtplugin.Stage.FastOpt
+perMonPages in Global := true

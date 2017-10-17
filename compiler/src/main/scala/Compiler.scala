@@ -13,26 +13,31 @@ object Compiler {
 	private[this] val predictors = gamesToMakePagesAbout.map{game => ((game, new Predictor(game)))}
 	
 	final case class Context(
-		  targetDirectory:File
+		generatePerMonPages:java.lang.Boolean,
+		targetDirectory:File
 	)
 	
 	final case class Result(
-		  files:Array[File]
+		files:Array[File]
 	)
 	
 	
 	def apply(ctx:Context):Result = {
 		val perMonPages:Seq[File] = {
-			predictors.flatMap{case (game, predictions) =>
-				predictions.extantPokemon.map{_.dexNo}.map{x =>
-					System.out.println(s"${game.name}/${x}")
-					val outFile = (ctx.targetDirectory / game.name / s"${x}.html").toPath
-					val output = PageTemplatesText.perMonPage(x, predictions, game).render
-					val output2 = java.util.Collections.singleton(output)
-					Files.createDirectories(outFile.getParent)
-					Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
-					outFile.toFile
+			if (ctx.generatePerMonPages) {
+				predictors.flatMap{case (game, predictions) =>
+					predictions.extantPokemon.map{_.dexNo}.map{x =>
+						System.out.println(s"${game.name}/${x}")
+						val outFile = (ctx.targetDirectory / game.name / s"${x}.html").toPath
+						val output = PageTemplatesText.perMonPage(x, predictions, game).render
+						val output2 = java.util.Collections.singleton(output)
+						Files.createDirectories(outFile.getParent)
+						Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
+						outFile.toFile
+					}
 				}
+			} else {
+				Seq.empty
 			}
 		}
 		

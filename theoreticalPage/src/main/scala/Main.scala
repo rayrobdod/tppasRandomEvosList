@@ -3,7 +3,7 @@ package com.rayrobdod.possibleEvolutions
 import org.scalajs.dom.document
 import scalatags.JsDom.implicits._
 
-object Main {
+object TheoreticalPage {
 	def main(args:Array[String]):Unit = {
 		document.addEventListener("DOMContentLoaded", {(x:Any) =>
 			document.getElementById("generate").addEventListener("click", generate _)
