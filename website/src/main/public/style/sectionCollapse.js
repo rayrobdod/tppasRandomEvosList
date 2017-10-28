@@ -1,3 +1,7 @@
+/**
+ * Allow a user to hide or show any sibling nodes following a h2, but not after a
+ * different h2, by clicking on that h2
+ */
 document.addEventListener("DOMContentLoaded", function() {
 	let headers = document.getElementsByTagName("h2")
 	const SHOWN_INDICATOR = "▼ "

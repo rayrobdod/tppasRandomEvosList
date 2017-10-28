@@ -606,26 +606,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/theoreticalPage.js")(" ")
-				, script(defer := "defer", `type` := "text/javascript")(raw("""
-				  |document.addEventListener("DOMContentLoaded", function() {
-				  |	function forEach(coll, fun) {
-				  |		for (i = 0; i < coll.length; i++) {
-				  |			fun(coll[i]);
-				  |		}
-				  |	}
-				  |
-				  |	function syncBstEnabled() {
-				  |		var checked = document.getElementById("bstdifference_custom").checked;
-				  |		document.getElementById("bstdifference_min").disabled = !checked;
-				  |		document.getElementById("bstdifference_max").disabled = !checked;
-				  |	}
-				  |	
-				  |	syncBstEnabled();
-				  |	forEach(document.querySelectorAll("input[name=\"bstdifference\"]"), function(input) {
-				  |		input.addEventListener("change", syncBstEnabled);
-				  |	});
-				  |})
-				  |""".stripMargin.replace("\n", "").replace("\r", "").replace("\t", "")))
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/theoreticalPageForm.js")(" ")
 			  )
 			, body(
 				  header(

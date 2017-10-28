@@ -1,3 +1,8 @@
+/**
+ * Allow a user to sort tables by clicking on the corresponding header.
+ * The tables are sorted based on the value data-sort values in that column.
+ */
+// Global so that the function can be recalled when new tables are created by the theoretical page's scripts
 function makeTablesSortable() {
 	let tables = document.getElementsByTagName("table");
 	const SORT_INDICATOR = " ↕";
