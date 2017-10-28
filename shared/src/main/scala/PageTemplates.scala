@@ -26,6 +26,9 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	private[this] val dataType = data("type")
 	private[this] val title = tag("title")
 	
+	private[this] val hrefDexNoLinkModifier:Function[DexNo, scalatags.generic.Modifier[Builder]] = {
+		(dexNo) => href := s"${dexNo}.html"
+	}
 	
 	def index(prologue:scalatags.generic.Frag[Builder,FragT], gameNames:Seq[String]):scalatags.generic.Frag[Builder,FragT] = {
 		frag(htmlDoctype, html(lang := "en-US")(
@@ -59,6 +62,37 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			, seedDatas:Seq[SeedData]
 	):scalatags.generic.Frag[Builder,FragT] = {
 		implicit val config = game
+		val checkMon = AllPokemon.get(monNo).get
+		
+		frag(htmlDoctype, html(lang := "en-US")(
+			  head(
+				  title(s"Possible Evolutions - $config - ${checkMon.name}")
+				, link(rel := "stylesheet", href := "../style/style.css")
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
+			  )
+			, body(
+				  header(
+					  a(href := "../index.html")("Index")
+					, " > "
+					, a(href := "index.html")("Game")
+				  )
+				, main(
+					h1(checkMon.name),
+					perMonMain(monNo, predictions, game, seedDatas, hrefDexNoLinkModifier)
+				  )
+			)
+		))
+	}
+	
+	def perMonMain(
+			  monNo:DexNo
+			, predictions:Predictor
+			, game:EvosGame.Value
+			, seedDatas:Seq[SeedData]
+			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
+	):scalatags.generic.Frag[Builder,FragT] = {
+		implicit val config = game
 		
 		val checkMon = AllPokemon.get(monNo).get
 		val evos:Map[String, Seq[Pokemon]] = predictions.possibleEvolutions(monNo)
@@ -76,91 +110,75 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			}
 		}.distinct
 		
-		frag(htmlDoctype, html(lang := "en-US")(
-			  head(
-				  title(s"Possible Evolutions - $config - ${checkMon.name}")
-				, link(rel := "stylesheet", href := "../style/style.css")
-				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
-				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
+		frag(
+			  dl(
+				dt("National Dex Number"),
+					dd(checkMon.dexNo.toString),
+				dt("Base Stat Total"),
+					dd(checkMon.bst.toString),
+				dt("Experience Group"),
+					dd(checkMon.expGrowth),
+				dt("Types"),
+					dd(dataType := checkMon.types._1.toLowerCase, checkMon.types._1),
+					if (checkMon.types._1 != checkMon.types._2) {
+						dd(dataType := checkMon.types._2.toLowerCase, checkMon.types._2)
+					} else {frag("")}
 			  )
-			, body(
-				  header(
-					  a(href := "../index.html")("Index")
-					, " > "
-					, a(href := "index.html")("Game")
-				  )
-				, main(
-					  h1(checkMon.name)
-					, dl(
-						dt("National Dex Number"),
-							dd(checkMon.dexNo.toString),
-						dt("Base Stat Total"),
-							dd(checkMon.bst.toString),
-						dt("Experience Group"),
-							dd(checkMon.expGrowth),
-						dt("Types"),
-							dd(dataType := checkMon.types._1.toLowerCase, checkMon.types._1),
-							if (checkMon.types._1 != checkMon.types._2) {
-								dd(dataType := checkMon.types._2.toLowerCase, checkMon.types._2)
-							} else {frag("")}
-					  )
-					, h2("Possible Evos")
-					, div(evos.flatMap{case (method:String, possibleEvos:Seq[Pokemon]) =>
-						val naturalEvo = predictions.getPokemon(realEvos(EvosGame.Natural)(method))
-						val naturalBst = naturalEvo.bst
-						val realEvosMethod = realEvos.flatMap{case (a,bs) => bs.get(method).map{b => ((a, b))}}
-						
-						val veekunSearchLink = {
-							val growthRate = checkMon.expGrowth match {
-								case "Slow" => "1250000"
-								case "Medium Fast" => "1000000"
-								case "Fast" => "800000"
-								case "Medium Slow" => "1059860"
-								case "Erratic" => "600000"
-								case "Fluctuating" => "1640000"
-							}
-							val types = config.monToMatch match {
-								case MonTypeToMatch.Neither => ""
-								case MonTypeToMatch.BaseForm => {
-									val (type1, type2) = checkMon.types
-									s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
-								}
-								case MonTypeToMatch.EvolvedForm => {
-									val (type1, type2) = naturalEvo.types
-									s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
-								}
-							}
-							val bstRange = config.bstMatchFunction match {
-								case BstMatchFunction.Any => ""
-								case BstMatchFunction.Pk3ds => s"stat_total=${naturalBst * 5 / 6}-${naturalBst * 6 / 5}"
-								case BstMatchFunction.UniversalRandomizer => s"stat_total=${naturalBst * 9 / 10}-${naturalBst * 11 / 10}"
-								case BstMatchFunction.Custom(min, max) => s"stat_total=${(naturalBst * min).intValue}-${(naturalBst * max).intValue}"
-							}
-							val generation = s"&id=<=${config.maxKnownDexno}"
-							
-							(
-								"http://veekun.com/dex/pokemon/search?" +
-								bstRange +
-								generation +
-								(if (config.expGroupMustMatch) {s"&growth_rate=$growthRate"} else {""}) ++
-								types
-							)
+			, h2("Possible Evos")
+			, div(evos.flatMap{case (method:String, possibleEvos:Seq[Pokemon]) =>
+				val naturalEvo = predictions.getPokemon(realEvos(EvosGame.Natural)(method))
+				val naturalBst = naturalEvo.bst
+				val realEvosMethod = realEvos.flatMap{case (a,bs) => bs.get(method).map{b => ((a, b))}}
+				
+				val veekunSearchLink = {
+					val growthRate = checkMon.expGrowth match {
+						case "Slow" => "1250000"
+						case "Medium Fast" => "1000000"
+						case "Fast" => "800000"
+						case "Medium Slow" => "1059860"
+						case "Erratic" => "600000"
+						case "Fluctuating" => "1640000"
+					}
+					val types = config.monToMatch match {
+						case MonTypeToMatch.Neither => ""
+						case MonTypeToMatch.BaseForm => {
+							val (type1, type2) = checkMon.types
+							s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
 						}
-						
-						Seq(
-							  h3(method)
-							, div("Natural: ", naturalEvo.name, " (BST = ", naturalBst, ")")
-							, div(a(href := veekunSearchLink)("Veekun search with same parameters"))
-							, monPredictionSection(possibleEvos, realEvosMethod, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon)
-						)
-					  }.to[Seq]:_*)
-					, h2("Possible Prevos")
-					, monPredictionSection(prevos, realPrevos, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon)
-					, h2("Possible Prevos^2")
-					, monPredictionSection(prevos2, realPrevos2, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon)
+						case MonTypeToMatch.EvolvedForm => {
+							val (type1, type2) = naturalEvo.types
+							s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
+						}
+					}
+					val bstRange = config.bstMatchFunction match {
+						case BstMatchFunction.Any => ""
+						case BstMatchFunction.Pk3ds => s"stat_total=${naturalBst * 5 / 6}-${naturalBst * 6 / 5}"
+						case BstMatchFunction.UniversalRandomizer => s"stat_total=${naturalBst * 9 / 10}-${naturalBst * 11 / 10}"
+						case BstMatchFunction.Custom(min, max) => s"stat_total=${(naturalBst * min).intValue}-${(naturalBst * max).intValue}"
+					}
+					val generation = s"&id=<=${config.maxKnownDexno}"
+					
+					(
+						"http://veekun.com/dex/pokemon/search?" +
+						bstRange +
+						generation +
+						(if (config.expGroupMustMatch) {s"&growth_rate=$growthRate"} else {""}) ++
+						types
+					)
+				}
+				
+				Seq(
+					  h3(method)
+					, div("Natural: ", naturalEvo.name, " (BST = ", naturalBst, ")")
+					, div(a(href := veekunSearchLink)("Veekun search with same parameters"))
+					, monPredictionSection(possibleEvos, realEvosMethod, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon, dexNoLinkModifier)
 				)
-			)
-		))
+			  }.to[Seq]:_*)
+			, h2("Possible Prevos")
+			, monPredictionSection(prevos, realPrevos, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon, dexNoLinkModifier)
+			, h2("Possible Prevos^2")
+			, monPredictionSection(prevos2, realPrevos2, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon, dexNoLinkModifier)
+		)
 	}
 	
 	def perGamePage(
@@ -226,6 +244,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						, Map.empty
 						, predictions.possibleEvosCount
 						, predictions.possiblePrevosCount
+						, hrefDexNoLinkModifier
 					)
 					)(game.seedData.map{seedData => frag(
 						  h2("Evolutions")
@@ -264,11 +283,13 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						, pokemonListTable(
 							  seedData.firstStageMons.map{predictions.getPokemon _}
 							, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount
+							, hrefDexNoLinkModifier
 						  )
 						, h2("Pokémon that multiple things evolve into")
 						, pokemonListTable(
 							  seedData.multiplePrevos.map{predictions.getPokemon _}
 							, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount
+							, hrefDexNoLinkModifier
 						  )
 						, h2("Pokémon whose evo isn't predicted")
 						, pokemonListTable(
@@ -285,6 +306,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 								}
 							}).flatten.to[Seq].distinct.map{predictions.getPokemon _}
 							, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount
+							, hrefDexNoLinkModifier
 						  )
 						, h2("Pokémon who eventually evolve into their vanilla final stage")
 						, {
@@ -295,7 +317,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 											if (thisGameFinalEvo == naturalFinalEvo) 
 							) yield { predictions.getPokemon(startDexNo) }
 							
-							pokemonListTable(mons, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount)
+							pokemonListTable(mons, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount, hrefDexNoLinkModifier)
 						  }
 						, if (game.monToMatch == MonTypeToMatch.Neither) {frag(
 							  h2("Pokémon with same-type evolutions")
@@ -643,7 +665,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						, h2("Evolution Restrictions")
 						, checkbox("Experience Group Match", "expGroup")
 						, checkbox("Natural Evolution Allowed", "naturalEvolution")
-						, options("New evolution must match", "monTypeToMatch", Seq(
+						, options("New evolution's type must match", "monTypeToMatch", Seq(
 							  "Neither" -> MonTypeToMatch.Neither.id.toString
 							, "Base Form" -> MonTypeToMatch.BaseForm.id.toString
 							, "Evolved Form" -> MonTypeToMatch.EvolvedForm.id.toString
@@ -688,12 +710,13 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	}
 	
 	
-	private[this] def monPredictionSection(    
+	private[this] def monPredictionSection(
 			  possible:Seq[Pokemon]
 			, observed:Iterable[(EvosGame.Value, DexNo)]
 			, possibleEvosCount:DexNo => Int
 			, possiblePrevosCount:DexNo => Int
 			, resolveDexNo:DexNo => Pokemon
+			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
 			)(implicit config:EvosGame.Value
 	):scalatags.generic.Frag[Builder,FragT] = frag(
 		  div(s"Number of candidates: ${possible.size}")
@@ -704,7 +727,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				if (observedThisGame.size == 0) {
 					p("None")
 				} else {
-					pokemonListTable(observedThisGame, observed, possibleEvosCount, possiblePrevosCount)
+					pokemonListTable(observedThisGame, observed, possibleEvosCount, possiblePrevosCount, dexNoLinkModifier)
 				}
 			  }
 		  )}.getOrElse(frag(""))
@@ -713,7 +736,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			if (possible.size == 0) {
 				p("None")
 			} else {
-				pokemonListTable(possible, observed, possibleEvosCount, possiblePrevosCount)
+				pokemonListTable(possible, observed, possibleEvosCount, possiblePrevosCount, dexNoLinkModifier)
 			}
 		  }
 	)
@@ -724,6 +747,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			, realEvos:Iterable[(EvosGame.Value, DexNo)]
 			, possibleEvosCount:DexNo => Int
 			, possiblePrevosCount:DexNo => Int
+			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
 			)(implicit config:EvosGame.Value
 	):scalatags.generic.Frag[Builder,FragT] = {
 		table(`class` := "pokemon-list")(
@@ -744,7 +768,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					.to[Seq]
 					.sorted
 					.distinct
-					.map{(pokemonTableRow(realEvos, possibleEvosCount, possiblePrevosCount) _)}
+					.map{(pokemonTableRow(realEvos, possibleEvosCount, possiblePrevosCount, dexNoLinkModifier) _)}
 			):_*)
 		)
 	}
@@ -753,6 +777,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			  realEvos:Iterable[(EvosGame.Value, DexNo)]
 			, possibleEvosCount:DexNo => Int
 			, possiblePrevosCount:DexNo => Int
+			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
 			)(x:Pokemon
 			)(implicit config:EvosGame.Value
 	):scalatags.generic.Frag[Builder,FragT] = {
@@ -761,7 +786,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		tr(dataGame := game)(
 			  td(dataSort := x.dexNo.toStringPadded)(x.dexNo.toString)
 			, td(dataSort := x.name)(
-				a(href := s"${x.dexNo}.html")(x.name)
+				a(dexNoLinkModifier(x.dexNo))(x.name)
 			  )
 			, td(dataSort := x.types._1, dataType := x.types._1.toLowerCase)(x.types._1)
 			, td(dataSort := x.types._2, dataType := x.types._2.toLowerCase)(x.types._2) 
