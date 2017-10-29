@@ -39,12 +39,24 @@ object TheoreticalPage {
 		val predictor = new Predictor(game)
 		
 		mainElem.appendChild(
+			scalatags.JsDom.tags.h2("List of Pokémon").render
+		)
+		mainElem.appendChild(
 			PageTemplatesJsDom.pokemonListTable(
 				  x = AllPokemon.apply.filter{_.exists}
 				, realEvos = Seq.empty
 				, predictor.possibleEvosCount _
 				, predictor.possiblePrevosCount _
 				, {dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := "#", new AddClickListenerModifier(generateMonPage(dexNo) _))}
+			).render
+		)
+		mainElem.appendChild(
+			scalatags.JsDom.tags.h2("Prediction Summary").render
+		)
+		mainElem.appendChild(
+			PageTemplatesJsDom.predictionSummary(
+				  mons = AllPokemon.apply.filter{_.exists}
+				, possibleEvosCount = predictor.possibleEvosCount _
 			).render
 		)
 		

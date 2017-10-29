@@ -38,6 +38,9 @@ table td {border:1px solid black; padding:2px;}
 
 table.checktable td:nth-last-child(-n+4) {text-align: center;}
 
+dl {column-width: 12em; column-count: 2;}
+dl dt {break-after: avoid;}
+dl dd {break-before: avoid;}
 
 /** background (and foreground) color associated with each type */
 

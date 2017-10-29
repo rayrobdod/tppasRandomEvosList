@@ -245,7 +245,9 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						, predictions.possibleEvosCount
 						, predictions.possiblePrevosCount
 						, hrefDexNoLinkModifier
-					)
+					  )
+					, h2("Prediction Summary")
+					, predictionSummary(predictions.extantPokemon, predictions.possibleEvosCount)
 					)(game.seedData.map{seedData => frag(
 						  h2("Evolutions")
 						, table(
@@ -770,6 +772,63 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					.distinct
 					.map{(pokemonTableRow(realEvos, possibleEvosCount, possiblePrevosCount, dexNoLinkModifier) _)}
 			):_*)
+		)
+	}
+	
+	def predictionSummary(
+			  mons:Iterable[Pokemon]
+			, possibleEvosCount:DexNo => Int
+	):scalatags.generic.Frag[Builder,FragT] = {
+		import bundle.svgTags.{attr => _, frag => _, tag => _, modifier => _, _}
+		import bundle.svgAttrs.{attr => _, frag => _, tag => _, modifier => _, _}
+		
+		// key: number of evolutions; value: number of pokemon with that evolution count
+		// `- 0` to ignore the half of Pokemon that don't evolve into anything
+		val counts:Map[Int, Int] = {
+			mons.map{_.dexNo}
+				.groupBy(possibleEvosCount)
+				.mapValues{_.size}.map{x => x}
+				.withDefaultValue(0)
+		} - 0
+		val maxKey = counts.keySet.max
+		val maxValue = counts.values.max
+		val countCount = counts.values.sum
+		
+		val histogramPath = (1 to maxKey).map{k => s"V${counts(k)} h1 "}.mkString("M0,0 ", "", "V0 Z")
+		val median = {
+			val sortedSeq = counts.to[Seq].flatMap{case (k, v) => Seq.fill(v){k}}.sorted
+			assert(sortedSeq.size == countCount)
+			if (countCount % 2 == 0) {
+				(sortedSeq(countCount / 2) + sortedSeq(countCount / 2 - 1)) / 2.0
+			} else {
+				sortedSeq((countCount + 1) / 2)
+			}
+		}
+		
+		frag(
+			h3("Evolutions per Pokémon"),
+			// width="calc(100% - 1em)"` is illegal, hence need to put y-axis labels out-of-bounds
+			svg(`class` := "histogram", width := "100%", height := "7em", overflow := "visible")(
+				svg(x := 0, y := 0, width := "100%", height := "6em", viewBox := s"0 0 $maxKey $maxValue", preserveAspectRatio := "none meet")(
+					rect(x := 0, y := 0, width := maxKey, height := maxValue, fill := "#CCC"),
+					path(`class` := "data", d := histogramPath, fill := "blue", transform := s"scale(1, -1) translate(0, -$maxValue)"),
+				),
+				text(x := "50%", y := "7em", fontWeight := "bold", textAnchor := "middle", "Number of Possible Evolutions"),
+				text(x := "0%", y := "7em", textAnchor := "start", "1"),
+				text(x := "100%", y := "7em", textAnchor := "end", s"${maxKey}"),
+				svg(x := "-1", y := "3em", width := "100%", height := "3em", overflow := "visible")(
+					// create a new coordinate system to get around the inability to use units in transforms
+					text(x := 0, y := 0, fontWeight := "bold", textAnchor := "middle", transform := "rotate(270)", "Count"),
+				),
+				text(x := "-1px", y := "6em", textAnchor := "end", "0"),
+				text(x := "-1px", y := "1em", textAnchor := "end", s"${maxValue}"),
+			),
+			dl(
+				dt("Mean"), dd( counts.map{case (a,b) => a * b}.sum.doubleValue / countCount ),
+				dt("Median"), dd( median ),
+				dt("Mode"), dd( counts.maxBy{_._2}._1 + " with " + counts.maxBy{_._2}._2 ),
+				dt("Range"), dd( counts.keySet.min + " to " + maxKey ),
+			),
 		)
 	}
 	
