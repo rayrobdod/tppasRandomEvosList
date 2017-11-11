@@ -5,8 +5,12 @@ package object possibleEvolutions {
 
 package possibleEvolutions {
 	
+	/**
+	 * Describes the randomizer settings for a particular game.
+	 */
 	object EvosGame {
 		sealed trait Value {
+			/** Internal id for e.g. sorting. Also the order in which said games were played. */
 			def id:Int
 			/** This game's name */
 			def name:String

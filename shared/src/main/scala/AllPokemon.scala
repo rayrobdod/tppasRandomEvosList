@@ -2,7 +2,13 @@ package com.rayrobdod.possibleEvolutions
 
 import scala.collection.immutable.Seq
 
+/**
+ * Contains a list of every known Pokémon species.
+ */
 object AllPokemon {
+	/**
+	 * Said list of Pokémon species
+	 */
 	lazy val apply:Seq[Pokemon] = Seq(
 		  new Pokemon(dexNo = DexNo(0), name = "MissingNo", naturalType1 = "???", naturalType2 = "???", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 0, expGrowth = "???")
 		, new Pokemon(dexNo = DexNo(1), name = "Bulbasaur", naturalType1 = "Grass", naturalType2 = "Poison", rpType1 = "Bug", rpType2 = "Bug", gen1bst = 253, gen2bst = 318, gen6bst = 318, gen7bst = 318, expGrowth = "Medium Slow")
@@ -809,5 +815,8 @@ object AllPokemon {
 		, new Pokemon(dexNo = DexNo(802), name = "Marshadow", naturalType1 = "Fighting", naturalType2 = "Ghost", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 600, expGrowth = "Slow")
 	)
 	
+	/**
+	 * Returns the Pokémon from said list with the specified dexno.
+	 */
 	def get(x:DexNo):Option[Pokemon] = this.apply.find{_.dexNo == x} 
 }

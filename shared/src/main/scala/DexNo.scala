@@ -1,13 +1,16 @@
 package com.rayrobdod.possibleEvolutions
 
+/**
+ * Represents a numeric identifier
+ */
 final case class DexNo(private val value:Int) extends Ordered[DexNo] {
 	override def toString:String = value.toString
 	def toStringPadded:String = ("00000" + value).takeRight(5) 
 	
-	override def compare(rhs:DexNo) = this.value compare rhs.value
+	override def compare(rhs:DexNo):Int = this.value compare rhs.value
 	
-	def <=(x:Int) = this.value <= x
-	def to(rhs:DexNo) = (this.value to rhs.value).map{x => DexNo(x)}
+	def <=(x:Int):Boolean = this.value <= x
+	def to(rhs:DexNo):Seq[DexNo] = (this.value to rhs.value).map{x => DexNo(x)}
 }
 
 object DexNo {
@@ -18,9 +21,9 @@ object DexNo {
 	
 	implicit def mapCanBuildFrom[V]:scala.collection.generic.CanBuildFrom[Map[DexNo, V], (DexNo, V), DexNoMap[V]] = new DexNoMapCanBuildFrom[V]
 	
-	/** A Map with DexNo keys taking advantage of the following assumptions:
+	/**
+	 * A Map with DexNo keys taking advantage of the following assumptions:
 	 * - DexNos are all small, nonnegative integers
-	 * - Maps with DexNo keys have an entry for every key
 	 */
 	final class DexNoMap[+V] private[DexNo] (backing:Array[Option[V]])
 			extends scala.collection.immutable.Map[DexNo, V]

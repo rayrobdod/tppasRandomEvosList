@@ -1,5 +1,8 @@
 package com.rayrobdod.possibleEvolutions
 
+/**
+ * Information about a particular species of Pokémon
+ */
 final class Pokemon(
 	  val dexNo:DexNo = DexNo.undef
 	, val name:String = ""

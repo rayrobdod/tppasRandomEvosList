@@ -10,6 +10,9 @@ object PageTemplatesText extends PageTemplates(
 	, scalatags.Text.implicits.raw("<!DOCTYPE html>\n")
 )
 
+/**
+ * The templates for the HTML output files.
+ */
 class PageTemplates[Builder, Output <: FragT, FragT](
 	  bundle:Bundle[Builder, Output, FragT]
 	, htmlDoctype:Frag[Builder, FragT]
@@ -424,8 +427,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							  th("From Num")
 							, th("From")
 							, th("Method")
-							, th("To")
 							, th("To Num")
+							, th("To")
 							, frag( nameHeaders:_* )
 						  ))
 						, tbody(frag({
