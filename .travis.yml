@@ -4,5 +4,5 @@ install:
    - sbt update
 
 script:
-  - sbt web-stage
+  - sbt webStage
   - sbt benchmark/jmh:run\ -i\ 10\ -wi\ 5\ -f1\ -t1
