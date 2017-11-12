@@ -8,6 +8,10 @@ h4 { margin-bottom: 0.5em; }
 dt { font-weight: bold; }
 dd[data-type] {width: 6em;}
 
+fieldset > ul {margin: 0; padding: 0;}
+fieldset > ul > li {list-style-type: none;}
+#theoretical-game-properties > button[type="button"] {font-size: 150%; width:100%;}
+
 /** The list of games on the index page */
 
 ul.gamesList {
@@ -24,15 +28,21 @@ ul.gamesList > li {
 	flex-grow: 1;
 }
 ul.gamesList > li[data-game="natural"] {width:100%}
+ul.gamesList > li[data-game="theoretical"] {width:100%}
 
 /** Data tables */
 
-table {border-collapse:collapse; width: 100%;}
-table th {padding:2px;}
-table td {border:1px solid black; padding:2px;}
+table {border-collapse: collapse; width: 100%;}
+table th, table td {padding: 2px; text-align: left;}
+table th {border-bottom: 1px solid black;}
+table td {border: 1px dotted black; border-left: 0px; border-right: 0px;}
 
-table.checktable td:nth-last-child(-n+4) {text-align: center;}
+table.checktable td:nth-last-child(-n+4),
+table.checktable th:nth-last-child(-n+4) {text-align: center;}
 
+dl {column-width: 12em; column-count: 2;}
+dl dt {break-after: avoid;}
+dl dd {break-before: avoid;}
 
 /** background (and foreground) color associated with each type */
 
@@ -72,6 +82,7 @@ table.checktable td:nth-last-child(-n+4) {text-align: center;}
 [data-game="alpha-sapphire"]{background-color:#BFE4EA;} /* hsl(125/240, 50%, 200/240) */
 [data-game="platinum"]{background-color:#C9D4DF;} /* hsl(140/240, 10%, 200/240) */
 [data-game="white2"]{background-color:#DDDDCC;} /* hsl(40/240, 20%, 200/240) */
+[data-game="theoretical"]{background-color:#CAEABF;} /* hsl(70/240, 50%, 200/240) */
 [data-game="natural platinum"]{
 	background-color:#EAC5BF;
 	background: linear-gradient(to bottom, #EAC5BF 0%,#EAC5BF 50%,#C9D4DF 51%,#C9D4DF 100%);

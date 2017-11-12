@@ -1,7 +1,17 @@
-document.addEventListener("DOMContentLoaded", function() {
+/**
+ * Allow a user to sort tables by clicking on the corresponding header.
+ * The tables are sorted based on the value data-sort values in that column.
+ */
+// Global so that the function can be recalled when new tables are created by the theoretical page's scripts
+function makeTablesSortable() {
 	let tables = document.getElementsByTagName("table");
 	const SORT_INDICATOR = " ↕";
 	
+	function forEach(coll, fun) {
+		for (i = 0; i < coll.length; i++) {
+			fun(coll[i])
+		}
+	}
 	function toArray(x) {
 		var retVal = new Array()
 		for (i = 0; i < x.length; i++) {
@@ -34,15 +44,16 @@ document.addEventListener("DOMContentLoaded", function() {
 			sortTable(tableToSort, columnNo)
 		});
 	}
-
-	toArray(tables)
-		.forEach(function(tab) {
-			if (tab.tHead != null) {
-				var headerCells = tab.tHead.rows[0].cells
-				for (j = 0; j < headerCells.length; j++) {
-					makeColumnSortable(tab, j)
-				}
+	
+	forEach(tables, function(tab) {
+		if (tab.tHead != null) {
+			var headerCells = tab.tHead.rows[0].cells
+			for (j = 0; j < headerCells.length; j++) {
+				makeColumnSortable(tab, j)
 			}
+		}
 	})
 
-})
+}
+
+document.addEventListener("DOMContentLoaded", makeTablesSortable)

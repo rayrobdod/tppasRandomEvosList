@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<title>Possible Evolutions - Theoretical</title>
+<link rel="stylesheet" href="../style/style.css" />
+<script defer="defer" type="text/javascript" src="../style/sectionCollapse.js"> </script>
+<script defer="defer" type="text/javascript" src="../style/tableSort.js"> </script>
+<script defer="defer" type="text/javascript" src="../style/theoreticalPage.js"> </script>
+<script defer="defer" type="text/javascript" src="../style/theoreticalPageForm.js"> </script>
+</head>
+<body>
+<header>
+<a href="../index.html">Back to Index</a>
+</header>
+<main>
+<p>Note that these calculations are done in the browser,so if scripting is disabled this won't be able to work.</p>
+<h1>Settings</h1>
+<form id="theoretical-game-properties">
+<h2>Baseline Information</h2>
+<fieldset>
+<legend>Generation</legend>
+<ul>
+<li>
+<input type="radio" id="generation_151" name="generation" value="151" checked="checked" />
+<label for="generation_151">Gen1</label>
+</li>
+<li>
+<input type="radio" id="generation_251" name="generation" value="251">
+</input>
+<label for="generation_251">Gen2</label>
+</li>
+<li>
+<input type="radio" id="generation_386" name="generation" value="386">
+</input>
+<label for="generation_386">Gen3</label>
+</li>
+<li>
+<input type="radio" id="generation_493" name="generation" value="493">
+</input>
+<label for="generation_493">Gen4</label>
+</li>
+<li>
+<input type="radio" id="generation_649" name="generation" value="649">
+</input>
+<label for="generation_649">Gen5</label>
+</li>
+<li>
+<input type="radio" id="generation_721" name="generation" value="721">
+</input>
+<label for="generation_721">Gen6</label>
+</li>
+<li>
+<input type="radio" id="generation_802" name="generation" value="802">
+</input>
+<label for="generation_802">Gen7</label>
+</li>
+</ul>
+</fieldset>
+<fieldset>
+<legend>Types</legend>
+<ul>
+<li>
+<input type="radio" id="monTypeType_0" name="monTypeType" value="0" checked="checked" />
+<label for="monTypeType_0">Normal</label>
+</li>
+<li>
+<input type="radio" id="monTypeType_1" name="monTypeType" value="1">
+</input>
+<label for="monTypeType_1">Normal Sans Fairy</label>
+</li>
+<li>
+<input type="radio" id="monTypeType_2" name="monTypeType" value="2">
+</input>
+<label for="monTypeType_2">Random Platinum</label>
+</li>
+</ul>
+</fieldset>
+<fieldset>
+<legend>BST Values</legend>
+<ul>
+<li>
+<input type="radio" id="monBstType_0" name="monBstType" value="0" checked="checked" />
+<label for="monBstType_0">Gen1</label>
+</li>
+<li>
+<input type="radio" id="monBstType_1" name="monBstType" value="1">
+</input>
+<label for="monBstType_1">Gen2-5</label>
+</li>
+<li>
+<input type="radio" id="monBstType_2" name="monBstType" value="2">
+</input>
+<label for="monBstType_2">Gen6</label>
+</li>
+<li>
+<input type="radio" id="monBstType_3" name="monBstType" value="3">
+</input>
+<label for="monBstType_3">Gen7</label>
+</li>
+</ul>
+</fieldset>
+<h2>Evolution Restrictions</h2>
+<div>
+<input type="checkbox" name="expGroup" id="expGroup" />
+<label for="expGroup">Experience Group Match</label>
+</div>
+<div>
+<input type="checkbox" name="naturalEvolution" id="naturalEvolution" />
+<label for="naturalEvolution">Natural Evolution Allowed</label>
+</div>
+<fieldset>
+<legend>New evolution's type must match</legend>
+<ul>
+<li>
+<input type="radio" id="monTypeToMatch_2" name="monTypeToMatch" value="2" checked="checked" />
+<label for="monTypeToMatch_2">Neither</label>
+</li>
+<li>
+<input type="radio" id="monTypeToMatch_0" name="monTypeToMatch" value="0">
+</input>
+<label for="monTypeToMatch_0">Base Form</label>
+</li>
+<li>
+<input type="radio" id="monTypeToMatch_1" name="monTypeToMatch" value="1">
+</input>
+<label for="monTypeToMatch_1">Evolved Form</label>
+</li>
+</ul>
+</fieldset>
+<fieldset>
+<legend>Allowed difference in BST</legend>
+<ul>
+<li>
+<input type="radio" id="bstdifference_any" name="bstdifference" value="any" checked="checked" />
+<label for="bstdifference_any">Any</label>
+</li>
+<li>
+<input type="radio" id="bstdifference_pk" name="bstdifference" value="pk" />
+<label for="bstdifference_pk">5/6 to 6/5 (Like pk3DS)</label>
+</li>
+<li>
+<input type="radio" id="bstdifference_ur" name="bstdifference" value="ur" />
+<label for="bstdifference_ur">9/10 to 11/10 (like Universal Randomizer)</label>
+</li>
+<fieldset>
+<legend>
+<input type="radio" id="bstdifference_custom" name="bstdifference" value="custom" />
+<label for="bstdifference_custom">Custom</label>
+</legend>
+<div>
+<label for="bstdifference_min">Minimum: </label>
+<input type="number" name="bstdifference_min" id="bstdifference_min" step="0.1" max="1" min="0" value="0.9" />
+</div>
+<div>
+<label for="bstdifference_max">Maximum: </label>
+<input type="number" name="bstdifference_max" id="bstdifference_max" step="0.1" max="10" min="1" value="1.1" />
+</div>
+</fieldset>
+</ul>
+</fieldset>
+<h2>Generate</h2>
+<button type="button" id="generate">Generate</button>
+</form>
+</main>
+</body>
+</html>
