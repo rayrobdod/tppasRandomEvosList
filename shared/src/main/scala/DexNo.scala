@@ -1,7 +1,9 @@
 package com.rayrobdod.possibleEvolutions
 
 /**
- * Represents a numeric identifier
+ * Represents a Pokemon's unique identifier/primary key.
+ * Currently equal to the mon's national Pokedex number.
+ * I don't know what will happen when fakemons become relevant.
  */
 final case class DexNo(private val value:Int) extends Ordered[DexNo] {
 	override def toString:String = value.toString
@@ -16,7 +18,7 @@ final case class DexNo(private val value:Int) extends Ordered[DexNo] {
 object DexNo {
 	val missing:DexNo = DexNo(0)
 	val undef:DexNo = DexNo(-1)
-	val maxPlusOneInt:Int = 803
+	private val maxPlusOneInt:Int = 808
 	val maxPlusOne:DexNo = DexNo(maxPlusOneInt)
 	
 	implicit def mapCanBuildFrom[V]:scala.collection.generic.CanBuildFrom[Map[DexNo, V], (DexNo, V), DexNoMap[V]] = new DexNoMapCanBuildFrom[V]

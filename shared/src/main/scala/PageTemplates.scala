@@ -655,6 +655,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							, "Gen5" -> "649"
 							, "Gen6" -> "721"
 							, "Gen7" -> "802"
+							, "Gen7+" -> "807"
 						  ))
 						, options("Types", "monTypeType", Seq(
 							  "Normal" -> MonTypeType.Natural.id.toString
