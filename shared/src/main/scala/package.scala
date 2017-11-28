@@ -56,7 +56,7 @@ package possibleEvolutions {
 			override def expGroupMustMatch:Boolean = true
 			override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Any
 			override def naturalEvoAllowed:Boolean = true
-			override def maxKnownDexno:DexNo = DexNo(802)
+			override def maxKnownDexno:DexNo = DexNo(807)
 			override def bstType:MonBstType.Value = MonBstType.Gen7
 			override def typeType:MonTypeType.Value = MonTypeType.Natural
 		}

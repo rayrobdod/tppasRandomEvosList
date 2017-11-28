@@ -10,7 +10,7 @@ dd[data-type] {width: 6em;}
 
 fieldset > ul {margin: 0; padding: 0;}
 fieldset > ul > li {list-style-type: none;}
-#theoretical-game-properties > button[type="button"] {font-size: 150%; width:100%;}
+#theoretical-game-properties > button {font-size: 150%; width:100%;}
 
 /** The list of games on the index page */
 

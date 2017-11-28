@@ -72,7 +72,7 @@ lazy val website = project
 lazy val mySettings = Seq(
 	organization := "com.rayrobdod",
 	organizationHomepage := Some(new URL("http://rayrobdod.name/")),
-	version := "2017.11.11",
+	version := "SNAPSHOT",
 	javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked"),
 	scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Ywarn-unused-import", "-Ywarn-unused", "-Xlint:_", "-Xfuture", "-Xcheckinit")
 )

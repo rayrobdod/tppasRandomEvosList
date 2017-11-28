@@ -2,6 +2,7 @@ package com.rayrobdod.possibleEvolutions
 
 import scala.collection.immutable.Seq
 import org.scalajs.dom.document
+import org.scalajs.dom.window
 import scalatags.JsDom.implicits._
 
 object TheoreticalPage {
@@ -9,150 +10,97 @@ object TheoreticalPage {
 	
 	
 	def main(args:Array[String]):Unit = {
-		document.addEventListener("DOMContentLoaded", {(x:Any) =>
-			document.getElementById("generate").addEventListener("click", generateGamePage _)
-		})
+		document.addEventListener("DOMContentLoaded", generatePage _)
 	}
 	
-	def generateGamePage(x:Any):Unit = {
+	def generatePage(event:Any):Unit = {
 		val mainElem = document.getElementsByTagName("main").apply(0)
+		val navElem = document.getElementsByTagName("header").apply(0)
 		
-		// Remove elements previously added by this script
-		while (isNotForm(mainElem.lastChild)) {
+		while (mainElem.hasChildNodes) {
 			mainElem.removeChild(mainElem.lastChild)
 		}
 		
-		/* I can't decide whether the form should be disabled or not upon the first submit
-		document.getElementsByTagName("input").toScala.foreach{_ match {
-			case e:org.scalajs.dom.raw.Element => e.setAttribute("disabled", "disabled")
-		}}
-		document.getElementById("generate").setAttribute("disabled", "disabled")
-		*/
-		
-		mainElem.appendChild(
-			scalatags.JsDom.tags.h1("Results").render
-		)
-		
-		val game = getEvosGameFromForm()
-		implicit val config:EvosGame.Value = game
-		
+		val params = getQueryString()
+		val monNoOpt:Option[DexNo] = params.get("dexno").map{x => DexNo(x.toInt)}
+		val game = getEvosGameFromQueryString(params)
 		val predictor = new Predictor(game)
 		
+		val gamePageUrl = window.location.pathname + mapToQueryString(params - "dexno")
+		val monPageUrlFun = {dexNo:DexNo => window.location.pathname + mapToQueryString(params + (("dexno" -> dexNo.toString)))}
+		
+		monNoOpt.foreach{monNo =>
+			navElem.appendChild(
+				scalatags.JsDom.tags.span(" > ").render
+			)
+			navElem.appendChild(
+				scalatags.JsDom.tags.a("Game")(scalatags.JsDom.attrs.href := gamePageUrl).render
+			)
+		}
+		
 		mainElem.appendChild(
-			scalatags.JsDom.tags.h2("List of Pokémon").render
+			scalatags.JsDom.tags.h1("Theoretical" + monNoOpt.flatMap{AllPokemon.get _}.map{x => " - " + x.name}.getOrElse("")).render
 		)
-		mainElem.appendChild(
-			PageTemplatesJsDom.pokemonListTable(
-				  x = AllPokemon.apply.filter{_.exists}
-				, realEvos = Seq.empty
-				, predictor.possibleEvosCount _
-				, predictor.possiblePrevosCount _
-				, {dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := "#", new AddClickListenerModifier(generateMonPage(dexNo) _))}
-			).render
-		)
-		mainElem.appendChild(
-			scalatags.JsDom.tags.h2("Prediction Summary").render
-		)
-		mainElem.appendChild(
-			PageTemplatesJsDom.predictionSummary(
-				  mons = AllPokemon.apply.filter{_.exists}
-				, possibleEvosCount = predictor.possibleEvosCount _
-			).render
-		)
+		
+		monNoOpt match {
+			case None => {
+				mainElem.appendChild(
+					PageTemplatesJsDom.perGameMain(
+						  predictions = predictor
+						, game = game
+						, {dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := monPageUrlFun(dexNo))}
+					).render
+				)
+			}
+			case Some(monNo) => {
+				mainElem.appendChild(
+					PageTemplatesJsDom.perMonMain(
+						  monNo = monNo
+						, predictions = predictor
+						, game = game
+						, seedDatas = seedDatas
+						, {dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := monPageUrlFun(dexNo))}
+					).render
+				)
+			}
+			
+		}
 		
 		SortableTableFunction.makeTablesSortable()
 	}
 	
-	def generateMonPage(monNo:DexNo)(x:Any):Unit = {
-		val mainElem = document.getElementsByTagName("main").apply(0)
-		
-		// Remove elements previously added by this script
-		while (isNotForm(mainElem.lastChild)) {
-			mainElem.removeChild(mainElem.lastChild)
-		}
-		
-		val monName = AllPokemon.get(monNo).get.name
-		mainElem.appendChild(
-			scalatags.JsDom.tags.h1(s"Results - $monName").render
-		)
-		mainElem.appendChild(
-			scalatags.JsDom.tags.a(scalatags.JsDom.attrs.href := "#", new AddClickListenerModifier(generateGamePage _), "Back to Game").render
-		)
-		
-		val game = getEvosGameFromForm()
-		
-		val predictor = new Predictor(game)
-		
-		mainElem.appendChild(
-			PageTemplatesJsDom.perMonMain(
-				  monNo = monNo
-				, predictions = predictor
-				, game = game
-				, seedDatas = seedDatas
-				, {dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := "#", new AddClickListenerModifier(generateMonPage(dexNo) _))}
-			).render
-		)
-		
-		SortableTableFunction.makeTablesSortable()
-	}
 	
-	private[this] class AddClickListenerModifier(f:Function[Any, Unit]) extends scalatags.JsDom.Modifier {
-		def applyTo(t:org.scalajs.dom.Element):Unit = {
-			t.addEventListener("click", f)
-		}
-	}
-	
-	private[this] def getEvosGameFromForm():EvosGame.Value = {
+	private[this] def getEvosGameFromQueryString(params:Map[String, String]):EvosGame.Value = {
 		EvosGame.Custom(
 			  maxKnownDexno = {
-			  	document.querySelectorAll("input[name=\"generation\"]")
-					.toScala
-					.filter(isCheckboxChecked _)
-					.headOption
-					.map{_.asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value}
+				params.get("maxDexNo")
 					.map{id => DexNo(id.toInt)}
-					.getOrElse(DexNo(802))  
+					.getOrElse(DexNo.maxPlusOne)
 			  }
 			, bstType = {
-				document.querySelectorAll("input[name=\"monBstType\"]")
-					.toScala
-					.filter(isCheckboxChecked _)
-					.headOption
-					.map{_.asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value}
-					.map{id => MonBstType.apply(id.toInt)}
+				params.get("bsts")
+					.map{name => MonBstType.withName(name)}
 					.getOrElse(MonBstType.Gen7)
 			  }
 			, typeType = {
-				document.querySelectorAll("input[name=\"monTypeType\"]")
-					.toScala
-					.filter(isCheckboxChecked _)
-					.headOption
-					.map{_.asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value}
-					.map{id => MonTypeType.apply(id.toInt)}
+				params.get("types")
+					.map{name => MonTypeType.withName(name)}
 					.getOrElse(MonTypeType.Natural)
 			  }
 			, monToMatch = {
-				document.querySelectorAll("input[name=\"monTypeToMatch\"]")
-					.toScala
-					.filter(isCheckboxChecked _)
-					.headOption
-					.map{_.asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value}
-					.map{id => MonTypeToMatch.apply(id.toInt)}
+				params.get("typeToMatch")
+					.map{name => MonTypeToMatch.withName(name)}
 					.getOrElse(MonTypeToMatch.Neither)
 			  }
 			, bstMatchFunction = {
-				document.querySelectorAll("input[name=\"bstdifference\"]")
-					.toScala
-					.filter(isCheckboxChecked _)
-					.headOption
-					.map{_.asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value}
+				params.get("bstdifference")
 					.map{_ match {
 						case "any" => BstMatchFunction.`Any`
 						case "pk" => BstMatchFunction.Pk3ds
 						case "ur" => BstMatchFunction.UniversalRandomizer
 						case "custom" => {
-							val min = document.getElementById("bstdifference_min").asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value.toDouble
-							val max = document.getElementById("bstdifference_max").asInstanceOf[org.scalajs.dom.raw.HTMLInputElement].value.toDouble
+							val min = params.get("bstdifference_min").map{_.toDouble}.getOrElse(0d)
+							val max = params.get("bstdifference_max").map{_.toDouble}.getOrElse(10d)
 							BstMatchFunction.Custom(min, max)
 						}
 						case _ => BstMatchFunction.`Any`
@@ -160,29 +108,32 @@ object TheoreticalPage {
 					.getOrElse(BstMatchFunction.Any)
 			  }
 			, expGroupMustMatch = {
-				isCheckboxChecked(document.getElementById("expGroup"))
+				params.get("expGroupMatch")
+					.map{x => true}
+					.getOrElse(false)
 			  }
 			, naturalEvoAllowed = {
-				isCheckboxChecked(document.getElementById("naturalEvolution"))
+				params.get("naturalEvolutionAllowed")
+					.map{x => true}
+					.getOrElse(false)
 			  }
 		)
 	}
 	
-	private[this] def isNotForm(x:org.scalajs.dom.raw.Node):Boolean = x match {
-		case e:org.scalajs.dom.raw.Element => ! (e.tagName equalsIgnoreCase "form")
-		case null => false
-		case _ => true
+	private[this] def getQueryString():Map[String, String] = {
+		window.location.search.substring(1).split("&").map{param => 
+			val split = param.split("=")
+			split match {
+				case Array() => (("", ""))
+				case Array(k) => ((k, k))
+				case Array(k, v) => ((k, v))
+				case x:Array[String] => ((x.head, x.tail.mkString("=")))
+			}
+		}.toMap
 	}
 	
-	private[this] def isCheckboxChecked(x:org.scalajs.dom.raw.Node):Boolean = x match {
-		case e:org.scalajs.dom.raw.HTMLInputElement => e.checked
-		case _ => false
-	}
-	
-	private[this] implicit class NodeListToScalaSeq(coll:org.scalajs.dom.raw.NodeList) {
-		def toScala:scala.collection.immutable.Seq[org.scalajs.dom.raw.Node] = {
-			(0 until coll.length).map{idx => coll(idx)}
-		}
+	private[this] def mapToQueryString(x:Map[String, String]):String = {
+		x.map{x => s"${x._1}=${x._2}"}.mkString("?", "&", "")
 	}
 	
 	@scala.scalajs.js.native

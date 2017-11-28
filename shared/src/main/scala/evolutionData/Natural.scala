@@ -381,6 +381,7 @@ object Natural extends SeedData {
 		builder += ((DexNo(783), Map("Level Up [45]" -> DexNo(784)) ))
 		builder += ((DexNo(789), Map("Level Up [43]" -> DexNo(790)) ))
 		builder += ((DexNo(790), Map("Level Up in Sun [53]" -> DexNo(791), "Level Up in Moon [53]" -> DexNo(792)) ))
+		builder += ((DexNo(803), Map("Level Up with Move [Dragon Pulse]" -> DexNo(804)) ))
 		
 		builder.withDefault(Map.empty)
 		builder.result

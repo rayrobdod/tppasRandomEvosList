@@ -813,6 +813,11 @@ object AllPokemon {
 		, new Pokemon(dexNo = DexNo(800), name = "Necrozma", naturalType1 = "Psychic", naturalType2 = "Psychic", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 600, expGrowth = "Slow")
 		, new Pokemon(dexNo = DexNo(801), name = "Magearna", naturalType1 = "Steel", naturalType2 = "Fairy", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 600, expGrowth = "Slow")
 		, new Pokemon(dexNo = DexNo(802), name = "Marshadow", naturalType1 = "Fighting", naturalType2 = "Ghost", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 600, expGrowth = "Slow")
+		, new Pokemon(dexNo = DexNo(803), name = "Poipole", naturalType1 = "Poison", naturalType2 = "Poison", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 420, expGrowth = "Slow")
+		, new Pokemon(dexNo = DexNo(804), name = "Naganadel", naturalType1 = "Poison", naturalType2 = "Dragon", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 540, expGrowth = "Slow")
+		, new Pokemon(dexNo = DexNo(805), name = "Stakataka", naturalType1 = "Rock", naturalType2 = "Steel", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 570, expGrowth = "Slow")
+		, new Pokemon(dexNo = DexNo(806), name = "Blacephalon", naturalType1 = "Fire", naturalType2 = "Ghost", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 570, expGrowth = "Slow")
+		, new Pokemon(dexNo = DexNo(807), name = "Zeraora", naturalType1 = "Electric", naturalType2 = "Electric", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 600, expGrowth = "Slow")
 	)
 	
 	/**
