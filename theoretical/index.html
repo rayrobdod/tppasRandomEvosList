@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-<title>Possible Evolutions - Theoretical</title>
+<title>Possible Evolutions - Theoretical - Form</title>
 <link rel="stylesheet" href="../style/style.css" />
-<script defer="defer" type="text/javascript" src="../style/sectionCollapse.js"> </script>
-<script defer="defer" type="text/javascript" src="../style/tableSort.js"> </script>
-<script defer="defer" type="text/javascript" src="../style/theoreticalPage.js"> </script>
 <script defer="defer" type="text/javascript" src="../style/theoreticalPageForm.js"> </script>
 </head>
 <body>
@@ -13,46 +10,51 @@
 <a href="../index.html">Back to Index</a>
 </header>
 <main>
-<p>Note that these calculations are done in the browser,so if scripting is disabled this won't be able to work.</p>
+<p>For technical reasons, these calculations are done in the browser, so if scripting is disabled then the page won't work.</p>
 <h1>Settings</h1>
-<form id="theoretical-game-properties">
+<form id="theoretical-game-properties" action="results.html">
 <h2>Baseline Information</h2>
 <fieldset>
 <legend>Generation</legend>
 <ul>
 <li>
-<input type="radio" id="generation_151" name="generation" value="151" checked="checked" />
-<label for="generation_151">Gen1</label>
+<input type="radio" id="maxDexNo_151" name="maxDexNo" value="151" checked="checked" />
+<label for="maxDexNo_151">Gen1</label>
 </li>
 <li>
-<input type="radio" id="generation_251" name="generation" value="251">
+<input type="radio" id="maxDexNo_251" name="maxDexNo" value="251">
 </input>
-<label for="generation_251">Gen2</label>
+<label for="maxDexNo_251">Gen2</label>
 </li>
 <li>
-<input type="radio" id="generation_386" name="generation" value="386">
+<input type="radio" id="maxDexNo_386" name="maxDexNo" value="386">
 </input>
-<label for="generation_386">Gen3</label>
+<label for="maxDexNo_386">Gen3</label>
 </li>
 <li>
-<input type="radio" id="generation_493" name="generation" value="493">
+<input type="radio" id="maxDexNo_493" name="maxDexNo" value="493">
 </input>
-<label for="generation_493">Gen4</label>
+<label for="maxDexNo_493">Gen4</label>
 </li>
 <li>
-<input type="radio" id="generation_649" name="generation" value="649">
+<input type="radio" id="maxDexNo_649" name="maxDexNo" value="649">
 </input>
-<label for="generation_649">Gen5</label>
+<label for="maxDexNo_649">Gen5</label>
 </li>
 <li>
-<input type="radio" id="generation_721" name="generation" value="721">
+<input type="radio" id="maxDexNo_721" name="maxDexNo" value="721">
 </input>
-<label for="generation_721">Gen6</label>
+<label for="maxDexNo_721">Gen6</label>
 </li>
 <li>
-<input type="radio" id="generation_802" name="generation" value="802">
+<input type="radio" id="maxDexNo_802" name="maxDexNo" value="802">
 </input>
-<label for="generation_802">Gen7</label>
+<label for="maxDexNo_802">Gen7</label>
+</li>
+<li>
+<input type="radio" id="maxDexNo_807" name="maxDexNo" value="807">
+</input>
+<label for="maxDexNo_807">Gen7+</label>
 </li>
 </ul>
 </fieldset>
@@ -60,18 +62,18 @@
 <legend>Types</legend>
 <ul>
 <li>
-<input type="radio" id="monTypeType_0" name="monTypeType" value="0" checked="checked" />
-<label for="monTypeType_0">Normal</label>
+<input type="radio" id="types_Natural" name="types" value="Natural" checked="checked" />
+<label for="types_Natural">Normal</label>
 </li>
 <li>
-<input type="radio" id="monTypeType_1" name="monTypeType" value="1">
+<input type="radio" id="types_NoFairy" name="types" value="NoFairy">
 </input>
-<label for="monTypeType_1">Normal Sans Fairy</label>
+<label for="types_NoFairy">Normal Sans Fairy</label>
 </li>
 <li>
-<input type="radio" id="monTypeType_2" name="monTypeType" value="2">
+<input type="radio" id="types_RandPlat" name="types" value="RandPlat">
 </input>
-<label for="monTypeType_2">Random Platinum</label>
+<label for="types_RandPlat">Random Platinum</label>
 </li>
 </ul>
 </fieldset>
@@ -79,51 +81,51 @@
 <legend>BST Values</legend>
 <ul>
 <li>
-<input type="radio" id="monBstType_0" name="monBstType" value="0" checked="checked" />
-<label for="monBstType_0">Gen1</label>
+<input type="radio" id="bsts_Gen1" name="bsts" value="Gen1" checked="checked" />
+<label for="bsts_Gen1">Gen1</label>
 </li>
 <li>
-<input type="radio" id="monBstType_1" name="monBstType" value="1">
+<input type="radio" id="bsts_Gen2" name="bsts" value="Gen2">
 </input>
-<label for="monBstType_1">Gen2-5</label>
+<label for="bsts_Gen2">Gen2-5</label>
 </li>
 <li>
-<input type="radio" id="monBstType_2" name="monBstType" value="2">
+<input type="radio" id="bsts_Gen6" name="bsts" value="Gen6">
 </input>
-<label for="monBstType_2">Gen6</label>
+<label for="bsts_Gen6">Gen6</label>
 </li>
 <li>
-<input type="radio" id="monBstType_3" name="monBstType" value="3">
+<input type="radio" id="bsts_Gen7" name="bsts" value="Gen7">
 </input>
-<label for="monBstType_3">Gen7</label>
+<label for="bsts_Gen7">Gen7</label>
 </li>
 </ul>
 </fieldset>
 <h2>Evolution Restrictions</h2>
 <div>
-<input type="checkbox" name="expGroup" id="expGroup" />
-<label for="expGroup">Experience Group Match</label>
+<input type="checkbox" name="expGroupMatch" id="expGroupMatch" />
+<label for="expGroupMatch">Experience Group Match</label>
 </div>
 <div>
-<input type="checkbox" name="naturalEvolution" id="naturalEvolution" />
-<label for="naturalEvolution">Natural Evolution Allowed</label>
+<input type="checkbox" name="naturalEvolutionAllowed" id="naturalEvolutionAllowed" />
+<label for="naturalEvolutionAllowed">Natural Evolution Allowed</label>
 </div>
 <fieldset>
 <legend>New evolution's type must match</legend>
 <ul>
 <li>
-<input type="radio" id="monTypeToMatch_2" name="monTypeToMatch" value="2" checked="checked" />
-<label for="monTypeToMatch_2">Neither</label>
+<input type="radio" id="typeToMatch_Neither" name="typeToMatch" value="Neither" checked="checked" />
+<label for="typeToMatch_Neither">Nothing</label>
 </li>
 <li>
-<input type="radio" id="monTypeToMatch_0" name="monTypeToMatch" value="0">
+<input type="radio" id="typeToMatch_BaseForm" name="typeToMatch" value="BaseForm">
 </input>
-<label for="monTypeToMatch_0">Base Form</label>
+<label for="typeToMatch_BaseForm">Base's type</label>
 </li>
 <li>
-<input type="radio" id="monTypeToMatch_1" name="monTypeToMatch" value="1">
+<input type="radio" id="typeToMatch_EvolvedForm" name="typeToMatch" value="EvolvedForm">
 </input>
-<label for="monTypeToMatch_1">Evolved Form</label>
+<label for="typeToMatch_EvolvedForm">Natural evolution's type</label>
 </li>
 </ul>
 </fieldset>
@@ -159,7 +161,7 @@
 </ul>
 </fieldset>
 <h2>Generate</h2>
-<button type="button" id="generate">Generate</button>
+<button type="submit" id="generate">Generate</button>
 </form>
 </main>
 </body>
