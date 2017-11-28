@@ -188,8 +188,6 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			  predictions:Predictor
 			, game:EvosGame.Value
 	):scalatags.generic.Frag[Builder,FragT] = {
-		implicit val config:EvosGame.Value = game
-		
 		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
 				  title(s"Possible Evolutions - ${game.name}")
@@ -203,204 +201,218 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				  )
 				, main(
 					  h1(game.toString)
-					, dl(
-						  dt("Pokémon")
-						, dd(game.maxKnownDexno match {
-							case DexNo(151) => "Gen 1"
-							case DexNo(251) => "Gen 2"
-							case DexNo(386) => "Gen 3"
-							case DexNo(493) => "Gen 4"
-							case DexNo(649) => "Gen 5"
-							case DexNo(721) => "Gen 6"
-							case DexNo(802) => "Gen 7"
-							case DexNo(x) => s"Up to $x inclusive"
-						  })
-						, dt("Base Stat Totals")
-						, dd(game.bstType match {
-							case MonBstType.Gen1 => "Gen 1"
-							case MonBstType.Gen2 => "Gen 2 - 5"
-							case MonBstType.Gen6 => "Gen 6"
-							case MonBstType.Gen7 => "Gen 7"
-						  })
-						, dt("Pokémon Types")
-						, dd(game.typeType match {
-							case MonTypeType.Natural => "Natural (Gen 6+)"
-							case MonTypeType.NoFairy => "Natural (Gen 2-5)"
-							case MonTypeType.RandPlat => "Randomized Platinum's Types"
-						  })
-						, dt("Type Match")
-						, dd(game.monToMatch match {
-							case MonTypeToMatch.BaseForm => "Base Form"
-							case MonTypeToMatch.EvolvedForm => "Natural Evolution"
-							case MonTypeToMatch.Neither => "Off"
-						  })
-						, dt("Experience Group Match")
-						, dd(if (game.expGroupMustMatch) {"Yes"} else {"No"})
-						, dt("Natural Evolution Allowed")
-						, dd(if (game.naturalEvoAllowed) {"Yes"} else {"No"})
-						, dt("Base Stat Total Range")
-						, dd(game.bstMatchFunction.description)
-					  )
-					, h2("Pokémon List")
-					, pokemonListTable(
-						  predictions.extantPokemon
-						, Map.empty
-						, predictions.possibleEvosCount
-						, predictions.possiblePrevosCount
-						, hrefDexNoLinkModifier
-					  )
-					, h2("Prediction Summary")
-					, predictionSummary(predictions.extantPokemon, predictions.possibleEvosCount)
-					)(game.seedData.map{seedData => frag(
-						  h2("Evolutions")
-						, table(
-							  thead(
-								tr(
-									  th("From DexNo")
-									, th("From Name")
-									, th("Method")
-									, th("To DexNo")
-									, th("To Name")
-								)
-							  )
-							, tbody(
-								(for (
-									(fromNo, methodto) <- seedData.evolutions.to[Seq];
-									(method, toNo) <- methodto.to[Seq]
-								) yield {
-									val from = predictions.getPokemon(fromNo)
-									val to = predictions.getPokemon(toNo)
-									tr(
-										  td(dataSort := from.dexNo.toStringPadded)(from.dexNo.toString)
-										, td(dataSort := from.name)(
-											a(href := s"${from.dexNo}.html")(from.name)
-										  )
-										, td(dataSort := method)(method)
-										, td(dataSort := to.dexNo.toStringPadded)(to.dexNo.toString)
-										, td(dataSort := to.name)(
-											a(href := s"${to.dexNo}.html")(to.name)
-										  )
-									)
-								}):_*
-							  )
-						  )
-						, h2("Pokémon that nothing evolves into")
-						, pokemonListTable(
-							  seedData.firstStageMons.map{predictions.getPokemon _}
-							, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount
-							, hrefDexNoLinkModifier
-						  )
-						, h2("Pokémon that multiple things evolve into")
-						, pokemonListTable(
-							  seedData.multiplePrevos.map{predictions.getPokemon _}
-							, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount
-							, hrefDexNoLinkModifier
-						  )
-						, h2("Pokémon whose evo isn't predicted")
-						, pokemonListTable(
-							(for (
-								(prevoNo, prevonodata) <- seedData.evolutions.to[Seq];
-								(method, realEvoNo) <- prevonodata.to[Seq]
-							) yield {
-								val isPredicted = predictions.possibleEvolutions(prevoNo)(method).map{_.dexNo} contains realEvoNo
-								
-								if (isPredicted) {
-									Seq.empty
-								} else {
-									Seq(prevoNo)
-								}
-							}).flatten.to[Seq].distinct.map{predictions.getPokemon _}
-							, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount
-							, hrefDexNoLinkModifier
-						  )
-						, h2("Pokémon who eventually evolve into their vanilla final stage")
-						, {
-							val mons = for (
-								startDexNo <- predictions.extantPokemon.map{_.dexNo};
-								thisGameFinalEvo <- seedData.finalEvolutions(startDexNo);
-								naturalFinalEvo <- evolutionData.Natural.finalEvolutions(startDexNo)
-											if (thisGameFinalEvo == naturalFinalEvo) 
-							) yield { predictions.getPokemon(startDexNo) }
-							
-							pokemonListTable(mons, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount, hrefDexNoLinkModifier)
-						  }
-						, if (game.monToMatch == MonTypeToMatch.Neither) {frag(
-							  h2("Pokémon with same-type evolutions")
-							, table(
-								thead(
-									th("From DexNo"), th("From Name"),
-									th("Shared Type"),
-									th("To DexNo"), th("To Name")
-								),
-								tbody({
-									def haveSharedType(
-										a:Pokemon, b:Pokemon
-									):Seq[String] = {
-										val (a1, a2) = a.types
-										val (b1, b2) = b.types
-										
-										if (a1 == b1) {
-											Seq(a1)
-										} else if (a1 == b2) {
-											Seq(a1)
-										} else if (a2 == b1) {
-											Seq(a2)
-										} else if (a2 == b2) {
-											Seq(a2)
-										} else {
-											Seq.empty
-										}
-									}
-									
-									val elems = (for (
-										(fromNo, toNos) <- seedData.evolutions.to[Seq];
-										(method, toNo) <- toNos.to[Seq];
-										fromMon <- Seq(predictions.getPokemon(fromNo));
-										toMon <- Seq(predictions.getPokemon(toNo));
-										typ <- haveSharedType(fromMon, toMon)
-									) yield {
-										tr(
-											  td(dataSort := fromMon.dexNo.toStringPadded)(fromMon.dexNo.toString)
-											, td(dataSort := fromMon.name)(fromMon.name)
-											, td(dataType := typ.toLowerCase, dataSort := typ)(typ)
-											, td(dataSort := toMon.dexNo.toStringPadded)(toMon.dexNo.toString)
-											, td(dataSort := toMon.name)(toMon.name)
-										)
-									})
-									
-									frag(elems:_*)
-								})
-							  )
-						  )} else {frag("")}
-						, h2("4 stage evolution chains")
-						, ul({
-							seedData.threeEvoChains.map{case (p1,p2,p3,p4) => 
-								li(
-									  a(href := s"${p1}.html")(s"${p1} ${predictions.getPokemon(p1).name}")
-									, " → "
-									, a(href := s"${p2}.html")(s"${p2} ${predictions.getPokemon(p2).name}")
-									, " → "
-									, a(href := s"${p3}.html")(s"${p3} ${predictions.getPokemon(p3).name}")
-									, " → "
-									, a(href := s"${p4}.html")(s"${p4} ${predictions.getPokemon(p4).name}")
-								)
-							}
-						  }:_*)
-						, h2("Large evolution chain convergances")
-						, ul(
-							seedData.families.map{case (end, members) =>
-								if (members.size >= 6) {frag(
-									h4(a(href := s"${end}.html", predictions.getPokemon(end).name), " – ", members.size.toString),
-									ul(
-										members.to[Seq].map{member => li(member + " " + predictions.getPokemon(member).name)}:_*
-									)
-								)} else {frag("")}
-							}.to[Seq]:_*
-						  )
-					)}.getOrElse(frag(""))
+					, perGameMain(predictions, game, hrefDexNoLinkModifier)
 				  )
 			  )
 		))
+	}
+	
+	def perGameMain(
+			  predictions:Predictor
+			, game:EvosGame.Value
+			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
+	):scalatags.generic.Frag[Builder,FragT] = {
+		implicit val config:EvosGame.Value = game
+		
+		frag(
+			frag(
+				  dl(
+					  dt("Pokémon")
+					, dd(game.maxKnownDexno match {
+						case DexNo(151) => "Gen 1"
+						case DexNo(251) => "Gen 2"
+						case DexNo(386) => "Gen 3"
+						case DexNo(493) => "Gen 4"
+						case DexNo(649) => "Gen 5"
+						case DexNo(721) => "Gen 6"
+						case DexNo(802) => "Gen 7"
+						case DexNo(x) => s"Up to $x inclusive"
+					  })
+					, dt("Base Stat Totals")
+					, dd(game.bstType match {
+						case MonBstType.Gen1 => "Gen 1"
+						case MonBstType.Gen2 => "Gen 2 - 5"
+						case MonBstType.Gen6 => "Gen 6"
+						case MonBstType.Gen7 => "Gen 7"
+					  })
+					, dt("Pokémon Types")
+					, dd(game.typeType match {
+						case MonTypeType.Natural => "Natural (Gen 6+)"
+						case MonTypeType.NoFairy => "Natural (Gen 2-5)"
+						case MonTypeType.RandPlat => "Randomized Platinum's Types"
+					  })
+					, dt("Type Match")
+					, dd(game.monToMatch match {
+						case MonTypeToMatch.BaseForm => "Base Form"
+						case MonTypeToMatch.EvolvedForm => "Natural Evolution"
+						case MonTypeToMatch.Neither => "Off"
+					  })
+					, dt("Experience Group Match")
+					, dd(if (game.expGroupMustMatch) {"Yes"} else {"No"})
+					, dt("Natural Evolution Allowed")
+					, dd(if (game.naturalEvoAllowed) {"Yes"} else {"No"})
+					, dt("Base Stat Total Range")
+					, dd(game.bstMatchFunction.description)
+				  )
+				, h2("Pokémon List")
+				, pokemonListTable(
+					  predictions.extantPokemon
+					, Map.empty
+					, predictions.possibleEvosCount
+					, predictions.possiblePrevosCount
+					, dexNoLinkModifier
+				  )
+				, h2("Prediction Summary")
+				, predictionSummary(predictions.extantPokemon, predictions.possibleEvosCount)
+			),
+			game.seedData.map{seedData => frag(
+				  h2("Evolutions")
+				, table(
+					  thead(
+						tr(
+							  th("From DexNo")
+							, th("From Name")
+							, th("Method")
+							, th("To DexNo")
+							, th("To Name")
+						)
+					  )
+					, tbody(
+						(for (
+							(fromNo, methodto) <- seedData.evolutions.to[Seq];
+							(method, toNo) <- methodto.to[Seq]
+						) yield {
+							val from = predictions.getPokemon(fromNo)
+							val to = predictions.getPokemon(toNo)
+							tr(
+								  td(dataSort := from.dexNo.toStringPadded)(from.dexNo.toString)
+								, td(dataSort := from.name)(
+									a(href := s"${from.dexNo}.html")(from.name)
+								  )
+								, td(dataSort := method)(method)
+								, td(dataSort := to.dexNo.toStringPadded)(to.dexNo.toString)
+								, td(dataSort := to.name)(
+									a(href := s"${to.dexNo}.html")(to.name)
+								  )
+							)
+						}):_*
+					  )
+				  )
+				, h2("Pokémon that nothing evolves into")
+				, pokemonListTable(
+					  seedData.firstStageMons.map{predictions.getPokemon _}
+					, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount
+					, dexNoLinkModifier
+				  )
+				, h2("Pokémon that multiple things evolve into")
+				, pokemonListTable(
+					  seedData.multiplePrevos.map{predictions.getPokemon _}
+					, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount
+					, dexNoLinkModifier
+				  )
+				, h2("Pokémon whose evo isn't predicted")
+				, pokemonListTable(
+					(for (
+						(prevoNo, prevonodata) <- seedData.evolutions.to[Seq];
+						(method, realEvoNo) <- prevonodata.to[Seq]
+					) yield {
+						val isPredicted = predictions.possibleEvolutions(prevoNo)(method).map{_.dexNo} contains realEvoNo
+						
+						if (isPredicted) {
+							Seq.empty
+						} else {
+							Seq(prevoNo)
+						}
+					}).flatten.to[Seq].distinct.map{predictions.getPokemon _}
+					, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount
+					, dexNoLinkModifier
+				  )
+				, h2("Pokémon who eventually evolve into their vanilla final stage")
+				, {
+					val mons = for (
+						startDexNo <- predictions.extantPokemon.map{_.dexNo};
+						thisGameFinalEvo <- seedData.finalEvolutions(startDexNo);
+						naturalFinalEvo <- evolutionData.Natural.finalEvolutions(startDexNo)
+									if (thisGameFinalEvo == naturalFinalEvo) 
+					) yield { predictions.getPokemon(startDexNo) }
+					
+					pokemonListTable(mons, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount, dexNoLinkModifier)
+				  }
+				, if (game.monToMatch == MonTypeToMatch.Neither) {frag(
+					  h2("Pokémon with same-type evolutions")
+					, table(
+						thead(
+							th("From DexNo"), th("From Name"),
+							th("Shared Type"),
+							th("To DexNo"), th("To Name")
+						),
+						tbody({
+							def haveSharedType(
+								a:Pokemon, b:Pokemon
+							):Seq[String] = {
+								val (a1, a2) = a.types
+								val (b1, b2) = b.types
+								
+								if (a1 == b1) {
+									Seq(a1)
+								} else if (a1 == b2) {
+									Seq(a1)
+								} else if (a2 == b1) {
+									Seq(a2)
+								} else if (a2 == b2) {
+									Seq(a2)
+								} else {
+									Seq.empty
+								}
+							}
+							
+							val elems = (for (
+								(fromNo, toNos) <- seedData.evolutions.to[Seq];
+								(method, toNo) <- toNos.to[Seq];
+								fromMon <- Seq(predictions.getPokemon(fromNo));
+								toMon <- Seq(predictions.getPokemon(toNo));
+								typ <- haveSharedType(fromMon, toMon)
+							) yield {
+								tr(
+									  td(dataSort := fromMon.dexNo.toStringPadded)(fromMon.dexNo.toString)
+									, td(dataSort := fromMon.name)(fromMon.name)
+									, td(dataType := typ.toLowerCase, dataSort := typ)(typ)
+									, td(dataSort := toMon.dexNo.toStringPadded)(toMon.dexNo.toString)
+									, td(dataSort := toMon.name)(toMon.name)
+								)
+							})
+							
+							frag(elems:_*)
+						})
+					  )
+				  )} else {frag("")}
+				, h2("4 stage evolution chains")
+				, ul({
+					seedData.threeEvoChains.map{case (p1,p2,p3,p4) => 
+						li(
+							  a(href := s"${p1}.html")(s"${p1} ${predictions.getPokemon(p1).name}")
+							, " → "
+							, a(href := s"${p2}.html")(s"${p2} ${predictions.getPokemon(p2).name}")
+							, " → "
+							, a(href := s"${p3}.html")(s"${p3} ${predictions.getPokemon(p3).name}")
+							, " → "
+							, a(href := s"${p4}.html")(s"${p4} ${predictions.getPokemon(p4).name}")
+						)
+					}
+				  }:_*)
+				, h2("Large evolution chain convergences")
+				, ul(
+					seedData.families.map{case (end, members) =>
+						if (members.size >= 6) {frag(
+							h4(a(href := s"${end}.html", predictions.getPokemon(end).name), " – ", members.size.toString),
+							ul(
+								members.to[Seq].map{member => li(member + " " + predictions.getPokemon(member).name)}:_*
+							)
+						)} else {frag("")}
+					}.to[Seq]:_*
+				  )
+			)}.getOrElse(frag(""))
+		)
 	}
 	
 	def sharedPage(seedDatas:Seq[SeedData]):scalatags.generic.Frag[Builder,FragT] = {
@@ -769,7 +781,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	)
 	
 	
-	def pokemonListTable(
+	private[this] def pokemonListTable(
 			  x:Iterable[Pokemon]
 			, realEvos:Iterable[(EvosGame.Value, DexNo)]
 			, possibleEvosCount:DexNo => Int
@@ -800,7 +812,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		)
 	}
 	
-	def predictionSummary(
+	private[this] def predictionSummary(
 			  mons:Iterable[Pokemon]
 			, possibleEvosCount:DexNo => Int
 	):scalatags.generic.Frag[Builder,FragT] = {

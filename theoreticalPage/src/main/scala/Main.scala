@@ -24,7 +24,6 @@ object TheoreticalPage {
 		val params = getQueryString()
 		val monNoOpt:Option[DexNo] = params.get("dexno").map{x => DexNo(x.toInt)}
 		val game = getEvosGameFromQueryString(params)
-		implicit val config:EvosGame.Value = game
 		val predictor = new Predictor(game)
 		
 		val gamePageUrl = window.location.pathname + mapToQueryString(params - "dexno")
@@ -46,24 +45,10 @@ object TheoreticalPage {
 		monNoOpt match {
 			case None => {
 				mainElem.appendChild(
-					scalatags.JsDom.tags.h2("List of Pokémon").render
-				)
-				mainElem.appendChild(
-					PageTemplatesJsDom.pokemonListTable(
-						  x = AllPokemon.apply.filter{_.exists}
-						, realEvos = Seq.empty
-						, predictor.possibleEvosCount _
-						, predictor.possiblePrevosCount _
+					PageTemplatesJsDom.perGameMain(
+						  predictions = predictor
+						, game = game
 						, {dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := monPageUrlFun(dexNo))}
-					).render
-				)
-				mainElem.appendChild(
-					scalatags.JsDom.tags.h2("Prediction Summary").render
-				)
-				mainElem.appendChild(
-					PageTemplatesJsDom.predictionSummary(
-						  mons = AllPokemon.apply.filter{_.exists}
-						, possibleEvosCount = predictor.possibleEvosCount _
 					).render
 				)
 			}
