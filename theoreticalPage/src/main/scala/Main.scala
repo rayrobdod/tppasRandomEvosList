@@ -78,18 +78,18 @@ object TheoreticalPage {
 					.getOrElse(DexNo.maxPlusOne)
 			  }
 			, bstType = {
-				params.get("monBstType")
-					.map{id => MonBstType.apply(id.toInt)}
+				params.get("bsts")
+					.map{name => MonBstType.withName(name)}
 					.getOrElse(MonBstType.Gen7)
 			  }
 			, typeType = {
-				params.get("monTypeType")
-					.map{id => MonTypeType.apply(id.toInt)}
+				params.get("types")
+					.map{name => MonTypeType.withName(name)}
 					.getOrElse(MonTypeType.Natural)
 			  }
 			, monToMatch = {
-				params.get("monTypeToMatch")
-					.map{id => MonTypeToMatch.apply(id.toInt)}
+				params.get("typeToMatch")
+					.map{name => MonTypeToMatch.withName(name)}
 					.getOrElse(MonTypeToMatch.Neither)
 			  }
 			, bstMatchFunction = {
@@ -108,12 +108,12 @@ object TheoreticalPage {
 					.getOrElse(BstMatchFunction.Any)
 			  }
 			, expGroupMustMatch = {
-				params.get("expGroup")
+				params.get("expGroupMatch")
 					.map{x => true}
 					.getOrElse(false)
 			  }
 			, naturalEvoAllowed = {
-				params.get("naturalEvolution")
+				params.get("naturalEvolutionAllowed")
 					.map{x => true}
 					.getOrElse(false)
 			  }

@@ -666,24 +666,24 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							, "Gen6" -> "721"
 							, "Gen7" -> "802"
 						  ))
-						, options("Types", "monTypeType", Seq(
-							  "Normal" -> MonTypeType.Natural.id.toString
-							, "Normal Sans Fairy" -> MonTypeType.NoFairy.id.toString
-							, "Random Platinum" -> MonTypeType.RandPlat.id.toString
+						, options("Types", "types", Seq(
+							  "Normal" -> MonTypeType.Natural.toString
+							, "Normal Sans Fairy" -> MonTypeType.NoFairy.toString
+							, "Random Platinum" -> MonTypeType.RandPlat.toString
 						  ))
-						, options("BST Values", "monBstType", Seq(
-							  "Gen1" -> MonBstType.Gen1.id.toString
-							, "Gen2-5" -> MonBstType.Gen2.id.toString
-							, "Gen6" -> MonBstType.Gen6.id.toString
-							, "Gen7" -> MonBstType.Gen7.id.toString
+						, options("BST Values", "bsts", Seq(
+							  "Gen1" -> MonBstType.Gen1.toString
+							, "Gen2-5" -> MonBstType.Gen2.toString
+							, "Gen6" -> MonBstType.Gen6.toString
+							, "Gen7" -> MonBstType.Gen7.toString
 						  ))
 						, h2("Evolution Restrictions")
-						, checkbox("Experience Group Match", "expGroup")
-						, checkbox("Natural Evolution Allowed", "naturalEvolution")
-						, options("New evolution's type must match", "monTypeToMatch", Seq(
-							  "Neither" -> MonTypeToMatch.Neither.id.toString
-							, "Base Form" -> MonTypeToMatch.BaseForm.id.toString
-							, "Evolved Form" -> MonTypeToMatch.EvolvedForm.id.toString
+						, checkbox("Experience Group Match", "expGroupMatch")
+						, checkbox("Natural Evolution Allowed", "naturalEvolutionAllowed")
+						, options("New evolution's type must match", "typeToMatch", Seq(
+							  "Nothing" -> MonTypeToMatch.Neither.toString
+							, "Base's type" -> MonTypeToMatch.BaseForm.toString
+							, "Natural evolution's type" -> MonTypeToMatch.EvolvedForm.toString
 						  ))
 						, fieldset(
 							  legend("Allowed difference in BST")
