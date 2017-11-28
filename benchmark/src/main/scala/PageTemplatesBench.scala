@@ -11,7 +11,7 @@ object PageTemplatesBench {
 	class _State {
 		val dexnos = (1 to 50).map{DexNo(_)}
 		val games = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
-		val seedDatas = games.flatMap{_.seedData}
+		val seedDatas = games.flatMap{_.seedData} :+ evolutionData.Natural
 
 		val predictors = games.map{game => ((game, new Predictor(game)))}
 	}

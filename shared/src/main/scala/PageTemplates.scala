@@ -610,7 +610,9 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		))
 	}
 	
-	def theoreticalPage:scalatags.generic.Frag[Builder,FragT] = {
+	private[this] val theoreticalPageNoScript:String = "For technical reasons, these calculations are done in the browser, so if scripting is disabled then the page won't work."
+	
+	def theoreticalFormPage:scalatags.generic.Frag[Builder,FragT] = {
 		
 		def checkbox(labelStr:String, idStr:String) = div(
 			  input(`type` := "checkbox", name := idStr, id := idStr)
@@ -628,11 +630,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		
 		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
-				  title(s"Possible Evolutions - Theoretical")
+				  title(s"Possible Evolutions - Theoretical - Form")
 				, link(rel := "stylesheet", href := "../style/style.css")
-				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
-				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
-				, script(defer := "defer", `type` := "text/javascript", src := "../style/theoreticalPage.js")(" ")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/theoreticalPageForm.js")(" ")
 			  )
 			, body(
@@ -641,13 +640,12 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				  )
 				, main(
 					  p(
-					  	"Note that these calculations are done in the browser,so if ",
-					  	"scripting is disabled this won't be able to work."
+						theoreticalPageNoScript
 					  )
 					, h1("Settings")
-					, form(`id` := "theoretical-game-properties",
+					, form(`id` := "theoretical-game-properties", action := "results.html",
 						  h2("Baseline Information")
-						, options("Generation", "generation", Seq(
+						, options("Generation", "maxDexNo", Seq(
 							  "Gen1" -> "151"
 							, "Gen2" -> "251"
 							, "Gen3" -> "386"
@@ -707,7 +705,31 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							)
 						  )
 						, h2("Generate")
-						, button("Generate", `type` := "button", id := "generate")
+						, button("Generate", `type` := "submit", id := "generate")
+					  )
+				  )
+			  )
+		))
+	}
+	
+	def theoreticalPage:scalatags.generic.Frag[Builder,FragT] = {
+		frag(htmlDoctype, html(lang := "en-US")(
+			  head(
+				  title(s"Possible Evolutions - Theoretical")
+				, link(rel := "stylesheet", href := "../style/style.css")
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/theoreticalPage.js")(" ")
+			  )
+			, body(
+				  header(
+					a(href := "../index.html")("Back to Index"),
+					" > ",
+					a(href := "index.html")("Form")
+				  )
+				, main(
+					  p(
+						theoreticalPageNoScript
 					  )
 				  )
 			  )

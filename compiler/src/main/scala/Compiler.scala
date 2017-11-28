@@ -81,9 +81,17 @@ object Compiler {
 			Seq(outFile.toFile)
 		}
 		
-		val theoreticalPage:Seq[File] = {
-			val outFile = (ctx.targetDirectory / "theoretical" / "index.html").toPath
+		val theoreticalPageResults:Seq[File] = {
+			val outFile = (ctx.targetDirectory / "theoretical" / "results.html").toPath
 			val output = PageTemplatesText.theoreticalPage.render
+			val output2 = java.util.Collections.singleton(output.replace("><", ">\n<"))
+			Files.createDirectories(outFile.getParent)
+			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
+			Seq(outFile.toFile)
+		}
+		val theoreticalPageForm:Seq[File] = {
+			val outFile = (ctx.targetDirectory / "theoretical" / "index.html").toPath
+			val output = PageTemplatesText.theoreticalFormPage.render
 			val output2 = java.util.Collections.singleton(output.replace("><", ">\n<"))
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
@@ -91,7 +99,15 @@ object Compiler {
 		}
 		
 		Result(
-			files = (indexPage ++: sharedPage ++: theoreticalPage ++: perGamePages ++: perMonPages ++: sharedEeveePage).toArray
+			files = Seq(
+				  indexPage
+				, sharedPage
+				, sharedEeveePage
+				, theoreticalPageForm
+				, theoreticalPageResults
+				, perGamePages
+				, perMonPages
+			).flatten.toArray
 		)
 	}
 }
