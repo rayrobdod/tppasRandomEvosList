@@ -7,7 +7,7 @@ object AlphaSapphire extends SeedData {
 	def game:EvosGame.Value = EvosGame.AlphaSapphire
 	
 	lazy val evolutions:Map[DexNo, Map[String, DexNo]] = {
-		val builder = new DexNo.DexNoMapBuilder[Map[String, DexNo]]
+		val builder = Map.newBuilder[DexNo, Map[String, DexNo]]
 		
 		builder += ((DexNo.national( 63), Map("Level Up [16]" -> DexNo.national( 65))))
 		builder += ((DexNo.national(190), Map("Level Up with Move [Double Hit]" -> DexNo.national(428))))
@@ -351,7 +351,6 @@ object AlphaSapphire extends SeedData {
 		builder += ((DexNo.national( 41), Map("Level Up [22]" -> DexNo.national(169))))
 		builder += ((DexNo.national(634), Map("Level Up [64]" -> DexNo.national(373))))
 
-		builder.withDefault(Map.empty)
 		builder.result
 	}
 }

@@ -2,7 +2,6 @@ package com.rayrobdod.possibleEvolutions
 
 import scala.collection.immutable.{Seq, Map}
 import scala.collection.mutable.{Buffer => MSeq}
-import com.rayrobdod.possibleEvolutions.DexNo.mapCanBuildFrom
 
 /**
  * Data about a particular game's true evolutions

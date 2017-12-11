@@ -3,7 +3,6 @@ package com.rayrobdod.possibleEvolutions
 import scala.collection.immutable.Seq
 import scalatags.generic.Bundle
 import scalatags.generic.Frag
-import com.rayrobdod.possibleEvolutions.DexNo.mapCanBuildFrom
 
 object PageTemplatesText extends PageTemplates(
 	  scalatags.Text
@@ -451,7 +450,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						, tbody(frag({
 							for (
 								prevo <- AllPokemon.apply;
-								(method, _) <- evolutionData.Natural.evolutions(prevo.dexNo)
+								(method, _) <- evolutionData.Natural.evolutions.get(prevo.dexNo).getOrElse(Map.empty)
 							) yield {
 								val evos:Seq[(SeedData, DexNo)] = {
 									for (

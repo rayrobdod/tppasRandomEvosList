@@ -7,7 +7,7 @@ object White2 extends SeedData {
 	def game:EvosGame.Value = EvosGame.White2
 	
 	lazy val evolutions:Map[DexNo, Map[String, DexNo]] = {
-		val builder = new DexNo.DexNoMapBuilder[Map[String, DexNo]]
+		val builder = Map.newBuilder[DexNo, Map[String, DexNo]]
 		
 		builder += ((DexNo.national(  1), Map("Level Up [16]" -> DexNo.national(496))))
 		builder += ((DexNo.national(  2), Map("Level Up [32]" -> DexNo.national(472))))
@@ -318,7 +318,6 @@ object White2 extends SeedData {
 		builder += ((DexNo.national(634), Map("Level Up [64]" -> DexNo.national(494))))
 		builder += ((DexNo.national(636), Map("Level Up [59]" -> DexNo.national(645))))
 
-		builder.withDefault(Map.empty)
 		builder.result
 	}
 }

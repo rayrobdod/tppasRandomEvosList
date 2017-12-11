@@ -2,7 +2,6 @@ package com.rayrobdod.possibleEvolutions
 
 import scala.collection.immutable.{Seq, Map}
 import scala.collection.mutable.{Buffer => MSeq}
-import com.rayrobdod.possibleEvolutions.DexNo.mapCanBuildFrom
 
 /**
  * For a given game's settings, list the likely post-randomization evolutions
@@ -26,7 +25,7 @@ final class Predictor(game:EvosGame.Value) {
 		}
 		
 		allDexNos.map{checkNo =>
-			val naturalEvoNos:Map[String, DexNo] = naturalEvos(checkNo)
+			val naturalEvoNos:Map[String, DexNo] = naturalEvos.get(checkNo).getOrElse(Map.empty)
 			val naturalEvoMons:Map[String, Pokemon] = naturalEvoNos.mapValues(this.getPokemon _).map{x => x}
 			val checkMon = this.getPokemon(checkNo)
 			

@@ -7,7 +7,7 @@ object Platinum extends SeedData {
 	def game:EvosGame.Value = EvosGame.Platinum
 	
 	lazy val evolutions:Map[DexNo, Map[String, DexNo]] = {
-		val builder = new DexNo.DexNoMapBuilder[Map[String, DexNo]]
+		val builder = Map.newBuilder[DexNo, Map[String, DexNo]]
 		
 		builder += ((DexNo.national(1), Map("Level Up [16]" -> DexNo.national(5))))
 		builder += ((DexNo.national(2), Map("Level Up [32]" -> DexNo.national(3))))
@@ -244,7 +244,6 @@ object Platinum extends SeedData {
 		builder += ((DexNo.national(458), Map("Level up with Party [Remoraid]" -> DexNo.national(227))))
 		builder += ((DexNo.national(459), Map("Level Up [40]" -> DexNo.national(460))))
 		
-		builder.withDefault(Map.empty)
 		builder.result
 	}
 }

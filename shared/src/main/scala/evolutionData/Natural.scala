@@ -7,7 +7,7 @@ object Natural extends SeedData {
 	def game:EvosGame.Value = EvosGame.Natural
 	
 	lazy val evolutions:Map[DexNo, Map[String, DexNo]] = {
-		val builder = new DexNo.DexNoMapBuilder[Map[String, DexNo]]
+		val builder = Map.newBuilder[DexNo, Map[String, DexNo]]
 		
 		builder += ((DexNo.national(  1), Map("Level Up [16]" -> DexNo.national(2)) ))
 		builder += ((DexNo.national(  2), Map("Level Up [32]" -> DexNo.national(3)) ))
@@ -383,7 +383,6 @@ object Natural extends SeedData {
 		builder += ((DexNo.national(790), Map("Level Up in Sun [53]" -> DexNo.national(791), "Level Up in Moon [53]" -> DexNo.national(792)) ))
 		builder += ((DexNo.national(803), Map("Level Up with Move [Dragon Pulse]" -> DexNo.national(804)) ))
 		
-		builder.withDefault(Map.empty)
 		builder.result
 	}
 }
