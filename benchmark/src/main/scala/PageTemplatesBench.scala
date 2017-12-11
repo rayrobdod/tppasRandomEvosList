@@ -9,7 +9,7 @@ object PageTemplatesBench {
 	
 	@State(org.openjdk.jmh.annotations.Scope.Thread)
 	class _State {
-		val dexnos = (1 to 50).map{DexNo(_)}
+		val dexnos = (1 to 50).map{DexNo.national(_)}
 		val games = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
 		val seedDatas = games.flatMap{_.seedData} :+ evolutionData.Natural
 

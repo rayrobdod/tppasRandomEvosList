@@ -1,27 +1,46 @@
 package com.rayrobdod.possibleEvolutions
 
+import scala.collection.generic.CanBuildFrom
+import scala.collection.immutable.IndexedSeq
+import scala.collection.mutable.Builder
+
 /**
  * Represents a Pokemon's unique identifier/primary key.
- * Currently equal to the mon's national Pokedex number.
- * I don't know what will happen when fakemons become relevant.
  */
-final case class DexNo(private val value:Int) extends Ordered[DexNo] {
+final class DexNo private (private val value:Int) extends Ordered[DexNo] {
 	override def toString:String = value.toString
 	def toStringPadded:String = ("00000" + value).takeRight(5) 
 	
 	override def compare(rhs:DexNo):Int = this.value compare rhs.value
-	
-	def <=(x:Int):Boolean = this.value <= x
-	def to(rhs:DexNo):Seq[DexNo] = (this.value to rhs.value).map{x => DexNo(x)}
+	override def hashCode:Int = value
+	override def equals(rhs:Any):Boolean = rhs match {
+		case DexNo(rhsValue) => rhsValue == this.value
+		case _ => false
+	}
 }
 
 object DexNo {
-	val missing:DexNo = DexNo(0)
-	val undef:DexNo = DexNo(-1)
-	private val maxPlusOneInt:Int = 808
-	val maxPlusOne:DexNo = DexNo(maxPlusOneInt)
+	/** Creates a DexNo with the value of a national dex number */
+	def national(x:Int) = new DexNo(x)
+	private def unapply(x:Any):Option[Int] = x match {
+		case x2:DexNo => Option(x2.value)
+		case _ => None
+	}
 	
-	implicit def mapCanBuildFrom[V]:scala.collection.generic.CanBuildFrom[Map[DexNo, V], (DexNo, V), DexNoMap[V]] = new DexNoMapCanBuildFrom[V]
+	def valueOf(x:String):DexNo = DexNo.national(x.toInt)
+	def seqValueOf(xs:String):Seq[DexNo] = {
+		xs.split(',').map{x =>
+			val NATIONAL_RANGE = """(\d+)\-(\d+)""".r
+			
+			x match {
+				case NATIONAL_RANGE(low, high) => DexNo.NationalDexNoRange(low.toInt, high.toInt)
+				case x => Seq(DexNo.valueOf(x))
+			}
+		}.reduce{_ ++ _}
+	}
+	
+	private val maxPlusOneInt:Int = 808
+	implicit def mapCanBuildFrom[V]:CanBuildFrom[Map[DexNo, V], (DexNo, V), DexNoMap[V]] = new DexNoMapCanBuildFrom[V]
 	
 	/**
 	 * A Map with DexNo keys taking advantage of the following assumptions:
@@ -62,7 +81,7 @@ object DexNo {
 					current < backing.length
 				}
 				def next():(DexNo, V) = {
-					val retval = ((DexNo(current), backing(current).get))
+					val retval = ((new DexNo(current), backing(current).get))
 					this.advance()
 					retval
 				}
@@ -79,7 +98,7 @@ object DexNo {
 		// def ordering: Ordering[DexNo] = implicitly[Ordering[DexNo]]
 		// def rangeImpl(from:Option[DexNo], until:Option[DexNo]):DexNoMap[V] = ???
 	}
-	final class DexNoMapBuilder[V] extends scala.collection.mutable.Builder[(DexNo, V), DexNoMap[V]] {
+	final class DexNoMapBuilder[V] extends Builder[(DexNo, V), DexNoMap[V]] {
 		private[this] var backing = Array.fill[Option[V]](DexNo.maxPlusOneInt)(None)
 		
 		override def +=(kv:(DexNo, V)):DexNoMapBuilder.this.type = {backing(kv._1.value) = Option(kv._2); this}
@@ -93,8 +112,25 @@ object DexNo {
 			}
 		}
 	}
-	final class DexNoMapCanBuildFrom[V] extends scala.collection.generic.CanBuildFrom[Map[DexNo, V], (DexNo, V), DexNoMap[V]] {
-		def apply:scala.collection.mutable.Builder[(DexNo, V), DexNoMap[V]] = new DexNoMapBuilder
-		def apply(from:Map[DexNo,V]):scala.collection.mutable.Builder[(DexNo, V), DexNoMap[V]] = new DexNoMapBuilder
+	final class DexNoMapCanBuildFrom[V] extends CanBuildFrom[Map[DexNo, V], (DexNo, V), DexNoMap[V]] {
+		def apply:Builder[(DexNo, V), DexNoMap[V]] = new DexNoMapBuilder
+		def apply(from:Map[DexNo,V]):Builder[(DexNo, V), DexNoMap[V]] = new DexNoMapBuilder
+	}
+	
+	/** A range from min to max, both sides inclusive, where min and max represent national dex numbers */
+	final case class NationalDexNoRange(min:Int, max:Int) extends IndexedSeq[DexNo] {
+		
+		override def apply(idx:Int):DexNo = {
+			if (idx < 0 || idx + min > max) {
+				throw new IndexOutOfBoundsException();
+			} else {
+				new DexNo(idx + min);
+			}
+		}
+		override def length:Int = max - min + 1
+		override def contains[A1 >: DexNo](x:A1):Boolean = x match {
+			case DexNo(value) => (min <= value && value <= max)
+			case _ => false
+		}
 	}
 }

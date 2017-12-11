@@ -18,8 +18,8 @@ package possibleEvolutions {
 			def shortName:String
 			
 			
-			/** The greatest dexno of extant pokemon */
-			def maxKnownDexno:DexNo
+			/** The dexnos of extant pokemon */
+			def knownDexnos:Seq[DexNo]
 			/** the set of BST values used by Pokemon */
 			def bstType:MonBstType.Value
 			/** The set of types used by Pokemon */
@@ -56,7 +56,7 @@ package possibleEvolutions {
 			override def expGroupMustMatch:Boolean = true
 			override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Any
 			override def naturalEvoAllowed:Boolean = true
-			override def maxKnownDexno:DexNo = DexNo(807)
+			override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 807)
 			override def bstType:MonBstType.Value = MonBstType.Gen7
 			override def typeType:MonTypeType.Value = MonTypeType.Natural
 		}
@@ -70,7 +70,7 @@ package possibleEvolutions {
 			override def seedData:Option[SeedData] = Option(evolutionData.AlphaSapphire)
 			override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Pk3ds
 			override def naturalEvoAllowed:Boolean = false
-			override def maxKnownDexno:DexNo = DexNo(721)
+			override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 721)
 			override def bstType:MonBstType.Value = MonBstType.Gen6
 			override def typeType:MonTypeType.Value = MonTypeType.Natural
 		}
@@ -84,7 +84,7 @@ package possibleEvolutions {
 			override def seedData:Option[SeedData] = Option(evolutionData.Platinum)
 			override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.UniversalRandomizer
 			override def naturalEvoAllowed:Boolean = true
-			override def maxKnownDexno:DexNo = DexNo(493)
+			override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 493)
 			override def bstType:MonBstType.Value = MonBstType.Gen2
 			override def typeType:MonTypeType.Value = MonTypeType.RandPlat
 		}
@@ -98,13 +98,13 @@ package possibleEvolutions {
 			override def seedData:Option[SeedData] = Option(evolutionData.White2)
 			override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.UniversalRandomizer
 			override def naturalEvoAllowed:Boolean = false
-			override def maxKnownDexno:DexNo = DexNo(649)
+			override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 649)
 			override def bstType:MonBstType.Value = MonBstType.Gen2
 			override def typeType:MonTypeType.Value = MonTypeType.NoFairy
 		}
 		
 		final case class Custom(
-			  val maxKnownDexno:DexNo
+			  val knownDexnos:Seq[DexNo]
 			, val bstType:MonBstType.Value
 			, val typeType:MonTypeType.Value
 			, val monToMatch:MonTypeToMatch.Value

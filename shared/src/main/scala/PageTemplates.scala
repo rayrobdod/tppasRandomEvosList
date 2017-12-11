@@ -159,7 +159,10 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case BstMatchFunction.UniversalRandomizer => s"stat_total=${naturalBst * 9 / 10}-${naturalBst * 11 / 10}"
 						case BstMatchFunction.Custom(min, max) => s"stat_total=${(naturalBst * min).intValue}-${(naturalBst * max).intValue}"
 					}
-					val generation = s"&id=<=${config.maxKnownDexno}"
+					val generation = config.knownDexnos match {
+						case DexNo.NationalDexNoRange(1, high) => s"&id=<=${high}"
+						case _ => "&id=???"
+					}
 					
 					(
 						"http://veekun.com/dex/pokemon/search?" +
@@ -218,15 +221,17 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			frag(
 				  dl(
 					  dt("Pokémon")
-					, dd(game.maxKnownDexno match {
-						case DexNo(151) => "Gen 1"
-						case DexNo(251) => "Gen 2"
-						case DexNo(386) => "Gen 3"
-						case DexNo(493) => "Gen 4"
-						case DexNo(649) => "Gen 5"
-						case DexNo(721) => "Gen 6"
-						case DexNo(802) => "Gen 7"
-						case DexNo(x) => s"Up to $x inclusive"
+					, dd(game.knownDexnos match {
+						case DexNo.NationalDexNoRange(1, 151) => "Gen 1"
+						case DexNo.NationalDexNoRange(1, 251) => "Gen 2"
+						case DexNo.NationalDexNoRange(1, 386) => "Gen 3"
+						case DexNo.NationalDexNoRange(1, 493) => "Gen 4"
+						case DexNo.NationalDexNoRange(1, 649) => "Gen 5"
+						case DexNo.NationalDexNoRange(1, 721) => "Gen 6"
+						case DexNo.NationalDexNoRange(1, 802) => "Gen 7"
+						case DexNo.NationalDexNoRange(1, 807) => "Gen 7+"
+						case DexNo.NationalDexNoRange(1, x) => s"Up to $x inclusive"
+						case _ => "Something complicated"
 					  })
 					, dt("Base Stat Totals")
 					, dd(game.bstType match {
@@ -543,7 +548,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	}
 	
 	def sharedEeveePage(seedDatas:Seq[SeedData]):scalatags.generic.Frag[Builder,FragT] = {
-		val eeveeDexNo = new DexNo(133)
+		val eeveeDexNo = DexNo.national(133)
 		val nameHeaders = seedDatas.map{_.game.shortName}.map{x => th(x)}
 		
 		val methodIcons:Map[String, String] = Map(
@@ -657,15 +662,15 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h1("Settings")
 					, form(`id` := "theoretical-game-properties", action := "results.html",
 						  h2("Baseline Information")
-						, options("Generation", "maxDexNo", Seq(
-							  "Gen1" -> "151"
-							, "Gen2" -> "251"
-							, "Gen3" -> "386"
-							, "Gen4" -> "493"
-							, "Gen5" -> "649"
-							, "Gen6" -> "721"
-							, "Gen7" -> "802"
-							, "Gen7+" -> "807"
+						, options("Generation", "dexNos", Seq(
+							  "Gen1" -> "1-151"
+							, "Gen2" -> "1-251"
+							, "Gen3" -> "1-386"
+							, "Gen4" -> "1-493"
+							, "Gen5" -> "1-649"
+							, "Gen6" -> "1-721"
+							, "Gen7" -> "1-802"
+							, "Gen7+" -> "1-807"
 						  ))
 						, options("Types", "types", Seq(
 							  "Normal" -> MonTypeType.Natural.toString
