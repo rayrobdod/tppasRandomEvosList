@@ -8,16 +8,16 @@ import com.rayrobdod.possibleEvolutions.DexNo.mapCanBuildFrom
  * For a given game's settings, list the likely post-randomization evolutions
  */
 final class Predictor(game:EvosGame.Value) {
-	private[this] val naturalEvos = evolutionData.Natural.evolutions
-	private[this] val allPokemon:Iterable[Pokemon] = AllPokemon.apply
-	
-	
-	
 	private[this] implicit val config:EvosGame.Value = game
+	
+	private[this] val allPokemon:Iterable[Pokemon] = AllPokemon.apply
 	val extantPokemon = allPokemon.filter{_.exists}.to[Seq]
 	private[this] val allDexNos:Seq[DexNo] = extantPokemon.map{_.dexNo}
 	def getPokemon(id:DexNo):Pokemon = allPokemon.find{_.dexNo == id}.get
 	
+	private[this] val naturalEvos = evolutionData.Natural.evolutions
+			.filter{case (k,_) => allDexNos.contains(k)}
+			.map{case (k,v) => ((k, v.filter{case (_, v2) => allDexNos.contains(v2)}))}
 	
 	private[this] val possibleEvolutionsData:Map[DexNo, Map[String, Seq[Pokemon]]] = {
 		/** True if either `a` value is equal to either `b` value */
