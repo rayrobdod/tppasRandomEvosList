@@ -74,6 +74,7 @@ object TheoreticalPage {
 		EvosGame.Custom(
 			  knownDexnos = {
 				params.get("dexNos")
+					.map{s => java.net.URLDecoder.decode(s, "UTF-8")}
 					.map{DexNo.seqValueOf _}
 					.getOrElse(AllPokemon.apply.map{_.dexNo})
 			  }

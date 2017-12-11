@@ -50,13 +50,13 @@ package possibleEvolutions {
 			override def shortName:String = "nat"
 			
 			override def seedData:Option[SeedData] = Option(evolutionData.Natural)
+			override def knownDexnos:Seq[DexNo] = AllPokemon.apply.map{_.dexNo}
 			
 			// Prediction pages aren't built for natural evolutions, so the values used here don't matter
 			override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.BaseForm
 			override def expGroupMustMatch:Boolean = true
 			override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Any
 			override def naturalEvoAllowed:Boolean = true
-			override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 807)
 			override def bstType:MonBstType.Value = MonBstType.Gen7
 			override def typeType:MonTypeType.Value = MonTypeType.Natural
 		}

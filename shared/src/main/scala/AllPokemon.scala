@@ -818,6 +818,27 @@ object AllPokemon {
 		, new Pokemon(dexNo = DexNo.national(805), name = "Stakataka", naturalType1 = "Rock", naturalType2 = "Steel", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 570, expGrowth = "Slow")
 		, new Pokemon(dexNo = DexNo.national(806), name = "Blacephalon", naturalType1 = "Fire", naturalType2 = "Ghost", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 570, expGrowth = "Slow")
 		, new Pokemon(dexNo = DexNo.national(807), name = "Zeraora", naturalType1 = "Electric", naturalType2 = "Electric", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 600, expGrowth = "Slow")
+		
+		, new Pokemon(dexNo = DexNo.alola(19), name = "Rattata (Alola)", naturalType1 = "Normal", naturalType2 = "Dark", rpType1 = "???", rpType2 = "???", gen1bst = 218, gen2bst = 253, gen6bst = 253, gen7bst = 253, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(20), name = "Raticate (Alola)", naturalType1 = "Normal", naturalType2 = "Dark", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 413, gen6bst = 413, gen7bst = 413, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(26), name = "Raichu (Alola)", naturalType1 = "Electric", naturalType2 = "Psychic", rpType1 = "???", rpType2 = "???", gen1bst = 395, gen2bst = 475, gen6bst = 485, gen7bst = 485, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(27), name = "Sandshrew (Alola)", naturalType1 = "Ice", naturalType2 = "Steel", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 300, gen6bst = 300, gen7bst = 300, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(28), name = "Sandslash (Alola)", naturalType1 = "Ice", naturalType2 = "Steel", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 450, gen6bst = 450, gen7bst = 450, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(37), name = "Vulpix (Alola)", naturalType1 = "Ice", naturalType2 = "Ice", rpType1 = "???", rpType2 = "???", gen1bst = 249, gen2bst = 299, gen6bst = 299, gen7bst = 299, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(38), name = "Ninetales (Alola)", naturalType1 = "Ice", naturalType2 = "Fairy", rpType1 = "???", rpType2 = "???", gen1bst = 424, gen2bst = 505, gen6bst = 505, gen7bst = 505, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(50), name = "Diglett (Alola)", naturalType1 = "Ground", naturalType2 = "Steel", rpType1 = "???", rpType2 = "???", gen1bst = 230, gen2bst = 265, gen6bst = 265, gen7bst = 265, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(51), name = "Dugtrio (Alola)", naturalType1 = "Ground", naturalType2 = "Steel", rpType1 = "???", rpType2 = "???", gen1bst = 355, gen2bst = 405, gen6bst = 405, gen7bst = 425, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(52), name = "Meowth (Alola)", naturalType1 = "Dark", naturalType2 = "Dark", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 290, gen6bst = 290, gen7bst = 290, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(53), name = "Persian (Alola)", naturalType1 = "Dark", naturalType2 = "Dark", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 440, gen6bst = 440, gen7bst = 440, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(74), name = "Geodude (Alola)", naturalType1 = "Rock", naturalType2 = "Electric", rpType1 = "???", rpType2 = "???", gen1bst = 270, gen2bst = 300, gen6bst = 300, gen7bst = 300, expGrowth = "Medium Slow")
+		, new Pokemon(dexNo = DexNo.alola(75), name = "Graveler (Alola)", naturalType1 = "Rock", naturalType2 = "Electric", rpType1 = "???", rpType2 = "???", gen1bst = 345, gen2bst = 390, gen6bst = 390, gen7bst = 390, expGrowth = "Medium Slow")
+		, new Pokemon(dexNo = DexNo.alola(76), name = "Golem (Alola)", naturalType1 = "Rock", naturalType2 = "Electric", rpType1 = "???", rpType2 = "???", gen1bst = 420, gen2bst = 485, gen6bst = 495, gen7bst = 495, expGrowth = "Medium Slow")
+		, new Pokemon(dexNo = DexNo.alola(88), name = "Grimer (Alola)", naturalType1 = "Poison", naturalType2 = "Dark", rpType1 = "???", rpType2 = "???", gen1bst = 275, gen2bst = 325, gen6bst = 325, gen7bst = 325, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(89), name = "Muk (Alola)", naturalType1 = "Poison", naturalType2 = "Dark", rpType1 = "???", rpType2 = "???", gen1bst = 400, gen2bst = 500, gen6bst = 500, gen7bst = 500, expGrowth = "Medium Fast")
+		, new Pokemon(dexNo = DexNo.alola(103), name = "Exeggutor (Alola)", naturalType1 = "Grass", naturalType2 = "Dragon", rpType1 = "???", rpType2 = "???", gen1bst = 455, gen2bst = 520, gen6bst = 520, gen7bst = 530, expGrowth = "Slow")
+		, new Pokemon(dexNo = DexNo.alola(105), name = "Marowak (Alola)", naturalType1 = "Fire", naturalType2 = "Ghost", rpType1 = "???", rpType2 = "???", gen1bst = 345, gen2bst = 425, gen6bst = 425, gen7bst = 425, expGrowth = "Medium Fast")
+		
+		, new Pokemon(dexNo = DexNo.duskRockruff, name = "Rockruff (Dusk)", naturalType1 = "Rock", naturalType2 = "Rock", rpType1 = "???", rpType2 = "???", gen1bst = 0, gen2bst = 0, gen6bst = 0, gen7bst = 280, expGrowth = "Medium Fast")
 	)
 	
 	/**

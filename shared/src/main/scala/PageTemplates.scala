@@ -209,6 +209,9 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		))
 	}
 	
+	private val Gen7Dex = DexNo.NationalDexNoRange(1, 802) ++ DexNo.alolanDexNos
+	private val Gen7PlusDex = DexNo.NationalDexNoRange(1, 807) ++ DexNo.alolanDexNos :+ DexNo.duskRockruff
+	
 	def perGameMain(
 			  predictions:Predictor
 			, game:EvosGame.Value
@@ -227,8 +230,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case DexNo.NationalDexNoRange(1, 493) => "Gen 4"
 						case DexNo.NationalDexNoRange(1, 649) => "Gen 5"
 						case DexNo.NationalDexNoRange(1, 721) => "Gen 6"
-						case DexNo.NationalDexNoRange(1, 802) => "Gen 7"
-						case DexNo.NationalDexNoRange(1, 807) => "Gen 7+"
+						case Gen7Dex => "Gen 7"
+						case Gen7PlusDex => "Gen 7+"
 						case DexNo.NationalDexNoRange(1, x) => s"Up to $x inclusive"
 						case _ => "Something complicated"
 					  })
@@ -668,8 +671,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							, "Gen4" -> "1-493"
 							, "Gen5" -> "1-649"
 							, "Gen6" -> "1-721"
-							, "Gen7" -> "1-802"
-							, "Gen7+" -> "1-807"
+							, "Gen7" -> ("1-802," + DexNo.alolanDexNos.mkString(","))
+							, "Gen7+" -> ("1-807," + DexNo.alolanDexNos.mkString(",") + "," + DexNo.duskRockruff.toString)
 						  ))
 						, options("Types", "types", Seq(
 							  "Normal" -> MonTypeType.Natural.toString
