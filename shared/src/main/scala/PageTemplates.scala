@@ -6,7 +6,7 @@ import scalatags.generic.Frag
 
 object PageTemplatesText extends PageTemplates(
 	  scalatags.Text
-	, scalatags.Text.implicits.raw("<!DOCTYPE html>\n")
+	, scalatags.Text.implicits.raw("<!DOCTYPE html>" + System.lineSeparator)
 )
 
 /**
@@ -286,7 +286,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					  )
 					, tbody(
 						(for (
-							(fromNo, methodto) <- seedData.evolutions.to[Seq];
+							(fromNo, methodto) <- seedData.evolutions.to[Seq].sortBy{_._1};
 							(method, toNo) <- methodto.to[Seq]
 						) yield {
 							val from = predictions.getPokemon(fromNo)
@@ -374,8 +374,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							}
 							
 							val elems = (for (
-								(fromNo, toNos) <- seedData.evolutions.to[Seq];
-								(method, toNo) <- toNos.to[Seq];
+								(fromNo, toNos) <- seedData.evolutions.to[Seq].sortBy{_._1};
+								(method, toNo) <- toNos.to[Seq].sortBy{_._2};
 								fromMon <- Seq(predictions.getPokemon(fromNo));
 								toMon <- Seq(predictions.getPokemon(toNo));
 								typ <- haveSharedType(fromMon, toMon)
@@ -409,11 +409,11 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				  }:_*)
 				, h2("Large evolution chain convergences")
 				, ul(
-					seedData.families.map{case (end, members) =>
+					seedData.families.to[Seq].sortBy{_._1}.map{case (end, members) =>
 						if (members.size >= 6) {frag(
 							h4(a(href := s"${end}.html", predictions.getPokemon(end).name), " – ", members.size.toString),
 							ul(
-								members.to[Seq].map{member => li(member + " " + predictions.getPokemon(member).name)}:_*
+								members.to[Seq].sorted.map{member => li(member + " " + predictions.getPokemon(member).name)}:_*
 							)
 						)} else {frag("")}
 					}.to[Seq]:_*
@@ -609,7 +609,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							}
 							def nameOf(dexNo:DexNo) = AllPokemon.get(dexNo).map{_.name}.getOrElse{"???"}
 							
-							eeveeEvos.to[Seq].map{case (toNo, gameMethods) => tr(
+							eeveeEvos.to[Seq].sortBy{_._1}.map{case (toNo, gameMethods) => tr(
 								td(dataSort := toNo.toString, toNo.toString),
 								td(dataSort := nameOf(toNo), nameOf(toNo)),
 								frag(seedDatas.map{game =>
