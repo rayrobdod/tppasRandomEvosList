@@ -4,20 +4,20 @@ package com.rayrobdod.possibleEvolutions
  * Information about a particular species of Pokémon
  */
 final class Pokemon(
-	  val dexNo:DexNo = DexNo.undef
-	, val name:String = ""
-	, naturalType1:String = ""
-	, naturalType2:String = ""
-	, rpType1:String = ""
-	, rpType2:String = ""
-	, gen1bst:Int = -1
-	, gen2bst:Int = -1
-	, gen6bst:Int = -1
-	, gen7bst:Int = -1
-	, val expGrowth:String = ""
+	  val dexNo:DexNo
+	, val name:String
+	, naturalType1:String
+	, naturalType2:String
+	, rpType1:String
+	, rpType2:String
+	, gen1bst:Int
+	, gen2bst:Int
+	, gen6bst:Int
+	, gen7bst:Int
+	, val expGrowth:String
 ) {
-	def exists(implicit config:EvosGame.Value):Boolean = { 
-		DexNo.missing < this.dexNo && this.dexNo <= config.maxKnownDexno 
+	def exists(implicit config:EvosGame.Value):Boolean = {
+		config.knownDexnos contains this.dexNo
 	}
 	
 	// Create the tuples only once, reducing GC churn

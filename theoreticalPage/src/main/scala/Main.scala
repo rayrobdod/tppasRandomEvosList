@@ -22,7 +22,7 @@ object TheoreticalPage {
 		}
 		
 		val params = getQueryString()
-		val monNoOpt:Option[DexNo] = params.get("dexno").map{x => DexNo(x.toInt)}
+		val monNoOpt:Option[DexNo] = params.get("dexno").map{DexNo.valueOf _}
 		val game = getEvosGameFromQueryString(params)
 		val predictor = new Predictor(game)
 		
@@ -72,10 +72,11 @@ object TheoreticalPage {
 	
 	private[this] def getEvosGameFromQueryString(params:Map[String, String]):EvosGame.Value = {
 		EvosGame.Custom(
-			  maxKnownDexno = {
-				params.get("maxDexNo")
-					.map{id => DexNo(id.toInt)}
-					.getOrElse(DexNo.maxPlusOne)
+			  knownDexnos = {
+				params.get("dexNos")
+					.map{s => java.net.URLDecoder.decode(s, "UTF-8")}
+					.map{DexNo.seqValueOf _}
+					.getOrElse(AllPokemon.apply.map{_.dexNo})
 			  }
 			, bstType = {
 				params.get("bsts")

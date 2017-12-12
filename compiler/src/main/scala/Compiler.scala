@@ -12,6 +12,7 @@ object Compiler {
 	private[this] val gamesToMakePagesAbout = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
 	private[this] val seedDatas = evolutionData.Natural +: gamesToMakePagesAbout.flatMap{_.seedData}
 	private[this] val predictors = gamesToMakePagesAbout.map{game => ((game, new Predictor(game)))}
+	private[this] val bracketsWithLineBreak = ">" + System.lineSeparator + "<"
 	
 	final case class Context(
 		generatePerMonPages:java.lang.Boolean,
@@ -31,7 +32,7 @@ object Compiler {
 						System.out.println(s"${game.name}/${x}")
 						val outFile = (ctx.targetDirectory / game.name / s"${x}.html").toPath
 						val output = PageTemplatesText.perMonPage(x, predictions, game, seedDatas).render
-						val output2 = java.util.Collections.singleton(output.replace("><", ">\n<"))
+						val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
 						Files.createDirectories(outFile.getParent)
 						Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
 						outFile.toFile
@@ -46,7 +47,7 @@ object Compiler {
 			predictors.map{case (game, predictor) =>
 				val outFile = (ctx.targetDirectory / game.name / "index.html").toPath
 				val output = PageTemplatesText.perGamePage(predictor, game).render
-				val output2 = java.util.Collections.singleton(output.replace("><", ">\n<"))
+				val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
 				Files.createDirectories(outFile.getParent)
 				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
 				outFile.toFile
@@ -56,7 +57,7 @@ object Compiler {
 		val sharedPage:Seq[File] = {
 			val outFile = (ctx.targetDirectory / "shared" / "index.html").toPath
 			val output = PageTemplatesText.sharedPage(seedDatas).render
-			val output2 = java.util.Collections.singleton(output.replace("><", ">\n<"))
+			val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
 			Seq(outFile.toFile)
@@ -65,7 +66,7 @@ object Compiler {
 		val sharedEeveePage:Seq[File] = {
 			val outFile = (ctx.targetDirectory / "shared" / "133.html").toPath
 			val output = PageTemplatesText.sharedEeveePage(seedDatas).render
-			val output2 = java.util.Collections.singleton(output.replace("><", ">\n<"))
+			val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
 			Seq(outFile.toFile)
@@ -75,7 +76,7 @@ object Compiler {
 			val prologue = IndexPrologue.apply
 			val outFile = (ctx.targetDirectory / "index.html").toPath
 			val output = PageTemplatesText.index(prologue, gamesToMakePagesAbout.map{_.name}).render
-			val output2 = java.util.Collections.singleton(output.replace("><", ">\n<"))
+			val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
 			Seq(outFile.toFile)
@@ -84,7 +85,7 @@ object Compiler {
 		val theoreticalPageResults:Seq[File] = {
 			val outFile = (ctx.targetDirectory / "theoretical" / "results.html").toPath
 			val output = PageTemplatesText.theoreticalPage.render
-			val output2 = java.util.Collections.singleton(output.replace("><", ">\n<"))
+			val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
 			Seq(outFile.toFile)
@@ -92,7 +93,7 @@ object Compiler {
 		val theoreticalPageForm:Seq[File] = {
 			val outFile = (ctx.targetDirectory / "theoretical" / "index.html").toPath
 			val output = PageTemplatesText.theoreticalFormPage.render
-			val output2 = java.util.Collections.singleton(output.replace("><", ">\n<"))
+			val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
 			Files.createDirectories(outFile.getParent)
 			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
 			Seq(outFile.toFile)

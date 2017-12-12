@@ -2,7 +2,6 @@ package com.rayrobdod.possibleEvolutions
 
 import scala.collection.immutable.{Seq, Map}
 import scala.collection.mutable.{Buffer => MSeq}
-import com.rayrobdod.possibleEvolutions.DexNo.mapCanBuildFrom
 
 /**
  * Data about a particular game's true evolutions
@@ -14,7 +13,7 @@ abstract class SeedData {
 	
 	
 	private[this] implicit def config = game
-	private[this] val extantDexNos = (DexNo.missing to DexNo.maxPlusOne).filter{num => new Pokemon(dexNo = num).exists}
+	private[this] val extantDexNos = config.knownDexnos
 	
 	private[this] val abridgedEvosData:Map[DexNo, Seq[DexNo]] = {
 		(for (

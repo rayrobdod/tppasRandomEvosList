@@ -3,11 +3,10 @@ package com.rayrobdod.possibleEvolutions
 import scala.collection.immutable.Seq
 import scalatags.generic.Bundle
 import scalatags.generic.Frag
-import com.rayrobdod.possibleEvolutions.DexNo.mapCanBuildFrom
 
 object PageTemplatesText extends PageTemplates(
 	  scalatags.Text
-	, scalatags.Text.implicits.raw("<!DOCTYPE html>\n")
+	, scalatags.Text.implicits.raw("<!DOCTYPE html>" + System.lineSeparator)
 )
 
 /**
@@ -159,7 +158,10 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case BstMatchFunction.UniversalRandomizer => s"stat_total=${naturalBst * 9 / 10}-${naturalBst * 11 / 10}"
 						case BstMatchFunction.Custom(min, max) => s"stat_total=${(naturalBst * min).intValue}-${(naturalBst * max).intValue}"
 					}
-					val generation = s"&id=<=${config.maxKnownDexno}"
+					val generation = config.knownDexnos match {
+						case DexNo.NationalDexNoRange(1, high) => s"&id=<=${high}"
+						case _ => "&id=???"
+					}
 					
 					(
 						"http://veekun.com/dex/pokemon/search?" +
@@ -207,6 +209,9 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		))
 	}
 	
+	private val Gen7Dex = DexNo.NationalDexNoRange(1, 802) ++ DexNo.alolanDexNos
+	private val Gen7PlusDex = DexNo.NationalDexNoRange(1, 807) ++ DexNo.alolanDexNos :+ DexNo.duskRockruff
+	
 	def perGameMain(
 			  predictions:Predictor
 			, game:EvosGame.Value
@@ -218,15 +223,17 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			frag(
 				  dl(
 					  dt("Pokémon")
-					, dd(game.maxKnownDexno match {
-						case DexNo(151) => "Gen 1"
-						case DexNo(251) => "Gen 2"
-						case DexNo(386) => "Gen 3"
-						case DexNo(493) => "Gen 4"
-						case DexNo(649) => "Gen 5"
-						case DexNo(721) => "Gen 6"
-						case DexNo(802) => "Gen 7"
-						case DexNo(x) => s"Up to $x inclusive"
+					, dd(game.knownDexnos match {
+						case DexNo.NationalDexNoRange(1, 151) => "Gen 1"
+						case DexNo.NationalDexNoRange(1, 251) => "Gen 2"
+						case DexNo.NationalDexNoRange(1, 386) => "Gen 3"
+						case DexNo.NationalDexNoRange(1, 493) => "Gen 4"
+						case DexNo.NationalDexNoRange(1, 649) => "Gen 5"
+						case DexNo.NationalDexNoRange(1, 721) => "Gen 6"
+						case Gen7Dex => "Gen 7"
+						case Gen7PlusDex => "Gen 7+"
+						case DexNo.NationalDexNoRange(1, x) => s"Up to $x inclusive"
+						case _ => "Something complicated"
 					  })
 					, dt("Base Stat Totals")
 					, dd(game.bstType match {
@@ -279,7 +286,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					  )
 					, tbody(
 						(for (
-							(fromNo, methodto) <- seedData.evolutions.to[Seq];
+							(fromNo, methodto) <- seedData.evolutions.to[Seq].sortBy{_._1};
 							(method, toNo) <- methodto.to[Seq]
 						) yield {
 							val from = predictions.getPokemon(fromNo)
@@ -367,8 +374,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							}
 							
 							val elems = (for (
-								(fromNo, toNos) <- seedData.evolutions.to[Seq];
-								(method, toNo) <- toNos.to[Seq];
+								(fromNo, toNos) <- seedData.evolutions.to[Seq].sortBy{_._1};
+								(method, toNo) <- toNos.to[Seq].sortBy{_._2};
 								fromMon <- Seq(predictions.getPokemon(fromNo));
 								toMon <- Seq(predictions.getPokemon(toNo));
 								typ <- haveSharedType(fromMon, toMon)
@@ -402,11 +409,11 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				  }:_*)
 				, h2("Large evolution chain convergences")
 				, ul(
-					seedData.families.map{case (end, members) =>
+					seedData.families.to[Seq].sortBy{_._1}.map{case (end, members) =>
 						if (members.size >= 6) {frag(
 							h4(a(href := s"${end}.html", predictions.getPokemon(end).name), " – ", members.size.toString),
 							ul(
-								members.to[Seq].map{member => li(member + " " + predictions.getPokemon(member).name)}:_*
+								members.to[Seq].sorted.map{member => li(member + " " + predictions.getPokemon(member).name)}:_*
 							)
 						)} else {frag("")}
 					}.to[Seq]:_*
@@ -446,7 +453,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						, tbody(frag({
 							for (
 								prevo <- AllPokemon.apply;
-								(method, _) <- evolutionData.Natural.evolutions(prevo.dexNo)
+								(method, _) <- evolutionData.Natural.evolutions.get(prevo.dexNo).getOrElse(Map.empty)
 							) yield {
 								val evos:Seq[(SeedData, DexNo)] = {
 									for (
@@ -543,7 +550,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	}
 	
 	def sharedEeveePage(seedDatas:Seq[SeedData]):scalatags.generic.Frag[Builder,FragT] = {
-		val eeveeDexNo = new DexNo(133)
+		val eeveeDexNo = DexNo.national(133)
 		val nameHeaders = seedDatas.map{_.game.shortName}.map{x => th(x)}
 		
 		val methodIcons:Map[String, String] = Map(
@@ -602,7 +609,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							}
 							def nameOf(dexNo:DexNo) = AllPokemon.get(dexNo).map{_.name}.getOrElse{"???"}
 							
-							eeveeEvos.to[Seq].map{case (toNo, gameMethods) => tr(
+							eeveeEvos.to[Seq].sortBy{_._1}.map{case (toNo, gameMethods) => tr(
 								td(dataSort := toNo.toString, toNo.toString),
 								td(dataSort := nameOf(toNo), nameOf(toNo)),
 								frag(seedDatas.map{game =>
@@ -657,15 +664,15 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h1("Settings")
 					, form(`id` := "theoretical-game-properties", action := "results.html",
 						  h2("Baseline Information")
-						, options("Generation", "maxDexNo", Seq(
-							  "Gen1" -> "151"
-							, "Gen2" -> "251"
-							, "Gen3" -> "386"
-							, "Gen4" -> "493"
-							, "Gen5" -> "649"
-							, "Gen6" -> "721"
-							, "Gen7" -> "802"
-							, "Gen7+" -> "807"
+						, options("Generation", "dexNos", Seq(
+							  "Gen1" -> "1-151"
+							, "Gen2" -> "1-251"
+							, "Gen3" -> "1-386"
+							, "Gen4" -> "1-493"
+							, "Gen5" -> "1-649"
+							, "Gen6" -> "1-721"
+							, "Gen7" -> ("1-802," + DexNo.alolanDexNos.mkString(","))
+							, "Gen7+" -> ("1-807," + DexNo.alolanDexNos.mkString(",") + "," + DexNo.duskRockruff.toString)
 						  ))
 						, options("Types", "types", Seq(
 							  "Normal" -> MonTypeType.Natural.toString
