@@ -1,5 +1,7 @@
 package com.rayrobdod
 
+import scala.collection.immutable.Seq
+
 package object possibleEvolutions {
 }
 

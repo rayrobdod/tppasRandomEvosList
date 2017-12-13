@@ -14,7 +14,7 @@ final class DexNo private (private val number:Int, private val variant:String) e
 		val b = this.variant compare rhs.variant
 		if (a == 0) {b} else {a}
 	}
-	override def hashCode:Int = number
+	override def hashCode:Int = number + variant.hashCode * 1001
 	override def equals(rhs:Any):Boolean = rhs match {
 		case DexNo(rhsValue, rhsVar) => rhsValue == this.number && rhsVar == this.variant
 		case _ => false

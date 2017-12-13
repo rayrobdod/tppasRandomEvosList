@@ -16,10 +16,6 @@ final class Pokemon(
 	, gen7bst:Int
 	, val expGrowth:String
 ) {
-	def exists(implicit config:EvosGame.Value):Boolean = {
-		config.knownDexnos contains this.dexNo
-	}
-	
 	// Create the tuples only once, reducing GC churn
 	private[this] val rpTypes = ((rpType1, rpType2))
 	private[this] val natTypes = ((naturalType1, naturalType2))

@@ -1,6 +1,6 @@
 package com.rayrobdod.possibleEvolutions
 
-import scala.collection.immutable.{Seq, Map}
+import scala.collection.immutable.{Seq, Map, Iterable}
 import scala.collection.mutable.{Buffer => MSeq}
 
 /**
@@ -9,14 +9,13 @@ import scala.collection.mutable.{Buffer => MSeq}
 final class Predictor(game:EvosGame.Value) {
 	private[this] implicit val config:EvosGame.Value = game
 	
-	private[this] val allPokemon:Iterable[Pokemon] = AllPokemon.apply
-	val extantPokemon = allPokemon.filter{_.exists}.to[Seq]
-	private[this] val allDexNos:Seq[DexNo] = extantPokemon.map{_.dexNo}
-	def getPokemon(id:DexNo):Pokemon = allPokemon.find{_.dexNo == id}.get
+	private[this] val knownDexNos = game.knownDexnos
+	val extantPokemon:Iterable[Pokemon] = knownDexNos.map{num => AllPokemon.get(num).get}
+	def getPokemon(id:DexNo):Pokemon = extantPokemon.find{_.dexNo == id}.get
 	
 	private[this] val naturalEvos = evolutionData.Natural.evolutions
-			.filter{case (k,_) => allDexNos.contains(k)}
-			.map{case (k,v) => ((k, v.filter{case (_, v2) => allDexNos.contains(v2)}))}
+			.filter{case (k,_) => knownDexNos.contains(k)}
+			.map{case (k,v) => ((k, v.filter{case (_, v2) => knownDexNos.contains(v2)}))}
 	
 	private[this] val possibleEvolutionsData:Map[DexNo, Map[String, Seq[Pokemon]]] = {
 		/** True if either `a` value is equal to either `b` value */
@@ -24,12 +23,12 @@ final class Predictor(game:EvosGame.Value) {
 			a1 == b1 || a1 == b2 || a2 == b1 || a2 == b2
 		}
 		
-		allDexNos.map{checkNo =>
+		knownDexNos.map{checkNo =>
 			val naturalEvoNos:Map[String, DexNo] = naturalEvos.get(checkNo).getOrElse(Map.empty)
 			val naturalEvoMons:Map[String, Pokemon] = naturalEvoNos.mapValues(this.getPokemon _).map{x => x}
 			val checkMon = this.getPokemon(checkNo)
 			
-			((checkNo, naturalEvoMons.mapValues{naturalEvoMon => allPokemon.filter{candidate =>
+			((checkNo, naturalEvoMons.mapValues{naturalEvoMon => extantPokemon.filter{candidate =>
 				val typsMatch = config.monToMatch match {
 					case MonTypeToMatch.Neither => true
 					case MonTypeToMatch.BaseForm => {
@@ -49,7 +48,6 @@ final class Predictor(game:EvosGame.Value) {
 				
 				typsMatch && bstMatch && expGroupMatch &&
 						!candidateIsSelf &&
-						candidate.exists &&
 						(config.naturalEvoAllowed || !candidateIsNatural)
 						
 			}.to[Seq]}.map{x => x}))
@@ -60,7 +58,7 @@ final class Predictor(game:EvosGame.Value) {
 	def possibleEvolutions(checkNo:DexNo):Map[String, Seq[Pokemon]] = this.possibleEvolutionsData(checkNo)
 	
 	private[this] val possiblePrevolutionsData:Map[DexNo, Seq[Pokemon]] = {
-		val retval = allDexNos.map{dexNo => ((dexNo, MSeq.empty[Pokemon]))}.toMap
+		val retval = knownDexNos.map{dexNo => ((dexNo, MSeq.empty[Pokemon]))}.toMap
 		
 		for (
 			(prevoDexno, dexnodata) <- this.possibleEvolutionsData;
