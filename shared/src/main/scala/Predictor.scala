@@ -29,7 +29,7 @@ final class Predictor(game:EvosGame.Value) {
 			val checkMon = this.getPokemon(checkNo)
 			
 			((checkNo, naturalEvoMons.mapValues{naturalEvoMon => extantPokemon.filter{candidate =>
-				val typsMatch = config.monToMatch match {
+				val typsMatch = game.monToMatch match {
 					case MonTypeToMatch.Neither => true
 					case MonTypeToMatch.BaseForm => {
 						typesMatch(checkMon.types._1, checkMon.types._2, candidate.types._1, candidate.types._2)
@@ -38,17 +38,17 @@ final class Predictor(game:EvosGame.Value) {
 						typesMatch(naturalEvoMon.types._1, naturalEvoMon.types._2, candidate.types._1, candidate.types._2)
 					}
 				}
-				val bstMatch = config.bstMatchFunction(
+				val bstMatch = game.bstMatchFunction(
 					naturalBst = naturalEvoMon.bst,
 					candidateBst = candidate.bst
 				)
-				val expGroupMatch = !config.expGroupMustMatch || candidate.expGrowth == checkMon.expGrowth
+				val expGroupMatch = !game.expGroupMustMatch || candidate.expGrowth == checkMon.expGrowth
 				val candidateIsSelf = candidate == checkMon
 				val candidateIsNatural = candidate == naturalEvoMon
 				
 				typsMatch && bstMatch && expGroupMatch &&
 						!candidateIsSelf &&
-						(config.naturalEvoAllowed || !candidateIsNatural)
+						(game.naturalEvoAllowed || !candidateIsNatural)
 						
 			}.to[Seq]}.map{x => x}))
 			// `map{x => x}` because `mapValues` creates a view, which is particularly suboptimal with a parameter function this complicated

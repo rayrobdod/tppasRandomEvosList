@@ -6,3 +6,5 @@ install:
 script:
   - sbt webStage
   - sbt benchmark/jmh:run\ -i\ 10\ -wi\ 5\ -f1\ -t1
+  - sbt sharedJVM/test
+  - sbt sharedJS/test

@@ -11,18 +11,13 @@ abstract class SeedData {
 	def evolutions:Map[DexNo, Map[String, DexNo]]
 	
 	
+	private[this] val extantDexNos = game.knownDexnos
 	
-	private[this] implicit def config = game
-	private[this] val extantDexNos = config.knownDexnos
-	
+	/** The evolution data, but ignoring the method used to evolve */
 	private[this] val abridgedEvosData:Map[DexNo, Seq[DexNo]] = {
-		(for (
-			(prevoNo, prevonodata) <- this.evolutions.to[Seq];
-			(method, evoNo) <- prevonodata.to[Seq]
-		) yield {
-			(prevoNo, evoNo)
-		}).groupBy{_._1}.mapValues{_.map{_._2}}.map{x => x}
+		this.evolutions.mapValues{_.values.to[Seq]}.map{x => x}
 	}
+	
 	private[this] val threeEvoChainData:Seq[(DexNo, DexNo, DexNo, DexNo)] = {
 		(for (
 			(first, secondSeq) <- this.abridgedEvosData.to[Seq];
@@ -36,17 +31,17 @@ abstract class SeedData {
 	final def threeEvoChains:Seq[(DexNo, DexNo, DexNo, DexNo)] = this.threeEvoChainData.sortBy{_._1}
 	
 	private[this] val finalEvolutionData:Map[DexNo, Seq[DexNo]] = {
-		def followEvoChain(x:DexNo, game:EvosGame.Value):Seq[DexNo] = {
+		def followEvoChain(x:DexNo):Seq[DexNo] = {
 			if (abridgedEvosData contains x) {
 				val nexts = this.abridgedEvosData(x)
-				nexts.flatMap{y => if (y == x) {Seq(x)} else {followEvoChain(y, game)}}
+				nexts.flatMap{y => if (y == x) {Seq(x)} else {followEvoChain(y)}}
 			} else {
 				Seq(x)
 			}
 		}
 		
 		extantDexNos
-				.map{startNum => startNum -> followEvoChain(startNum, game)}
+				.map{startNum => startNum -> followEvoChain(startNum)}
 				.filter{x => Seq(x._1) != x._2}
 				.toMap
 				.map{x => x}
@@ -85,6 +80,7 @@ abstract class SeedData {
 		
 		retval.filter{_._2.nonEmpty}.mapValues{_.to[Set]}.map{x => x}
 	}
+	/** Key: the evolution; Value: the recursive prevolutions */
 	final def families:Map[DexNo, Set[DexNo]] = familiesData
 	
 	private[this] val prevosData:Map[DexNo, Set[DexNo]] = {
@@ -103,5 +99,5 @@ abstract class SeedData {
 	final def prevos:Map[DexNo, Set[DexNo]] = this.prevosData
 	
 	/** Pokemon with multiple prevos */
-	final val multiplePrevos:Set[DexNo] = prevos.filter{_._2.size >= 2}.map{_._1}.to[Set]
+	final val multiplePrevos:Set[DexNo] = prevos.filter{_._2.size >= 2}.keySet
 }

@@ -4,6 +4,7 @@ lazy val shared = crossProject.crossType(SharedCrossType)
 	.settings(name := "tppRandomEvos")
 	.settings(libraryDependencies ++= Seq(
 		  "com.lihaoyi" %%% "scalatags" % "0.6.7"
+		, "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
 	))
 	.settings(mySettings:_*)
 
