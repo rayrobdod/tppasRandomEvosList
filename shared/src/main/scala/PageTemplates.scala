@@ -486,6 +486,44 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							}
 						  }.flatten:_*))
 					  )
+					, h2("Repeat Final Evolutions")
+					, table(`class` := "checktable")(
+						  colgroup(colgroupSpan := "5")
+						, frag( seedDatas.map{x => colgroup(colgroupSpan := "1", dataGame := x.game.toString)}:_* )
+						, thead(tr(
+							  th("From Num")
+							, th("From")
+							, th("→")
+							, th("To Num")
+							, th("To")
+							, frag( nameHeaders:_* )
+						  ))
+						, tbody(frag({
+							AllPokemon.apply.map{prevo =>
+								val allFinalEvoNums = seedDatas.flatMap{_.finalEvolutions(prevo.dexNo)}.distinct.sorted
+								
+								frag({allFinalEvoNums.map{evoNum =>
+									val games = seedDatas.filter{_.finalEvolutions(prevo.dexNo) contains evoNum}
+									if (games.size >= 2) {
+										val evoName = AllPokemon.get(evoNum).get.name
+										
+										tr(
+											  td(dataSort := prevo.dexNo.toStringPadded, prevo.dexNo.toString)
+											, td(dataSort := prevo.name, prevo.name)
+											, td(dataSort := "→", "→")
+											, td(dataSort := evoNum.toStringPadded, evoNum.toString)
+											, td(dataSort := evoName, evoName)
+											, frag( seedDatas.map{x =>
+												if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
+											  }:_*)
+										)
+									} else {
+										frag("")
+									}
+								}}:_*)
+							}
+						  }:_*))
+					  )
 					, h2("Pokémon with multiple prevos multiple times")
 					, table(`class` := "checktable")(
 						  colgroup(colgroupSpan := "2")
