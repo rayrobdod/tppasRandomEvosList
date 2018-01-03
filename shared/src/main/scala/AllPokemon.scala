@@ -5,7 +5,7 @@ import scala.collection.immutable.Seq
 /**
  * Contains a list of every known Pokémon species.
  */
-object AllPokemon {
+object AllPokemon extends CompiledOnNoted {
 	/**
 	 * Said list of Pokémon species
 	 */
@@ -845,4 +845,6 @@ object AllPokemon {
 	 * Returns the Pokémon from said list with the specified dexno.
 	 */
 	def get(x:DexNo):Option[Pokemon] = this.apply.find{_.dexNo == x} 
+	
+	val compiledOn:java.time.Instant = compiledOnMacro.apply
 }

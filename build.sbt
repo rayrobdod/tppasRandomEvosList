@@ -1,14 +1,25 @@
 import com.rayrobdod.possibleEvolutions.SharedCrossType
 
+lazy val compiledOnMacro = crossProject.crossType(SharedCrossType)
+	.settings(name := "tppRandomEvos-compiledTimeMacro")
+	.settings(mySettings:_*)
+	.settings(libraryDependencies ++= Seq(
+		"org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
+	))
+	.jsSettings(
+		libraryDependencies += "org.scala-js" %%% "scalajs-java-time" % "0.2.3",
+	)
+lazy val compiledOnMacroJVM = compiledOnMacro.jvm
+lazy val compiledOnMacroJS = compiledOnMacro.js
+
 lazy val shared = crossProject.crossType(SharedCrossType)
+	.dependsOn(compiledOnMacro)
 	.settings(name := "tppRandomEvos")
 	.settings(libraryDependencies ++= Seq(
 		  "com.lihaoyi" %%% "scalatags" % "0.6.7"
 		, "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
 	))
 	.settings(mySettings:_*)
-
-// Needed, so sbt finds the projects
 lazy val sharedJVM = shared.jvm
 lazy val sharedJS = shared.js
 

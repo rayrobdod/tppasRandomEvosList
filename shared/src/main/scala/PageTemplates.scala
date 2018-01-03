@@ -941,3 +941,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	
 	private[this] def padStrWithZeros(x:Int):String = ("00000" + x).takeRight(5)
 }
+
+object PageTemplates extends CompiledOnNoted {
+	val compiledOn:java.time.Instant = compiledOnMacro.apply
+}

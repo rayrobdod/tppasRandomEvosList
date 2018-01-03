@@ -14,6 +14,7 @@ class SeedDataTest extends FunSpec {
 						DexNo.national(2) -> Map("a" -> DexNo.national(3)),
 						DexNo.national(3) -> Map("a" -> DexNo.national(4)),
 					)
+					val compiledOn = java.time.Instant.now()
 				}
 				assertResult(Seq( (DexNo.national(1), DexNo.national(2), DexNo.national(3), DexNo.national(4)) )){dut.threeEvoChains}
 			}
@@ -25,6 +26,7 @@ class SeedDataTest extends FunSpec {
 					def evolutions = Map(
 						DexNo.national(1) -> Map("a" -> DexNo.national(2))
 					)
+					val compiledOn = java.time.Instant.now()
 				}
 				assertResult(Seq(DexNo.national(2))){dut.finalEvolutions(DexNo.national(1))}
 			}
@@ -35,6 +37,7 @@ class SeedDataTest extends FunSpec {
 						DexNo.national(1) -> Map("a" -> DexNo.national(2)),
 						DexNo.national(2) -> Map("a" -> DexNo.national(3))
 					)
+					val compiledOn = java.time.Instant.now()
 				}
 				assertResult(Seq(DexNo.national(3))){dut.finalEvolutions(DexNo.national(1))}
 				assertResult(Seq(DexNo.national(3))){dut.finalEvolutions(DexNo.national(2))}
@@ -45,6 +48,7 @@ class SeedDataTest extends FunSpec {
 					def evolutions = Map(
 						DexNo.national(1) -> Map("a" -> DexNo.national(2), "b" -> DexNo.national(3))
 					)
+					val compiledOn = java.time.Instant.now()
 				}
 				assertResult(Seq(DexNo.national(2), DexNo.national(3))){dut.finalEvolutions(DexNo.national(1))}
 			}
@@ -54,6 +58,7 @@ class SeedDataTest extends FunSpec {
 				object dut extends SeedData {
 					def game = EvosGame.Natural
 					def evolutions = Map.empty
+					val compiledOn = java.time.Instant.now()
 				}
 				assertResult(dut.game.knownDexnos.to[Set]){dut.firstStageMons}
 			}
@@ -63,6 +68,7 @@ class SeedDataTest extends FunSpec {
 					def evolutions = Map(
 						DexNo.national(100) -> Map("a" -> DexNo.national(200))
 					)
+					val compiledOn = java.time.Instant.now()
 				}
 				assertResult(false)(dut.firstStageMons contains DexNo.national(200))
 			}
@@ -77,6 +83,7 @@ class SeedDataTest extends FunSpec {
 						DexNo.national(2) -> Map("a" -> DexNo.national(5)),
 						DexNo.national(4) -> Map("a" -> DexNo.national(5))
 					)
+					val compiledOn = java.time.Instant.now()
 				}
 				assertResult(Set(
 					DexNo.national(1), DexNo.national(2),
@@ -96,6 +103,7 @@ class SeedDataTest extends FunSpec {
 						DexNo.national(2) -> Map("a" -> DexNo.national(5)),
 						DexNo.national(4) -> Map("a" -> DexNo.national(5))
 					)
+					val compiledOn = java.time.Instant.now()
 				}
 				assertResult(Map(
 					DexNo.national(5) -> Set(DexNo.national(2), DexNo.national(4)),
@@ -111,6 +119,7 @@ class SeedDataTest extends FunSpec {
 					def evolutions = Map(
 						DexNo.national(1) -> Map("a" -> DexNo.national(2))
 					)
+					val compiledOn = java.time.Instant.now()
 				}
 				assertResult(Set.empty){dut.multiplePrevos}
 			}
@@ -121,6 +130,7 @@ class SeedDataTest extends FunSpec {
 						DexNo.national(1) -> Map("a" -> DexNo.national(3)),
 						DexNo.national(2) -> Map("a" -> DexNo.national(3))
 					)
+					val compiledOn = java.time.Instant.now()
 				}
 				assertResult(Set(DexNo.national(3))){dut.multiplePrevos}
 			}

@@ -177,4 +177,11 @@ package possibleEvolutions {
 		
 	}
 	
+	/**
+	 * Notes the time at which the class was compiled. Used for invalidating a cache by `Compiler`.
+	 */
+	trait CompiledOnNoted {
+		/** Returns the time at which the class was compiled */
+		def compiledOn:java.time.Instant
+	}
 }

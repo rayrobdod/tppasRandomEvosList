@@ -81,3 +81,7 @@ final class Predictor(game:EvosGame.Value) {
 	/** The number of possible prevolutions that a randomizer can produce for the given mon*/
 	def possiblePrevosCount(dexno:DexNo):Int = this.possiblePrevosCountData(dexno)
 }
+
+object Predictor extends CompiledOnNoted {
+	val compiledOn:java.time.Instant = compiledOnMacro.apply
+}
