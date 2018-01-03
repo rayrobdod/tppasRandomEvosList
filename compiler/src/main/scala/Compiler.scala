@@ -24,91 +24,41 @@ object Compiler {
 	)
 	
 	
+	private[this] def writeToFile(outRelPath:String, contents:() => String)(ctx:Context):File = {
+		val outFile = (ctx.targetDirectory / outRelPath).toPath
+		val outData = java.util.Collections.singleton(contents.apply.replace("><", bracketsWithLineBreak))
+		Files.createDirectories(outFile.getParent)
+		Files.write(outFile, outData, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
+		outFile.toFile
+	}
+	
 	def apply(ctx:Context):Result = {
 		val perMonPages:Seq[File] = {
-			if (ctx.generatePerMonPages) {
-				predictors.flatMap{case (game, predictions) =>
-					predictions.extantPokemon.map{_.dexNo}.map{x =>
-						System.out.println(s"${game.name}/${x}")
-						val outFile = (ctx.targetDirectory / game.name / s"${x}.html").toPath
-						val output = PageTemplatesText.perMonPage(x, predictions, game, seedDatas).render
-						val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
-						Files.createDirectories(outFile.getParent)
-						Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
-						outFile.toFile
-					}
-				}
-			} else {
-				Seq.empty
+			for (
+				(game, predictions) <- predictors if ctx.generatePerMonPages;
+				mon <- predictions.extantPokemon
+			) yield {
+				val x = mon.dexNo
+				writeToFile(s"${game.name}/${x}.html", () => PageTemplatesText.perMonPage(x, predictions, game, seedDatas).render)(ctx)
 			}
 		}
 		
 		val perGamePages:Seq[File] = {
 			predictors.map{case (game, predictor) =>
-				val outFile = (ctx.targetDirectory / game.name / "index.html").toPath
-				val output = PageTemplatesText.perGamePage(predictor, game).render
-				val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
-				Files.createDirectories(outFile.getParent)
-				Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
-				outFile.toFile
+				writeToFile(s"${game.name}/index.html", () => PageTemplatesText.perGamePage(predictor, game).render)(ctx)
 			}
 		}
 		
-		val sharedPage:Seq[File] = {
-			val outFile = (ctx.targetDirectory / "shared" / "index.html").toPath
-			val output = PageTemplatesText.sharedPage(seedDatas).render
-			val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
-			Files.createDirectories(outFile.getParent)
-			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
-			Seq(outFile.toFile)
-		}
-		
-		val sharedEeveePage:Seq[File] = {
-			val outFile = (ctx.targetDirectory / "shared" / "133.html").toPath
-			val output = PageTemplatesText.sharedEeveePage(seedDatas).render
-			val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
-			Files.createDirectories(outFile.getParent)
-			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
-			Seq(outFile.toFile)
-		}
-		
-		val indexPage:Seq[File] = {
-			val prologue = IndexPrologue.apply
-			val outFile = (ctx.targetDirectory / "index.html").toPath
-			val output = PageTemplatesText.index(prologue, gamesToMakePagesAbout.map{_.name}).render
-			val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
-			Files.createDirectories(outFile.getParent)
-			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
-			Seq(outFile.toFile)
-		}
-		
-		val theoreticalPageResults:Seq[File] = {
-			val outFile = (ctx.targetDirectory / "theoretical" / "results.html").toPath
-			val output = PageTemplatesText.theoreticalPage.render
-			val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
-			Files.createDirectories(outFile.getParent)
-			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
-			Seq(outFile.toFile)
-		}
-		val theoreticalPageForm:Seq[File] = {
-			val outFile = (ctx.targetDirectory / "theoretical" / "index.html").toPath
-			val output = PageTemplatesText.theoreticalFormPage.render
-			val output2 = java.util.Collections.singleton(output.replace("><", bracketsWithLineBreak))
-			Files.createDirectories(outFile.getParent)
-			Files.write(outFile, output2, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
-			Seq(outFile.toFile)
-		}
+		val otherPages:Seq[File] = Seq(
+			writeToFile("index.html", () => PageTemplatesText.index(IndexPrologue.apply, gamesToMakePagesAbout.map{_.name}).render)(ctx),
+			writeToFile("shared/index.html", () => PageTemplatesText.sharedPage(seedDatas).render)(ctx),
+			writeToFile("shared/133.html", () => PageTemplatesText.sharedEeveePage(seedDatas).render)(ctx),
+			writeToFile("theoretical/index.html", () => PageTemplatesText.theoreticalFormPage.render)(ctx),
+			writeToFile("theoretical/results.html", () => PageTemplatesText.theoreticalPage.render)(ctx),
+		)
 		
 		Result(
-			files = Seq(
-				  indexPage
-				, sharedPage
-				, sharedEeveePage
-				, theoreticalPageForm
-				, theoreticalPageResults
-				, perGamePages
-				, perMonPages
-			).flatten.toArray
+			files = Seq(otherPages, perGamePages, perMonPages).flatten.toArray
 		)
 	}
 }
