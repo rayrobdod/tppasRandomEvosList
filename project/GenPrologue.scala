@@ -219,13 +219,13 @@ object GenPrologue {
 	private def readPrologue(readmemdFile:File):TagsScalaSource.Frag = {
 		import TagsScalaSource.StringFrag
 		import TagsScalaSource.all.stringAttr
-		import scala.collection.JavaConversions._
+		import scala.collection.JavaConverters._
 		val containsLink = """([^\[]*)\[([ é\w]+)\]\(([\w\:\/\.\-]+)\)(.*)""".r
 		
 		val emptyParagraph = TagsScalaSource.tags.p
 		
 		val lines = Files.readAllLines(readmemdFile.toPath, UTF_8)
-		val usedLines = lines.dropWhile{!_.startsWith("#")}.drop(1)
+		val usedLines = lines.asScala.dropWhile{!_.startsWith("#")}.drop(1)
 				.takeWhile{!_.startsWith("##")}
 				.dropWhile{_ == "\n"}
 				.reverse.dropWhile{_ == "\n"}.reverse
