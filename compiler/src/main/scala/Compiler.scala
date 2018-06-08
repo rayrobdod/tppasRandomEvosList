@@ -58,6 +58,7 @@ object Compiler {
 			writeToFile("index.html", () => PageTemplatesText.index(IndexPrologue.apply, gamesToMakePagesAbout.map{_.name}).render)(ctx),
 			writeToFile("shared/index.html", () => PageTemplatesText.sharedPage(seedDatas).render)(ctx),
 			writeToFile("shared/133.html", () => PageTemplatesText.sharedEeveePage(seedDatas).render)(ctx),
+			writeToFile("shared/fossil.html", () => PageTemplatesText.sharedFossilPage().render)(ctx),
 			writeToFile("theoretical/index.html", () => PageTemplatesText.theoreticalFormPage.render)(ctx),
 			writeToFile("theoretical/results.html", () => PageTemplatesText.theoreticalPage.render)(ctx),
 		)

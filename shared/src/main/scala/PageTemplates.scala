@@ -648,15 +648,143 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							def nameOf(dexNo:DexNo) = AllPokemon.get(dexNo).map{_.name}.getOrElse{"???"}
 							
 							eeveeEvos.to[Seq].sortBy{_._1}.map{case (toNo, gameMethods) => tr(
-								td(dataSort := toNo.toString, toNo.toString),
+								td(dataSort := toNo.toStringPadded, toNo.toString),
 								td(dataSort := nameOf(toNo), nameOf(toNo)),
 								frag(seedDatas.map{game =>
 									val methods = gameMethods.getOrElse(game, Seq.empty)
 									val sortStr = {
 										val a = methods.map{method => methodSorting.getOrElse(method, "-1")}.mkString
-										if (a == "") {"999"} else {a}
+										if (a == "") {"\u007E"} else {a}
 									}
 									val iconStr = methods.map{method => methodIcons.getOrElse(method, "?")}.mkString
+									td(dataSort := sortStr, iconStr)
+								}:_*)
+							)}
+						  }:_*))
+					  )
+				  )
+			  )
+		))
+	}
+	
+	def sharedFossilPage():scalatags.generic.Frag[Builder,FragT] = {
+		val data:Seq[(String, Map[String, DexNo])] = Seq(
+			"Natural" -> Map(
+				"Amber" -> DexNo.national(142),
+				"Helix" -> DexNo.national(138),
+				"Dome" -> DexNo.national(140),
+				"Root" -> DexNo.national(345),
+				"Claw" -> DexNo.national(347),
+				"Skull" -> DexNo.national(408),
+				"Armor" -> DexNo.national(410),
+				"Cover" -> DexNo.national(564),
+				"Plume" -> DexNo.national(566),
+				"Jaw" -> DexNo.national(696),
+				"Sail" -> DexNo.national(698),
+			),
+			"FireRed" -> Map(
+				"Amber" -> DexNo.national(6),
+				"Helix" -> DexNo.national(211),
+				"Dome" -> DexNo.national(168),
+			),
+			"HeartGold" -> Map(
+				"Amber" -> DexNo.national(288),
+				"Helix" -> DexNo.national(200),
+				"Dome" -> DexNo.national(132) /*?*/,
+				"Root" -> DexNo.national(399) /*?*/,
+				"Claw" -> DexNo.national(466),
+				"Skull" -> DexNo.national(2) /*?*/,
+				"Armor" -> DexNo.national(180) /*?*/,
+			),
+			"Platinum" -> Map(
+				"Amber" -> DexNo.national(207),
+				"Helix" -> DexNo.national(17),
+				"Dome" -> DexNo.national(431),
+				"Root" -> DexNo.national(94),
+				"Claw" -> DexNo.national(290),
+				"Skull" -> DexNo.national(109),
+				"Armor" -> DexNo.national(31),
+			),
+			"White2" -> Map(
+				"Amber" -> DexNo.national(472),
+				"Helix" -> DexNo.national(531),
+				"Dome" -> DexNo.national(152),
+				"Root" -> DexNo.national(399),
+				"Claw" -> DexNo.national(570),
+				"Skull" -> DexNo.national(432),
+				"Armor" -> DexNo.national(256),
+				"Cover" -> DexNo.national(195),
+				"Plume" -> DexNo.national(163),
+			),
+		)
+		
+		def gameNameToClass(x:String):String = x match {
+			case "Natural" => "natural"
+			case "FireRed" => "fire-red"
+			case "HeartGold" => "heart-gold"
+			case "Platinum" => "platinum"
+			case "White2" => "white2"
+			case _ => "???"
+		}
+		val fossilOrdering:Map[String, String] = Map(
+			"Amber" -> "A",
+			"Helix" -> "B",
+			"Dome" -> "C",
+			"Root" -> "D",
+			"Claw" -> "E",
+			"Skull" -> "F",
+			"Armor" -> "G",
+			"Cover" -> "H",
+			"Plume" -> "I",
+			"Jaw" -> "J",
+			"Sail" -> "K",
+		)
+		
+		frag(htmlDoctype, html(lang := "en-US")(
+			  head(
+				  title(s"Possible Evolutions - Shared - Fossils")
+				, meta(charset := "utf-8")
+				, link(rel := "stylesheet", href := "../style/style.css")
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
+				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
+			  )
+			, body(
+				  header(
+					a(href := "../index.html")("Back to Index")
+					, " > "
+					, a(href := "index.html")("Game")
+				  )
+				, main(
+					  h1("Fossils")
+					, h2("Revivals")
+					, table(`class` := "checktable")(
+						  colgroup(colgroupSpan := "2")
+						, frag( data.map{x => colgroup(colgroupSpan := "1", dataGame := gameNameToClass(x._1))}:_* )
+						, thead(tr(
+							th("To Num"),
+							th("To"),
+							frag( data.map{x => th(x._1)}:_* )
+						  ))
+						, tbody(frag({
+							val dataInvert:Map[DexNo, Map[String, Seq[String]]] = {
+								val a:Seq[(DexNo, String, String)] = for (
+									(gameName, gameData) <- data;
+									(fossilName, toNo) <- gameData
+								) yield {(toNo, gameName, fossilName)}
+								a.groupBy{_._1}.mapValues{_.groupBy{_._2}.mapValues{_.map{_._3}}.map{x => x}}.map{x => x}
+							}
+							def nameOf(dexNo:DexNo) = AllPokemon.get(dexNo).map{_.name}.getOrElse{"???"}
+							
+							dataInvert.to[Seq].sortBy{_._1}.map{case (toNo, gameMethods) => tr(
+								td(dataSort := toNo.toStringPadded, toNo.toString),
+								td(dataSort := nameOf(toNo), nameOf(toNo)),
+								frag(data.map{_._1}.map{gameName =>
+									val fossils = gameMethods.getOrElse(gameName, Seq.empty)
+									val sortStr = {
+										val a = fossils.map{method => fossilOrdering.getOrElse(method, "-1")}.mkString
+										if (a == "") {"\u007E"} else {a}
+									}
+									val iconStr = fossils.mkString(", ")
 									td(dataSort := sortStr, iconStr)
 								}:_*)
 							)}
