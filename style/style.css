@@ -79,6 +79,8 @@ dl dd {break-before: avoid;}
 /** Background color associated with each game */
 
 [data-game="natural"]{background-color:#EAC5BF;} /* hsl(5/240, 50%, 200/240) */
+[data-game="fire-red"]{background-color:#F7C4B3;} /* hsl(10/240, 80%, 200/240) */
+[data-game="heart-gold"]{background-color:#F2EBB7;} /* hsl(35/240, 70%, 200/240) */
 [data-game="alpha-sapphire"]{background-color:#BFE4EA;} /* hsl(125/240, 50%, 200/240) */
 [data-game="platinum"]{background-color:#C9D4DF;} /* hsl(140/240, 10%, 200/240) */
 [data-game="white2"]{background-color:#DDDDCC;} /* hsl(40/240, 20%, 200/240) */
