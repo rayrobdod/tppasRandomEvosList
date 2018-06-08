@@ -45,8 +45,13 @@ lazy val theoreticalPage = project
 val perMonPages = taskKey[Boolean]("Whether to create the rather numerous per-mon html pages")
 lazy val website = project
 	.enablePlugins(com.typesafe.sbt.web.SbtWeb)
+	.enablePlugins(GhpagesPlugin)
 	.settings(name := "tppRandomEvos-website")
 	.settings(pipelineStages := Nil)
+	.settings(
+		git.remoteRepo := "https://rayrobdod@github.com/rayrobdod/tppasRandomEvosList",
+		(mappings in ghpagesSynchLocal) := com.typesafe.sbt.web.Import.WebKeys.pipeline.value,
+	)
 	.settings(mySettings:_*)
 	.settings(
 		TaskKey[Seq[File]]("generateHtmlFiles") in Assets := {
