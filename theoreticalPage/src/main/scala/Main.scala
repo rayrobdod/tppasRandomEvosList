@@ -98,6 +98,7 @@ object TheoreticalPage {
 					.map{_ match {
 						case "any" => BstMatchFunction.`Any`
 						case "pk" => BstMatchFunction.Pk3ds
+						case "pk2" => BstMatchFunction.Pk3ds_2
 						case "ur" => BstMatchFunction.UniversalRandomizer
 						case "custom" => {
 							val min = params.get("bstdifference_min").map{_.toDouble}.getOrElse(0d)

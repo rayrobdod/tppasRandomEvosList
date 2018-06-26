@@ -159,7 +159,14 @@ package possibleEvolutions {
 			def apply(naturalBst:Int, candidateBst:Int):Boolean = {
 				(candidateBst * 6 / 5 > naturalBst) && (naturalBst > candidateBst * 5 / 6)
 			}
-			def description = "From ×5/6 to ×6/5"
+			def description = "From ×5/6 (0.833) to ×6/5 (1.20)"
+		}
+		object Pk3ds_2 extends Value {
+			// https://github.com/kwsch/pk3DS/blob/da0f1f6eca0c76eeb11a1ade8d35b9dc87389179/pk3DS.Core/Randomizers/SpeciesRandomizer.cs#L119
+			def apply(naturalBst:Int, candidateBst:Int):Boolean = {
+				!((naturalBst * 10 / 11 > candidateBst) || (candidateBst > naturalBst * 11 / 10))
+			}
+			def description = "From ×10/11 (0.909) to ×11/10 (1.10)"
 		}
 		object UniversalRandomizer extends Value {
 			// https://github.com/Dabomstew/universal-pokemon-randomizer/blob/49e1d38991ee5339400abfc482e08d4cdfc3aacd/src/com/dabomstew/pkrandom/romhandlers/AbstractRomHandler.java#L3011

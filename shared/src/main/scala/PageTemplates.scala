@@ -155,6 +155,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					val bstRange = config.bstMatchFunction match {
 						case BstMatchFunction.Any => ""
 						case BstMatchFunction.Pk3ds => s"stat_total=${naturalBst * 5 / 6}-${naturalBst * 6 / 5}"
+						case BstMatchFunction.Pk3ds_2 => s"stat_total=${naturalBst * 10 / 11}-${naturalBst * 11 / 10}"
 						case BstMatchFunction.UniversalRandomizer => s"stat_total=${naturalBst * 9 / 10}-${naturalBst * 11 / 10}"
 						case BstMatchFunction.Custom(min, max) => s"stat_total=${(naturalBst * min).intValue}-${(naturalBst * max).intValue}"
 					}
@@ -868,7 +869,11 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 								  )
 							  	, li(
 									  input(`type` := "radio", id := "bstdifference_pk", name := "bstdifference", value := "pk")
-									, label("5/6 to 6/5 (Like pk3DS)", `for` := "bstdifference_pk")
+									, label("5/6 to 6/5 (Like pk3DS before Sep 10 2017)", `for` := "bstdifference_pk")
+								  )
+								, li(
+									  input(`type` := "radio", id := "bstdifference_pk2", name := "bstdifference", value := "pk2")
+									, label("10/11 to 11/10 (Like pk3DS after Sep 10 2017)", `for` := "bstdifference_pk2")
 								  )
 							  	, li(
 									  input(`type` := "radio", id := "bstdifference_ur", name := "bstdifference", value := "ur")
