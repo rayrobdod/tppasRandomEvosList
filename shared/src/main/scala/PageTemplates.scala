@@ -426,6 +426,16 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	def sharedPage(seedDatas:Seq[SeedData]):scalatags.generic.Frag[Builder,FragT] = {
 		val nameHeaders = seedDatas.map{_.game.shortName}.map{x => th(x)}
 		
+		def linkToSubpageIfSubpageExists(num:DexNo, name:String):scalatags.generic.Frag[Builder,FragT] = {
+			val subpages = Seq("133")
+			if (subpages contains num.toString) {
+				a(hrefDexNoLinkModifier(num))(name)
+			} else {
+				name
+			}
+		}
+		
+		
 		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
 				  title(s"Possible Evolutions - Shared")
@@ -475,10 +485,10 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 									
 									tr(
 										  td(dataSort := prevoNum.toStringPadded, prevoNum.toString)
-										, td(dataSort := prevoName, prevoName)
+										, td(dataSort := prevoName, linkToSubpageIfSubpageExists(prevoNum, prevoName))
 										, td(dataSort := method, method)
 										, td(dataSort := evoNum.toStringPadded, evoNum.toString)
-										, td(dataSort := evoName, evoName)
+										, td(dataSort := evoName, linkToSubpageIfSubpageExists(evoNum, evoName))
 										, frag( seedDatas.map{x =>
 											if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
 										  }:_*)
@@ -510,10 +520,10 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 										
 										tr(
 											  td(dataSort := prevo.dexNo.toStringPadded, prevo.dexNo.toString)
-											, td(dataSort := prevo.name, prevo.name)
+											, td(dataSort := prevo.name, linkToSubpageIfSubpageExists(prevo.dexNo, prevo.name))
 											, td(dataSort := "→", "→")
 											, td(dataSort := evoNum.toStringPadded, evoNum.toString)
-											, td(dataSort := evoName, evoName)
+											, td(dataSort := evoName, linkToSubpageIfSubpageExists(evoNum, evoName))
 											, frag( seedDatas.map{x =>
 												if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
 											  }:_*)
@@ -543,7 +553,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 									
 									tr(
 										  td(dataSort := evoNum.toStringPadded, evoNum.toString)
-										, td(dataSort := evoName, evoName)
+										, td(dataSort := evoName, linkToSubpageIfSubpageExists(evoNum, evoName))
 										, frag( seedDatas.map{x =>
 											if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
 										  }:_*)
@@ -572,7 +582,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 									
 									tr(
 										  td(dataSort := evoNum.toStringPadded, evoNum.toString)
-										, td(dataSort := evoName, evoName)
+										, td(dataSort := evoName, linkToSubpageIfSubpageExists(evoNum, evoName))
 										, frag( seedDatas.map{x =>
 											if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
 										  }:_*)
