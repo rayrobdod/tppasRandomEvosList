@@ -16,11 +16,23 @@ final class Predictor(game:EvosGame.Value) {
 	private[this] val naturalEvos = evolutionData.Natural.evolutions
 			.filter{case (k,_) => knownDexNos.contains(k)}
 			.map{case (k,v) => ((k, v.filter{case (_, v2) => knownDexNos.contains(v2)}))}
-	
+
 	private[this] val possibleEvolutionsData:Map[DexNo, Map[String, Seq[Pokemon]]] = {
 		/** True if either `a` value is equal to either `b` value */
 		def typesMatch(a1:String, a2:String, b1:String, b2:String) = {
 			a1 == b1 || a1 == b2 || a2 == b1 || a2 == b2
+		}
+		def stagesRemaining(mon:DexNo):Int = {
+			if (naturalEvos.contains(mon)) {
+				if (naturalEvos(mon).nonEmpty) {
+					// assumes that split evolutions have save stages remaining on both branches
+					1 + stagesRemaining(naturalEvos(mon).values.head)
+				} else {
+					0
+				}
+			} else {
+				0
+			}
 		}
 		
 		knownDexNos.map{checkNo =>
@@ -39,14 +51,16 @@ final class Predictor(game:EvosGame.Value) {
 					}
 				}
 				val bstMatch = game.bstMatchFunction(
+					selfBst = checkMon.bst,
 					naturalBst = naturalEvoMon.bst,
 					candidateBst = candidate.bst
 				)
 				val expGroupMatch = !game.expGroupMustMatch || candidate.expGrowth == checkMon.expGrowth
 				val candidateIsSelf = candidate == checkMon
 				val candidateIsNatural = candidate == naturalEvoMon
+				val stagesRemainingMatch = !game.remainingStageMatch || stagesRemaining(candidate.dexNo) + 1 == stagesRemaining(checkNo)
 				
-				typsMatch && bstMatch && expGroupMatch &&
+				typsMatch && bstMatch && expGroupMatch && stagesRemainingMatch &&
 						!candidateIsSelf &&
 						(game.naturalEvoAllowed || !candidateIsNatural)
 						

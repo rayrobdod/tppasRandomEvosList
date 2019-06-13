@@ -157,6 +157,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case BstMatchFunction.Pk3ds => s"stat_total=${naturalBst * 5 / 6}-${naturalBst * 6 / 5}"
 						case BstMatchFunction.Pk3ds_2 => s"stat_total=${naturalBst * 10 / 11}-${naturalBst * 11 / 10}"
 						case BstMatchFunction.UniversalRandomizer => s"stat_total=${naturalBst * 9 / 10}-${naturalBst * 11 / 10}"
+						case BstMatchFunction.GoDTool => s"stat_total=${checkMon.bst}-${checkMon.bst * 10}"
 						case BstMatchFunction.Custom(min, max) => s"stat_total=${(naturalBst * min).intValue}-${(naturalBst * max).intValue}"
 					}
 					val generation = config.knownDexnos match {
@@ -259,6 +260,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, dd(if (game.expGroupMustMatch) {"Yes"} else {"No"})
 					, dt("Natural Evolution Allowed")
 					, dd(if (game.naturalEvoAllowed) {"Yes"} else {"No"})
+					, dt("Remaining Evolution Stage Match")
+					, dd(if (game.remainingStageMatch) {"Yes"} else {"No"})
 					, dt("Base Stat Total Range")
 					, dd(game.bstMatchFunction.description)
 				  )
@@ -865,6 +868,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						, h2("Evolution Restrictions")
 						, checkbox("Experience Group Match", "expGroupMatch")
 						, checkbox("Natural Evolution Allowed", "naturalEvolutionAllowed")
+						, checkbox("Evolution Stages Remaining Match", "stagesRemainingMatch")
 						, options("New evolution's type must match", "typeToMatch", Seq(
 							  "Nothing" -> MonTypeToMatch.Neither.toString
 							, "Base's type" -> MonTypeToMatch.BaseForm.toString
@@ -879,15 +883,19 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 								  )
 							  	, li(
 									  input(`type` := "radio", id := "bstdifference_pk", name := "bstdifference", value := "pk")
-									, label("5/6 to 6/5 (Like pk3DS before Sep 10 2017)", `for` := "bstdifference_pk")
+									, label("5/6 to 6/5 of natural (Like pk3DS before Sep 10 2017)", `for` := "bstdifference_pk")
 								  )
 								, li(
 									  input(`type` := "radio", id := "bstdifference_pk2", name := "bstdifference", value := "pk2")
-									, label("10/11 to 11/10 (Like pk3DS after Sep 10 2017)", `for` := "bstdifference_pk2")
+									, label("10/11 to 11/10 of natural (Like pk3DS after Sep 10 2017)", `for` := "bstdifference_pk2")
 								  )
 							  	, li(
 									  input(`type` := "radio", id := "bstdifference_ur", name := "bstdifference", value := "ur")
-									, label("9/10 to 11/10 (like Universal Randomizer)", `for` := "bstdifference_ur")
+									, label("9/10 to 11/10 of natural (like Universal Randomizer)", `for` := "bstdifference_ur")
+								  )
+								, li(
+									  input(`type` := "radio", id := "bstdifference_godt", name := "bstdifference", value := "godt")
+									, label("Greater than current (Like GoD tool)", `for` := "bstdifference_godt")
 								  )
 								, fieldset(
 									legend(
@@ -895,11 +903,11 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 										, label("Custom", `for` := "bstdifference_custom")
 									)
 									, div(
-										  label("Minimum: ", `for` := "bstdifference_min")
+										  label("Minimum of Natural: ", `for` := "bstdifference_min")
 										, input(`type` := "number", name := "bstdifference_min", id := "bstdifference_min", step := 0.1, max := 1, min := 0, value := "0.9")
 									  )
 									, div(
-										  label("Maximum: ", `for` := "bstdifference_max")
+										  label("Maximum of Natural: ", `for` := "bstdifference_max")
 										, input(`type` := "number", name := "bstdifference_max", id := "bstdifference_max", step := 0.1, max := 10, min := 1, value := "1.1")
 									  )
 								)

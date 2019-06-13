@@ -100,6 +100,7 @@ object TheoreticalPage {
 						case "pk" => BstMatchFunction.Pk3ds
 						case "pk2" => BstMatchFunction.Pk3ds_2
 						case "ur" => BstMatchFunction.UniversalRandomizer
+						case "godt" => BstMatchFunction.GoDTool
 						case "custom" => {
 							val min = params.get("bstdifference_min").map{_.toDouble}.getOrElse(0d)
 							val max = params.get("bstdifference_max").map{_.toDouble}.getOrElse(10d)
@@ -119,6 +120,11 @@ object TheoreticalPage {
 					.map{x => true}
 					.getOrElse(false)
 			  }
+			, remainingStageMatch = {
+				params.get("stagesRemainingMatch")
+					.map{x => true}
+					.getOrElse(false)
+			}
 		)
 	}
 	

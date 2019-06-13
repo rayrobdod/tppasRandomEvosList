@@ -9,7 +9,7 @@ object Compiler {
 	private final implicit class FileWithSlash(f:File) {
 		def /(x:String) = new File(f, x)
 	}
-	private[this] val gamesToMakePagesAbout = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
+	private[this] val gamesToMakePagesAbout = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2, EvosGame.Randy, EvosGame.Colosseum)
 	private[this] val seedDatas = evolutionData.Natural +: gamesToMakePagesAbout.flatMap{_.seedData}
 	private[this] val predictors = gamesToMakePagesAbout.map{game => ((game, new Predictor(game)))}
 	private[this] val compiledOnNotes:Seq[CompiledOnNoted] = seedDatas :+ AllPokemon :+ PageTemplates :+ Predictor :+ SeedData
