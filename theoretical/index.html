@@ -110,6 +110,10 @@
 <input type="checkbox" name="naturalEvolutionAllowed" id="naturalEvolutionAllowed" />
 <label for="naturalEvolutionAllowed">Natural Evolution Allowed</label>
 </div>
+<div>
+<input type="checkbox" name="stagesRemainingMatch" id="stagesRemainingMatch" />
+<label for="stagesRemainingMatch">Evolution Stages Remaining Match</label>
+</div>
 <fieldset>
 <legend>New evolution's type must match</legend>
 <ul>
@@ -138,15 +142,19 @@
 </li>
 <li>
 <input type="radio" id="bstdifference_pk" name="bstdifference" value="pk" />
-<label for="bstdifference_pk">5/6 to 6/5 (Like pk3DS before Sep 10 2017)</label>
+<label for="bstdifference_pk">5/6 to 6/5 of natural (Like pk3DS before Sep 10 2017)</label>
 </li>
 <li>
 <input type="radio" id="bstdifference_pk2" name="bstdifference" value="pk2" />
-<label for="bstdifference_pk2">10/11 to 11/10 (Like pk3DS after Sep 10 2017)</label>
+<label for="bstdifference_pk2">10/11 to 11/10 of natural (Like pk3DS after Sep 10 2017)</label>
 </li>
 <li>
 <input type="radio" id="bstdifference_ur" name="bstdifference" value="ur" />
-<label for="bstdifference_ur">9/10 to 11/10 (like Universal Randomizer)</label>
+<label for="bstdifference_ur">9/10 to 11/10 of natural (like Universal Randomizer)</label>
+</li>
+<li>
+<input type="radio" id="bstdifference_godt" name="bstdifference" value="godt" />
+<label for="bstdifference_godt">Greater than current (Like GoD tool)</label>
 </li>
 <fieldset>
 <legend>
@@ -154,11 +162,11 @@
 <label for="bstdifference_custom">Custom</label>
 </legend>
 <div>
-<label for="bstdifference_min">Minimum: </label>
+<label for="bstdifference_min">Minimum of Natural: </label>
 <input type="number" name="bstdifference_min" id="bstdifference_min" step="0.1" max="1" min="0" value="0.9" />
 </div>
 <div>
-<label for="bstdifference_max">Maximum: </label>
+<label for="bstdifference_max">Maximum of Natural: </label>
 <input type="number" name="bstdifference_max" id="bstdifference_max" step="0.1" max="10" min="1" value="1.1" />
 </div>
 </fieldset>

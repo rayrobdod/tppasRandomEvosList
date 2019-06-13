@@ -84,6 +84,8 @@ dl dd {break-before: avoid;}
 [data-game="alpha-sapphire"]{background-color:#BFE4EA;} /* hsl(125/240, 50%, 200/240) */
 [data-game="platinum"]{background-color:#C9D4DF;} /* hsl(140/240, 10%, 200/240) */
 [data-game="white2"]{background-color:#DDDDCC;} /* hsl(40/240, 20%, 200/240) */
+[data-game="randy"]{background-color:#E2C7CE;} /* hsl(230/240, 33%, 200/240) */
+[data-game="colosseum"]{background-color:#DFBFEA;} /* hsl(190/240, 50%, 200/240) */
 [data-game="theoretical"]{background-color:#CAEABF;} /* hsl(70/240, 50%, 200/240) */
 [data-game="natural platinum"]{
 	background-color:#EAC5BF;
