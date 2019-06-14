@@ -1,0 +1,10 @@
+*.css	text	diff=css
+*.js	text	diff=javascript
+*.properties	text
+*.sbt	text	diff=sbt
+*.scala	text	diff=scala
+
+*.md	text	diff=markdown
+*.yaml	text	diff=yaml
+/.gitattributes	text
+/.gitignore	text	merge=union
