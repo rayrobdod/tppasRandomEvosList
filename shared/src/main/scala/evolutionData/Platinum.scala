@@ -88,7 +88,7 @@ object Platinum extends SeedData with CompiledOnNoted {
 		builder += ((DexNo.national(133), Map(
 				"Used Item [Water Stone]" -> DexNo.national(476), "Used Item [Thunder Stone]" -> DexNo.national(101),
 				"Used Item [Fire Stone]" -> DexNo.national(97),
-				"Level Up at Morning" -> DexNo.national(462), "Level Up at Night" -> DexNo.national(136),
+				"Level Up at Morning with Friendship" -> DexNo.national(462), "Level Up at Night with Friendship" -> DexNo.national(136),
 				"Level Up at Forest" -> DexNo.national(470), "Level Up at Cold" -> DexNo.national(203)
 		)))
 		builder += ((DexNo.national(137), Map("Trade with Held Item [Up-Grade]" -> DexNo.national(232))))
@@ -160,7 +160,7 @@ object Platinum extends SeedData with CompiledOnNoted {
 		builder += ((DexNo.national(276), Map("Level Up [22]" -> DexNo.national(5))))
 		builder += ((DexNo.national(278), Map("Level Up [25]" -> DexNo.national(211))))
 		builder += ((DexNo.national(280), Map("Level Up [20]" -> DexNo.national(374))))
-		builder += ((DexNo.national(281), Map("Level Up [30]" -> DexNo.national(229), "Level Up with Held Item (Male) [Dawn Stone]" -> DexNo.national(282))))
+		builder += ((DexNo.national(281), Map("Level Up [30]" -> DexNo.national(229), "Used Item (Male) [Dawn Stone]" -> DexNo.national(282))))
 		builder += ((DexNo.national(283), Map("Level Up [22]" -> DexNo.national(53))))
 		builder += ((DexNo.national(285), Map("Level Up [23]" -> DexNo.national(286))))
 		builder += ((DexNo.national(287), Map("Level Up [18]" -> DexNo.national(310))))
@@ -196,7 +196,7 @@ object Platinum extends SeedData with CompiledOnNoted {
 		builder += ((DexNo.national(355), Map("Level Up [37]" -> DexNo.national(210))))
 		builder += ((DexNo.national(356), Map("Trade with Held Item [Reaper Cloth]" -> DexNo.national(210))))
 		builder += ((DexNo.national(360), Map("Level Up [15]" -> DexNo.national(12))))
-		builder += ((DexNo.national(361), Map("Level Up [42]" -> DexNo.national(340), "Level Up with Held Item (Female) [Dawn Stone]" -> DexNo.national(203))))
+		builder += ((DexNo.national(361), Map("Level Up [42]" -> DexNo.national(340), "Used Item (Female) [Dawn Stone]" -> DexNo.national(203))))
 		builder += ((DexNo.national(363), Map("Level Up [32]" -> DexNo.national(180))))
 		builder += ((DexNo.national(364), Map("Level Up [44]" -> DexNo.national(365))))
 		builder += ((DexNo.national(366), Map("Trade with Held Item [Deep Sea Tooth]" -> DexNo.national(409), "Trade with Held Item [Deep Sea Scale]" -> DexNo.national(368))))
@@ -216,7 +216,7 @@ object Platinum extends SeedData with CompiledOnNoted {
 		builder += ((DexNo.national(401), Map("Level Up [10]" -> DexNo.national(402))))
 		builder += ((DexNo.national(403), Map("Level Up [15]" -> DexNo.national(198))))
 		builder += ((DexNo.national(404), Map("Level Up [30]" -> DexNo.national(430))))
-		builder += ((DexNo.national(406), Map("Level Up at Morning" -> DexNo.national(67))))
+		builder += ((DexNo.national(406), Map("Level Up at Morning with Friendship" -> DexNo.national(67))))
 		builder += ((DexNo.national(408), Map("Level Up [30]" -> DexNo.national(409))))
 		builder += ((DexNo.national(410), Map("Level Up [30]" -> DexNo.national(313))))
 		builder += ((DexNo.national(412), Map("Level Up Female [20]" -> DexNo.national(237), "Level Up Male [20]" -> DexNo.national(195))))
@@ -227,7 +227,7 @@ object Platinum extends SeedData with CompiledOnNoted {
 		builder += ((DexNo.national(425), Map("Level Up [28]" -> DexNo.national(426))))
 		builder += ((DexNo.national(427), Map("Level Up with Friendship" -> DexNo.national(135))))
 		builder += ((DexNo.national(431), Map("Level Up [38]" -> DexNo.national(432))))
-		builder += ((DexNo.national(433), Map("Level Up at Night" -> DexNo.national(358))))
+		builder += ((DexNo.national(433), Map("Level Up at Night with Friendship" -> DexNo.national(358))))
 		builder += ((DexNo.national(434), Map("Level Up [34]" -> DexNo.national(89))))
 		builder += ((DexNo.national(436), Map("Level Up [33]" -> DexNo.national(323))))
 		builder += ((DexNo.national(438), Map("Level Up with Move [Mimic]" -> DexNo.national(185))))
@@ -236,12 +236,12 @@ object Platinum extends SeedData with CompiledOnNoted {
 		builder += ((DexNo.national(443), Map("Level Up [24]" -> DexNo.national(444))))
 		builder += ((DexNo.national(444), Map("Level Up [48]" -> DexNo.national(373))))
 		builder += ((DexNo.national(446), Map("Level Up with Friendship" -> DexNo.national(473))))
-		builder += ((DexNo.national(447), Map("Level Up at Morning" -> DexNo.national(260))))
+		builder += ((DexNo.national(447), Map("Level Up at Morning with Friendship" -> DexNo.national(260))))
 		builder += ((DexNo.national(449), Map("Level Up [34]" -> DexNo.national(142))))
 		builder += ((DexNo.national(451), Map("Level Up [40]" -> DexNo.national(234))))
 		builder += ((DexNo.national(453), Map("Level Up [37]" -> DexNo.national(38))))
 		builder += ((DexNo.national(456), Map("Level Up [31]" -> DexNo.national(409))))
-		builder += ((DexNo.national(458), Map("Level up with Party [Remoraid]" -> DexNo.national(227))))
+		builder += ((DexNo.national(458), Map("Level Up with Party [Remoraid]" -> DexNo.national(227))))
 		builder += ((DexNo.national(459), Map("Level Up [40]" -> DexNo.national(460))))
 		
 		builder.result

@@ -609,8 +609,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			"Used Item [Water Stone]" -> "🌊", // ☂
 			"Used Item [Thunder Stone]" -> "💡", // ☈
 			"Used Item [Fire Stone]" -> "🔥",
-			"Level Up at Morning" -> "☀",
-			"Level Up at Night" -> "☽",
+			"Level Up at Morning with Friendship" -> "☀",
+			"Level Up at Night with Friendship" -> "☽",
 			"Level Up at Forest" -> "🍂",
 			"Level Up at Cold" -> "❄", //⛇. ☃
 			"Level Up with 50 Affection + MoveType [Fairy]" -> "❤" //♥
@@ -619,8 +619,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			"Used Item [Water Stone]" -> "1",
 			"Used Item [Thunder Stone]" -> "2",
 			"Used Item [Fire Stone]" -> "3",
-			"Level Up at Morning" -> "4",
-			"Level Up at Night" -> "5",
+			"Level Up at Morning with Friendship" -> "4",
+			"Level Up at Night with Friendship" -> "5",
 			"Level Up at Forest" -> "6",
 			"Level Up at Cold" -> "7",
 			"Level Up with 50 Affection + MoveType [Fairy]" -> "8"
