@@ -118,9 +118,9 @@ package possibleEvolutions {
 			override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.Neither
 			override def expGroupMustMatch:Boolean = false
 			override def remainingStageMatch:Boolean = false
-			override def seedData:Option[SeedData] = None //Option(evolutionData.Randy)
+			override def seedData:Option[SeedData] = Option(evolutionData.Randy)
 			override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Pk3ds_2
-			override def naturalEvoAllowed:Boolean = false
+			override def naturalEvoAllowed:Boolean = true
 			override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 721)
 			override def bstType:MonBstType.Value = MonBstType.Gen6
 			override def typeType:MonTypeType.Value = MonTypeType.Natural

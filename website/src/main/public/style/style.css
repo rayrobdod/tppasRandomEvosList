@@ -91,6 +91,14 @@ dl dd {break-before: avoid;}
 	background-color:#EAC5BF;
 	background: linear-gradient(to bottom, #EAC5BF 0%,#EAC5BF 50%,#C9D4DF 51%,#C9D4DF 100%);
 }
+[data-game="natural platinum randy"]{
+	background-color:#EAC5BF;
+	background: linear-gradient(to bottom, #EAC5BF 0%,#EAC5BF 33%,#C9D4DF 34%,#C9D4DF 66%,#E2C7CE 67%,#E2C7CE 100%);
+}
+[data-game="natural randy"]{
+	background-color:#EAC5BF;
+	background: linear-gradient(to bottom, #EAC5BF 0%,#EAC5BF 50%,#E2C7CE 51%,#E2C7CE 100%);
+}
 [data-game="alpha-sapphire platinum"]{
 	background-color:#BFE4EA;
 	background: linear-gradient(to bottom, #BFE4EA 0%,#BFE4EA 50%,#C9D4DF 51%,#C9D4DF 100%);
@@ -102,4 +110,8 @@ dl dd {break-before: avoid;}
 [data-game="platinum white2"]{
 	background-color:#C9D4DF;
 	background: linear-gradient(to bottom, #C9D4DF 0%,#C9D4DF 50%,#DDDDCC 51%,#DDDDCC 100%);
+}
+[data-game="white2 randy"]{
+	background-color:#DDDDCC;
+	background: linear-gradient(to bottom, #DDDDCC 0%,#DDDDCC 50%,#E2C7CE 51%,#E2C7CE 100%);
 }
