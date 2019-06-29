@@ -1,1 +1,5 @@
-style/theoreticalPage.js binary
+*.css	text	diff=css
+*.html	text	diff=html
+*.js	text	diff=javascript
+
+style/theoreticalPage.js	binary	-diff
