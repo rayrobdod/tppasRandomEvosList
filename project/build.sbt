@@ -1,4 +1,4 @@
-libraryDependencies += "com.lihaoyi" %% "scalatags" % "0.6.7"
+libraryDependencies += "com.lihaoyi" %% "scalatags" % "0.7.0"
 
 javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked")
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")

@@ -29,7 +29,7 @@ object TheoreticalPage {
 		val gamePageUrl = window.location.pathname + mapToQueryString(params - "dexno")
 		val monPageUrlFun = {dexNo:DexNo => window.location.pathname + mapToQueryString(params + (("dexno" -> dexNo.toString)))}
 		
-		monNoOpt.foreach{monNo =>
+		monNoOpt.foreach{_ =>
 			navElem.appendChild(
 				scalatags.JsDom.tags.span(" > ").render
 			)
@@ -111,19 +111,13 @@ object TheoreticalPage {
 					.getOrElse(BstMatchFunction.Any)
 			  }
 			, expGroupMustMatch = {
-				params.get("expGroupMatch")
-					.map{x => true}
-					.getOrElse(false)
+				params.get("expGroupMatch").nonEmpty
 			  }
 			, naturalEvoAllowed = {
-				params.get("naturalEvolutionAllowed")
-					.map{x => true}
-					.getOrElse(false)
+				params.get("naturalEvolutionAllowed").nonEmpty
 			  }
 			, remainingStageMatch = {
-				params.get("stagesRemainingMatch")
-					.map{x => true}
-					.getOrElse(false)
+				params.get("stagesRemainingMatch").nonEmpty
 			}
 		)
 	}
