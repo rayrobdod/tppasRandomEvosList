@@ -140,6 +140,21 @@ package possibleEvolutions {
 			override def bstType:MonBstType.Value = MonBstType.Gen2
 			override def typeType:MonTypeType.Value = MonTypeType.NoFairy
 		}
+
+		object UltraMoon extends Value {
+			override def id:Int = 6
+			override def name:String = "ultra-moon"
+			override def shortName:String = "um"
+			override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.Neither
+			override def expGroupMustMatch:Boolean = false
+			override def remainingStageMatch:Boolean = true
+			override def seedData:Option[SeedData] = None //Option(evolutionData.UltraMoon)
+			override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Pk3ds_2
+			override def naturalEvoAllowed:Boolean = false
+			override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 807) ++ DexNo.alolanDexNos :+ DexNo.duskRockruff
+			override def bstType:MonBstType.Value = MonBstType.Gen7
+			override def typeType:MonTypeType.Value = MonTypeType.Natural
+		}
 		
 		final case class Custom(
 			  val knownDexnos:Seq[DexNo]
