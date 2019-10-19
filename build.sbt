@@ -32,9 +32,9 @@ lazy val benchmark = project
 
 lazy val compiler = project
 	.dependsOn(sharedJVM)
+	.enablePlugins(GenPrologue)
 	.settings(name := "tppRandomEvos-compiler")
 	.settings(mySettings:_*)
-	.settings(com.rayrobdod.possibleEvolutions.GenPrologue.settings)
 
 lazy val theoreticalPage = project
 	.enablePlugins(ScalaJSPlugin)

@@ -7,7 +7,11 @@ import java.nio.charset.StandardCharsets.UTF_8
 import scala.collection.mutable.Buffer
 import scala.language.implicitConversions
 
-object GenPrologue {
+/**
+ * Reads the sbt project's `README.md`, takes the first section of that file,
+ * and generates a set of scalatags instructions that would recreate that text
+ */
+object GenPrologue extends AutoPlugin {
 	private final class TagsScalaSourceBuilder {
 		val parts = Buffer.empty[String]
 		
@@ -243,9 +247,12 @@ object GenPrologue {
 		}}:_*)
 	}
 	
-	val genPrologue = taskKey[Seq[File]]("Generate a scala file whose contents mirror README.md")
+	object autoImport {
+		val genPrologue = taskKey[Seq[File]]("Generate a scala file whose contents mirror README.md")
+	}
+	import autoImport.genPrologue
 	
-	def settings = Seq(
+	override lazy val projectSettings = Seq(
 		target in genPrologue in Compile := {
 			(sourceManaged in Compile).value / "IndexPrologue.scala"
 		},
