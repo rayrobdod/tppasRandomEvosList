@@ -72,6 +72,53 @@ package possibleEvolutions {
 		}
 		
 	}
+
+	/** A 'mon's experience growth category */
+	object ExperienceGrowth extends Enumeration {
+		protected class Val(name:String) extends super.Val(name) {
+			override def toString = name
+		}
+
+		val Fast = new Val("Fast")
+		val MedFast = new Val("Medium Fast")
+		val MedSlow = new Val("Medium Slow")
+		val Slow = new Val("Slow")
+		val Fluctuating = new Val("Fluctuating")
+		val Erratic = new Val("Erratic")
+	}
+
+	/** A 'mon's elemental type */
+	object ElementalType extends Enumeration {
+		protected class Val(name:String) extends super.Val(name) {
+			override def toString = name
+		}
+
+		 // `???` is the value that needs a custom tostring; without it the tostring is
+		 // the java version of the file name - `$qmark$qmark$qmark`
+		val ??? = new Val("???")
+		val Bug = new Val("Bug")
+		val Dark = new Val("Dark")
+		val Dragon = new Val("Dragon")
+		val Electric = new Val("Electric")
+		val Fairy = new Val("Fairy")
+		val Fighting = new Val("Fighting")
+		val Fire = new Val("Fire")
+		val Flying = new Val("Flying")
+		val Ghost = new Val("Ghost")
+		val Grass = new Val("Grass")
+		val Ground = new Val("Ground")
+		val Ice = new Val("Ice")
+		val Normal = new Val("Normal")
+		val Poison = new Val("Poison")
+		val Psychic = new Val("Psychic")
+		val Rock = new Val("Rock")
+		val Steel = new Val("Steel")
+		val Water = new Val("Water")
+	}
+
+	object LegendaryStatus extends Enumeration {
+		val Normal, Legendary, Mythical, Shedinja = Value
+	}
 	
 	/**
 	 * Notes the time at which the class was compiled. Used for invalidating a cache by `Compiler`.

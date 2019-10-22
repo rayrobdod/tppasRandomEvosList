@@ -4,28 +4,29 @@ package com.rayrobdod.possibleEvolutions
  * Information about a particular species of Pokémon
  */
 final class Pokemon(
-	  val dexNo:DexNo
-	, val name:String
-	, naturalType1:String
-	, naturalType2:String
-	, rpType1:String
-	, rpType2:String
-	, gen1bst:Int
-	, gen2bst:Int
-	, gen6bst:Int
-	, gen7bst:Int
-	, val expGrowth:String
+	val dexNo:DexNo,
+	val name:String,
+	naturalType1:ElementalType.Value,
+	naturalType2:ElementalType.Value,
+	rpType1:ElementalType.Value,
+	rpType2:ElementalType.Value,
+	gen1bst:Int,
+	gen2bst:Int,
+	gen6bst:Int,
+	gen7bst:Int,
+	val expGrowth:ExperienceGrowth.Value,
+	val isLegendary:LegendaryStatus.Value,
 ) {
 	// Create the tuples only once, reducing GC churn
 	private[this] val rpTypes = ((rpType1, rpType2))
 	private[this] val natTypes = ((naturalType1, naturalType2))
 	private[this] val noFairyTypes = {
-		val _1 = (if (naturalType1 == "Fairy") {"Normal"} else {naturalType1})
-		val _2 = (if (naturalType2 == "Fairy") {_1} else {naturalType2})
+		val _1 = (if (naturalType1 == ElementalType.Fairy) {ElementalType.Normal} else {naturalType1})
+		val _2 = (if (naturalType2 == ElementalType.Fairy) {_1} else {naturalType2})
 		((_1, _2))
 	}
 	
-	def types(implicit config:EvosGame.Value):(String, String) = config.typeType match {
+	def types(implicit config:EvosGame.Value):(ElementalType.Value, ElementalType.Value) = config.typeType match {
 		case MonTypeType.RandPlat => rpTypes
 		case MonTypeType.Natural => natTypes
 		case MonTypeType.NoFairy => noFairyTypes

@@ -119,11 +119,11 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				dt("Base Stat Total"),
 					dd(checkMon.bst.toString),
 				dt("Experience Group"),
-					dd(checkMon.expGrowth),
+					dd(checkMon.expGrowth.toString),
 				dt("Types"),
-					dd(dataType := checkMon.types._1.toLowerCase, checkMon.types._1),
+					dd(dataType := checkMon.types._1.toString.toLowerCase, checkMon.types._1.toString),
 					if (checkMon.types._1 != checkMon.types._2) {
-						dd(dataType := checkMon.types._2.toLowerCase, checkMon.types._2)
+						dd(dataType := checkMon.types._2.toString.toLowerCase, checkMon.types._2.toString)
 					} else {frag("")}
 			  )
 			, h2("Possible Evos")
@@ -133,23 +133,24 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				val realEvosMethod = realEvos.flatMap{case (a,bs) => bs.get(method).map{b => ((a, b))}}
 				
 				val veekunSearchLink = {
+					import com.rayrobdod.possibleEvolutions.ExperienceGrowth._
 					val growthRate = checkMon.expGrowth match {
-						case "Slow" => "1250000"
-						case "Medium Fast" => "1000000"
-						case "Fast" => "800000"
-						case "Medium Slow" => "1059860"
-						case "Erratic" => "600000"
-						case "Fluctuating" => "1640000"
+						case Slow => "1250000"
+						case MedFast => "1000000"
+						case Fast => "800000"
+						case MedSlow => "1059860"
+						case Erratic => "600000"
+						case Fluctuating => "1640000"
 					}
 					val types = config.monToMatch match {
 						case MonTypeToMatch.Neither => ""
 						case MonTypeToMatch.BaseForm => {
 							val (type1, type2) = checkMon.types
-							s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
+							s"&type=${type1.toString.toLowerCase}&type=${type2.toString.toLowerCase}"
 						}
 						case MonTypeToMatch.EvolvedForm => {
 							val (type1, type2) = naturalEvo.types
-							s"&type=${type1.toLowerCase}&type=${type2.toLowerCase}"
+							s"&type=${type1.toString.toLowerCase}&type=${type2.toString.toLowerCase}"
 						}
 					}
 					val bstRange = config.bstMatchFunction match {
@@ -360,7 +361,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						tbody({
 							def haveSharedType(
 								a:Pokemon, b:Pokemon
-							):Seq[String] = {
+							):Seq[ElementalType.Value] = {
 								val (a1, a2) = a.types
 								val (b1, b2) = b.types
 								
@@ -387,7 +388,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 								tr(
 									  td(dataSort := fromMon.dexNo.toStringPadded)(fromMon.dexNo.toString)
 									, td(dataSort := fromMon.name)(fromMon.name)
-									, td(dataType := typ.toLowerCase, dataSort := typ)(typ)
+									, td(dataType := typ.toString.toLowerCase, dataSort := typ.toString)(typ.toString)
 									, td(dataSort := toMon.dexNo.toStringPadded)(toMon.dexNo.toString)
 									, td(dataSort := toMon.name)(toMon.name)
 								)
@@ -1081,10 +1082,10 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			, td(dataSort := x.name)(
 				a(dexNoLinkModifier(x.dexNo))(x.name)
 			  )
-			, td(dataSort := x.types._1, dataType := x.types._1.toLowerCase)(x.types._1)
-			, td(dataSort := x.types._2, dataType := x.types._2.toLowerCase)(x.types._2) 
+			, td(dataSort := x.types._1.toString, dataType := x.types._1.toString.toLowerCase)(x.types._1.toString)
+			, td(dataSort := x.types._2.toString, dataType := x.types._2.toString.toLowerCase)(x.types._2.toString) 
 			, td(dataSort := padStrWithZeros(x.bst))(x.bst.toString)
-			, td(dataSort := x.expGrowth)(x.expGrowth)
+			, td(dataSort := x.expGrowth.toString)(x.expGrowth.toString)
 			, td(dataSort := padStrWithZeros(possibleEvosCount(x.dexNo)))(possibleEvosCount(x.dexNo).toString)
 			, td(dataSort := padStrWithZeros(possiblePrevosCount(x.dexNo)))(possiblePrevosCount(x.dexNo).toString)
 		)

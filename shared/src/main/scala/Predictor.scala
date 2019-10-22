@@ -19,7 +19,7 @@ final class Predictor(game:EvosGame.Value) {
 
 	private[this] val possibleEvolutionsData:Map[DexNo, Map[String, Seq[Pokemon]]] = {
 		/** True if either `a` value is equal to either `b` value */
-		def typesMatch(a1:String, a2:String, b1:String, b2:String) = {
+		def typesMatch(a1:ElementalType.Value, a2:ElementalType.Value, b1:ElementalType.Value, b2:ElementalType.Value) = {
 			a1 == b1 || a1 == b2 || a2 == b1 || a2 == b2
 		}
 		def stagesRemaining(mon:DexNo):Int = {
