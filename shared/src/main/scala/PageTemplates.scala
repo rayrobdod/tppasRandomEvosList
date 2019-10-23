@@ -127,7 +127,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					} else {frag("")}
 			  )
 			, h2("Possible Evos")
-			, div(evos.flatMap{case (method:String, possibleEvos:Seq[Pokemon]) =>
+			, div(evos.toSeq.sortBy{x => realEvos(EvosGame.Natural)(x._1)}.flatMap{case (method:String, possibleEvos:Seq[Pokemon]) =>
 				val naturalEvo = predictions.getPokemon(realEvos(EvosGame.Natural)(method))
 				val naturalBst = naturalEvo.bst
 				val realEvosMethod = realEvos.flatMap{case (a,bs) => bs.get(method).map{b => ((a, b))}}
