@@ -119,6 +119,9 @@ object TheoreticalPage {
 			, remainingStageMatch = {
 				params.get("stagesRemainingMatch").nonEmpty
 			}
+			, legendaryAllowed = {
+				params.get("legendaryAllowed").nonEmpty
+			}
 		)
 	}
 	

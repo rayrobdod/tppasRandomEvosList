@@ -263,6 +263,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, dd(if (game.naturalEvoAllowed) {"Yes"} else {"No"})
 					, dt("Remaining Evolution Stage Match")
 					, dd(if (game.remainingStageMatch) {"Yes"} else {"No"})
+					, dt("Evolution Into Legendary Allowed")
+					, dd(if (game.legendaryAllowed) {"Yes"} else {"No"})
 					, dt("Base Stat Total Range")
 					, dd(game.bstMatchFunction.description)
 				  )
@@ -870,6 +872,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						, checkbox("Experience Group Match", "expGroupMatch")
 						, checkbox("Natural Evolution Allowed", "naturalEvolutionAllowed")
 						, checkbox("Evolution Stages Remaining Match", "stagesRemainingMatch")
+						, checkbox("Evolution Into Legendary Allowed", "legendaryAllowed")
 						, options("New evolution's type must match", "typeToMatch", Seq(
 							  "Nothing" -> MonTypeToMatch.Neither.toString
 							, "Base's type" -> MonTypeToMatch.BaseForm.toString

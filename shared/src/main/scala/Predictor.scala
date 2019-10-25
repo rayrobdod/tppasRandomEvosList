@@ -59,8 +59,10 @@ final class Predictor(game:EvosGame.Value) {
 				val candidateIsSelf = candidate == checkMon
 				val candidateIsNatural = candidate == naturalEvoMon
 				val stagesRemainingMatch = !game.remainingStageMatch || stagesRemaining(candidate.dexNo) + 1 == stagesRemaining(checkNo)
+				val legendaryMatch = game.legendaryAllowed || candidate.isLegendary == LegendaryStatus.Normal
 				
 				typsMatch && bstMatch && expGroupMatch && stagesRemainingMatch &&
+						legendaryMatch &&
 						!candidateIsSelf &&
 						(game.naturalEvoAllowed || !candidateIsNatural)
 						

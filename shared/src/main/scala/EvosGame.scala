@@ -31,6 +31,8 @@ object EvosGame {
 		def naturalEvoAllowed:Boolean
 		/** True if  */
 		def remainingStageMatch:Boolean
+		/** True if evolution into a legendary is allowed */
+		def legendaryAllowed:Boolean
 		/**
 		 * A function that compares a natural and candidate Pokemon to determine whether
 		 * the candidate is an acceptable evolution candidate
@@ -57,6 +59,7 @@ object EvosGame {
 		override def remainingStageMatch:Boolean = true
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Any
 		override def naturalEvoAllowed:Boolean = true
+		override def legendaryAllowed:Boolean = true
 		override def bstType:MonBstType.Value = MonBstType.Gen7
 		override def typeType:MonTypeType.Value = MonTypeType.Natural
 	}
@@ -71,6 +74,7 @@ object EvosGame {
 		override def seedData:Option[SeedData] = Option(evolutionData.AlphaSapphire)
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Pk3ds
 		override def naturalEvoAllowed:Boolean = false
+		override def legendaryAllowed:Boolean = true
 		override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 721)
 		override def bstType:MonBstType.Value = MonBstType.Gen6
 		override def typeType:MonTypeType.Value = MonTypeType.Natural
@@ -86,6 +90,7 @@ object EvosGame {
 		override def seedData:Option[SeedData] = Option(evolutionData.Platinum)
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.UniversalRandomizer
 		override def naturalEvoAllowed:Boolean = true
+		override def legendaryAllowed:Boolean = true
 		override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 493)
 		override def bstType:MonBstType.Value = MonBstType.Gen2
 		override def typeType:MonTypeType.Value = MonTypeType.RandPlat
@@ -101,6 +106,7 @@ object EvosGame {
 		override def seedData:Option[SeedData] = Option(evolutionData.White2)
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.UniversalRandomizer
 		override def naturalEvoAllowed:Boolean = false
+		override def legendaryAllowed:Boolean = true
 		override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 649)
 		override def bstType:MonBstType.Value = MonBstType.Gen2
 		override def typeType:MonTypeType.Value = MonTypeType.NoFairy
@@ -116,6 +122,7 @@ object EvosGame {
 		override def seedData:Option[SeedData] = Option(evolutionData.Randy)
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Pk3ds_2
 		override def naturalEvoAllowed:Boolean = true
+		override def legendaryAllowed:Boolean = false
 		override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 721)
 		override def bstType:MonBstType.Value = MonBstType.Gen6
 		override def typeType:MonTypeType.Value = MonTypeType.Natural
@@ -131,6 +138,7 @@ object EvosGame {
 		override def seedData:Option[SeedData] = None //Option(evolutionData.Colosseum)
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.GoDTool
 		override def naturalEvoAllowed:Boolean = false
+		override def legendaryAllowed:Boolean = true
 		override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 386)
 		override def bstType:MonBstType.Value = MonBstType.Gen2
 		override def typeType:MonTypeType.Value = MonTypeType.NoFairy
@@ -145,7 +153,8 @@ object EvosGame {
 		override def remainingStageMatch:Boolean = true
 		override def seedData:Option[SeedData] = None //Option(evolutionData.UltraMoon)
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Pk3ds_2
-		override def naturalEvoAllowed:Boolean = false
+		override def naturalEvoAllowed:Boolean = true
+		override def legendaryAllowed:Boolean = false
 		override def knownDexnos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 807) ++ DexNo.alolanDexNos :+ DexNo.duskRockruff
 		override def bstType:MonBstType.Value = MonBstType.Gen7
 		override def typeType:MonTypeType.Value = MonTypeType.Natural
@@ -160,6 +169,7 @@ object EvosGame {
 		val expGroupMustMatch:Boolean,
 		val naturalEvoAllowed:Boolean,
 		val remainingStageMatch:Boolean,
+		val legendaryAllowed:Boolean,
 	) extends Value {
 		override def id:Int = -1
 		override def name:String = "custom"
