@@ -8,7 +8,7 @@ import com.rayrobdod.possibleEvolutions.LegendaryStatus.{Normal => NotLegendary,
 /**
  * Contains a list of every known Pokémon species.
  */
-object AllPokemon extends CompiledOnNoted {
+object AllPokemon {
 	/**
 	 * Said list of Pokémon species
 	 */
@@ -847,6 +847,4 @@ object AllPokemon extends CompiledOnNoted {
 	 * Returns the Pokémon from said list with the specified dexno.
 	 */
 	def get(x:DexNo):Option[Pokemon] = this.apply.find{_.dexNo == x}
-
-	val compiledOn:java.time.Instant = compiledOnMacro.apply
 }

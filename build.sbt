@@ -1,20 +1,7 @@
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 import com.rayrobdod.possibleEvolutions.SharedCrossType
 
-lazy val compiledOnMacro = crossProject(JVMPlatform, JSPlatform).crossType(SharedCrossType)
-	.settings(name := "tppRandomEvos-compiledTimeMacro")
-	.settings(mySettings:_*)
-	.settings(libraryDependencies ++= Seq(
-		"org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
-	))
-	.jsSettings(
-		libraryDependencies += "org.scala-js" %%% "scalajs-java-time" % "0.2.5",
-	)
-lazy val compiledOnMacroJVM = compiledOnMacro.jvm
-lazy val compiledOnMacroJS = compiledOnMacro.js
-
 lazy val shared = crossProject(JVMPlatform, JSPlatform).crossType(SharedCrossType)
-	.dependsOn(compiledOnMacro)
 	.settings(name := "tppRandomEvos")
 	.settings(libraryDependencies ++= Seq(
 		  "com.lihaoyi" %%% "scalatags" % "0.7.0"

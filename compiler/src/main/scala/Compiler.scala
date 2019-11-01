@@ -19,9 +19,7 @@ object Compiler {
 	)
 	private[this] val seedDatas = evolutionData.Natural +: gamesToMakePagesAbout.flatMap{_.seedData}
 	private[this] val predictors = gamesToMakePagesAbout.map{game => ((game, new Predictor(game)))}
-	private[this] val compiledOnNotes:Seq[CompiledOnNoted] = seedDatas :+ AllPokemon :+ PageTemplates :+ Predictor :+ SeedData
 	private[this] val bracketsWithLineBreak = ">" + System.lineSeparator + "<"
-	private[this] val mostRecentCompiledOnNote = compiledOnNotes.map{_.compiledOn}.max
 	
 	final case class Context(
 		generatePerMonPages:java.lang.Boolean,
@@ -35,12 +33,9 @@ object Compiler {
 	
 	private[this] def writeToFile(outRelPath:String, contents:() => String)(ctx:Context):File = {
 		val outFile = (ctx.targetDirectory / outRelPath).toPath
-		// only rewrite file contents if file is stale
-		if (!Files.exists(outFile) || Files.getLastModifiedTime(outFile).toInstant.compareTo(mostRecentCompiledOnNote).<(0)) {
-			val outData = java.util.Collections.singleton(contents.apply.replace("><", bracketsWithLineBreak))
-			Files.createDirectories(outFile.getParent)
-			Files.write(outFile, outData, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
-		}
+		val outData = java.util.Collections.singleton(contents.apply.replace("><", bracketsWithLineBreak))
+		Files.createDirectories(outFile.getParent)
+		Files.write(outFile, outData, UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.WRITE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING)
 		outFile.toFile
 	}
 	

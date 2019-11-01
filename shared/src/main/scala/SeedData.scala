@@ -6,7 +6,7 @@ import scala.collection.mutable.{Buffer => MSeq}
 /**
  * Data about a particular game's true evolutions
  */
-abstract class SeedData extends CompiledOnNoted {
+abstract class SeedData {
 	def game:EvosGame.Value
 	def evolutions:Map[DexNo, Map[String, DexNo]]
 	
@@ -100,8 +100,4 @@ abstract class SeedData extends CompiledOnNoted {
 	
 	/** Pokemon with multiple prevos */
 	final val multiplePrevos:Set[DexNo] = prevos.filter{_._2.size >= 2}.keySet
-}
-
-object SeedData extends CompiledOnNoted {
-	val compiledOn:java.time.Instant = compiledOnMacro.apply
 }

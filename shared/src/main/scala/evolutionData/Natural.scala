@@ -3,7 +3,7 @@ package evolutionData
 
 import scala.collection.immutable.Map
 
-object Natural extends SeedData with CompiledOnNoted {
+object Natural extends SeedData {
 	def game:EvosGame.Value = EvosGame.Natural
 	
 	lazy val evolutions:Map[DexNo, Map[String, DexNo]] = {
@@ -394,6 +394,4 @@ object Natural extends SeedData with CompiledOnNoted {
 		
 		builder.result
 	}
-	
-	val compiledOn:java.time.Instant = compiledOnMacro.apply
 }
