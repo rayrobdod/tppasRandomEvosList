@@ -93,7 +93,7 @@ object Natural extends SeedData {
 		builder += ((DexNo.national(125), Map("Trade with Held Item [Electirizer]" -> DexNo.national(466)) ))
 		builder += ((DexNo.national(126), Map("Trade with Held Item [Magmarizer]" -> DexNo.national(467)) ))
 		builder += ((DexNo.national(129), Map("Level Up [20]" -> DexNo.national(130)) ))
-		builder += ((DexNo.national(133), Map(
+		builder += ((DexNo.national(133), scala.collection.immutable.ListMap(
 				"Used Item [Water Stone]" -> DexNo.national(134), "Used Item [Thunder Stone]" -> DexNo.national(135), "Used Item [Fire Stone]" -> DexNo.national(136),
 				"Level Up at Morning with Friendship" -> DexNo.national(196), "Level Up at Night with Friendship" -> DexNo.national(197),
 				"Level Up at Forest" -> DexNo.national(470), "Level Up at Cold" -> DexNo.national(471),

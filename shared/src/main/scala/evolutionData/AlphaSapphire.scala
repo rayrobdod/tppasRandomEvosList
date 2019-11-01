@@ -82,7 +82,7 @@ object AlphaSapphire extends SeedData {
 		builder += ((DexNo.national(355), Map("Level Up [37]" -> DexNo.national(593))))
 		builder += ((DexNo.national(557), Map("Level Up [34]" -> DexNo.national(469))))
 		builder += ((DexNo.national(603), Map("Used Item [Thunder Stone]" -> DexNo.national(243))))
-		builder += ((DexNo.national(133), Map(
+		builder += ((DexNo.national(133), scala.collection.immutable.ListMap(
 				"Level Up at Forest" -> DexNo.national( 44), "Level Up at Cold" -> DexNo.national(460),
 				"Used Item [Thunder Stone]" -> DexNo.national(417), "Used Item [Water Stone]" -> DexNo.national( 99),
 				"Used Item [Fire Stone]" -> DexNo.national(654), "Level Up with 50 Affection + MoveType [Fairy]" -> DexNo.national(707),

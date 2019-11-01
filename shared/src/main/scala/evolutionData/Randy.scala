@@ -85,7 +85,7 @@ object Randy extends SeedData {
 		builder += ((DexNo.national(125), Map("Trade with Held Item [Electirizer]" -> DexNo.national(680))))
 		builder += ((DexNo.national(126), Map("Trade with Held Item [Magmarizer]" -> DexNo.national(311))))
 		builder += ((DexNo.national(129), Map("Level Up [20]" -> DexNo.national(677))))
-		builder += ((DexNo.national(133), Map(
+		builder += ((DexNo.national(133), scala.collection.immutable.ListMap(
 				"Used Item [Water Stone]" -> DexNo.national(332),
 				"Used Item [Thunder Stone]" -> DexNo.national(706),
 				"Used Item [Fire Stone]" -> DexNo.national(257),

@@ -85,7 +85,7 @@ object White2 extends SeedData {
 		builder += ((DexNo.national(125), Map("Trade with Held Item [Electirizer]" -> DexNo.national(467))))
 		builder += ((DexNo.national(126), Map("Trade with Held Item [Magmarizer]" -> DexNo.national(78))))
 		builder += ((DexNo.national(129), Map("Level Up [20]" -> DexNo.national(379))))
-		builder += ((DexNo.national(133), Map(
+		builder += ((DexNo.national(133), scala.collection.immutable.ListMap(
 				"Used Item [Water Stone]" -> DexNo.national(558), "Used Item [Thunder Stone]" -> DexNo.national(125),
 				"Used Item [Fire Stone]" -> DexNo.national(623),
 				"Level Up at Morning with Friendship" -> DexNo.national(530), "Level Up at Night with Friendship" -> DexNo.national(547),
