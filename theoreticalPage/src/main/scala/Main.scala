@@ -46,20 +46,21 @@ object TheoreticalPage {
 			case None => {
 				mainElem.appendChild(
 					PageTemplatesJsDom.perGameMain(
-						  predictions = predictor
-						, game = game
-						, {dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := monPageUrlFun(dexNo))}
+						predictions = predictor,
+						settings = game,
+						seedDatas = None,
+						{dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := monPageUrlFun(dexNo))},
 					).render
 				)
 			}
 			case Some(monNo) => {
 				mainElem.appendChild(
 					PageTemplatesJsDom.perMonMain(
-						  monNo = monNo
-						, predictions = predictor
-						, game = game
-						, seedDatas = seedDatas
-						, {dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := monPageUrlFun(dexNo))}
+						monNo = monNo,
+						predictions = predictor,
+						config = game,
+						seedDatas = None,
+						{dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := monPageUrlFun(dexNo))},
 					).render
 				)
 			}

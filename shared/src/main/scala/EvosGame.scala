@@ -1,20 +1,12 @@
 package com.rayrobdod.possibleEvolutions
 
-import scala.collection.immutable.Seq
+import scala.collection.immutable.{Seq, SortedMap}
 
 /**
  * Describes the randomizer settings for a particular game.
  */
 object EvosGame {
 	sealed trait Value {
-		/** Internal id for e.g. sorting. Also the order in which said games were played. */
-		def id:Int
-		/** This game's name */
-		def name:String
-		/** An abbreviated version of this game's name */
-		def shortName:String
-
-
 		/** The dexnos of extant pokemon */
 		def knownDexnos:Seq[DexNo]
 		/** the set of BST values used by Pokemon */
@@ -38,40 +30,12 @@ object EvosGame {
 		 * the candidate is an acceptable evolution candidate
 		 */
 		def bstMatchFunction:BstMatchFunction.Value
-
-		/** True if the game has logs to display and generate data about */
-		def seedData:Option[SeedData]
-
-		override def toString = this.name
-	}
-
-	object Natural extends Value {
-		override def id:Int = 0
-		override def name:String = "natural"
-		override def shortName:String = "nat"
-
-		override def seedData:Option[SeedData] = Option(evolutionData.Natural)
-		override def knownDexnos:Seq[DexNo] = AllPokemon.apply.map{_.dexNo}
-
-		// Prediction pages aren't built for natural evolutions, so the values used here don't matter
-		override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.BaseForm
-		override def expGroupMustMatch:Boolean = true
-		override def remainingStageMatch:Boolean = true
-		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Any
-		override def naturalEvoAllowed:Boolean = true
-		override def legendaryAllowed:Boolean = true
-		override def bstType:MonBstType.Value = MonBstType.Gen7
-		override def typeType:MonTypeType.Value = MonTypeType.Natural
 	}
 
 	object AlphaSapphire extends Value {
-		override def id:Int = 1
-		override def name:String = "alpha-sapphire"
-		override def shortName:String = "αS"
 		override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.EvolvedForm
 		override def expGroupMustMatch:Boolean = false
 		override def remainingStageMatch:Boolean = false
-		override def seedData:Option[SeedData] = Option(evolutionData.AlphaSapphire)
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Pk3ds
 		override def naturalEvoAllowed:Boolean = false
 		override def legendaryAllowed:Boolean = true
@@ -81,13 +45,9 @@ object EvosGame {
 	}
 
 	object Platinum extends Value {
-		override def id:Int = 2
-		override def name:String = "platinum"
-		override def shortName:String = "rP"
 		override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.BaseForm
 		override def expGroupMustMatch:Boolean = true
 		override def remainingStageMatch:Boolean = false
-		override def seedData:Option[SeedData] = Option(evolutionData.Platinum)
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.UniversalRandomizer
 		override def naturalEvoAllowed:Boolean = true
 		override def legendaryAllowed:Boolean = true
@@ -97,13 +57,9 @@ object EvosGame {
 	}
 
 	object White2 extends Value {
-		override def id:Int = 3
-		override def name:String = "white2"
-		override def shortName:String = "w2"
 		override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.Neither
 		override def expGroupMustMatch:Boolean = true
 		override def remainingStageMatch:Boolean = false
-		override def seedData:Option[SeedData] = Option(evolutionData.White2)
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.UniversalRandomizer
 		override def naturalEvoAllowed:Boolean = false
 		override def legendaryAllowed:Boolean = true
@@ -113,13 +69,9 @@ object EvosGame {
 	}
 
 	object Randy extends Value {
-		override def id:Int = 4
-		override def name:String = "randy"
-		override def shortName:String = "rY"
 		override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.Neither
 		override def expGroupMustMatch:Boolean = false
 		override def remainingStageMatch:Boolean = false
-		override def seedData:Option[SeedData] = Option(evolutionData.Randy)
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Pk3ds_2
 		override def naturalEvoAllowed:Boolean = true
 		override def legendaryAllowed:Boolean = false
@@ -129,13 +81,9 @@ object EvosGame {
 	}
 
 	object Colosseum extends Value {
-		override def id:Int = 5
-		override def name:String = "colosseum"
-		override def shortName:String = "co"
 		override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.EvolvedForm
 		override def expGroupMustMatch:Boolean = false
 		override def remainingStageMatch:Boolean = true
-		override def seedData:Option[SeedData] = None //Option(evolutionData.Colosseum)
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.GoDTool
 		override def naturalEvoAllowed:Boolean = false
 		override def legendaryAllowed:Boolean = true
@@ -145,13 +93,9 @@ object EvosGame {
 	}
 
 	object UltraMoon extends Value {
-		override def id:Int = 6
-		override def name:String = "ultra-moon"
-		override def shortName:String = "um"
 		override def monToMatch:MonTypeToMatch.Value = MonTypeToMatch.Neither
 		override def expGroupMustMatch:Boolean = false
 		override def remainingStageMatch:Boolean = true
-		override def seedData:Option[SeedData] = None //Option(evolutionData.UltraMoon)
 		override def bstMatchFunction:BstMatchFunction.Value = BstMatchFunction.Pk3ds_2
 		override def naturalEvoAllowed:Boolean = true
 		override def legendaryAllowed:Boolean = false
@@ -170,10 +114,14 @@ object EvosGame {
 		val naturalEvoAllowed:Boolean,
 		val remainingStageMatch:Boolean,
 		val legendaryAllowed:Boolean,
-	) extends Value {
-		override def id:Int = -1
-		override def name:String = "custom"
-		override def shortName:String = "cm"
-		override def seedData:Option[SeedData] = None
-	}
+	) extends Value
+	
+	val runToValue:SortedMap[Run, Value] = SortedMap(
+		Runs.AlphaSapphire -> AlphaSapphire,
+		Runs.Platinum -> Platinum,
+		Runs.White2 -> White2,
+		Runs.Randy -> Randy,
+		Runs.Colosseum -> Colosseum,
+		Runs.UltraMoon -> UltraMoon,
+	)
 }

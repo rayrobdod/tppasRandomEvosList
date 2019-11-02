@@ -10,10 +10,11 @@ object PageTemplatesBench {
 	@State(org.openjdk.jmh.annotations.Scope.Thread)
 	class _State {
 		val dexnos = (1 to 50).map{DexNo.national(_)}
-		val games = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
-		val seedDatas = games.flatMap{_.seedData} :+ evolutionData.Natural
+		val runs = Seq(Runs.AlphaSapphire, Runs.Platinum, Runs.White2)
+		val settings = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
+		val seedDatas = Seq(evolutionData.Natural, evolutionData.AlphaSapphire, evolutionData.Platinum)
 
-		val predictors = games.map{game => ((game, new Predictor(game)))}
+		val predictors = runs.zip(settings).map({x => ((x._1, new Predictor(x._2)))})
 	}
 }
 
@@ -24,7 +25,7 @@ class PageTemplatesBench {
 	def perMonPage(state:_State) = {
 		val predictor = state.predictors.head
 		
-		state.dexnos.map{dexno => PageTemplatesText.perMonPage(dexno, predictor._2, predictor._1, state.seedDatas)}
+		state.dexnos.map({dexno => PageTemplatesText.perMonPage(dexno, predictor._2, predictor._1)})
 	}
 	
 	@Benchmark
@@ -34,6 +35,6 @@ class PageTemplatesBench {
 	
 	@Benchmark
 	def sharedPage(state:_State) = {
-		PageTemplatesText.sharedPage(state.seedDatas)
+		PageTemplatesText.sharedPage()
 	}
 }
