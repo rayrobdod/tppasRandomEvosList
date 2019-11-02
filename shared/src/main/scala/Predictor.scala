@@ -13,7 +13,7 @@ final class Predictor(game:RandomizerSettings) {
 	val extantPokemon:Iterable[Pokemon] = knownDexNos.map{num => AllPokemon.get(num).get}
 	def getPokemon(id:DexNo):Pokemon = extantPokemon.find{_.dexNo == id}.get
 	
-	private[this] val naturalEvos = evolutionData.Natural.evolutions
+	private[this] val naturalEvos = seedData.Natural.evolutions
 			.filter{case (k,_) => knownDexNos.contains(k)}
 			.map{case (k,v) => ((k, v.filter{case (_, v2) => knownDexNos.contains(v2)}))}
 

@@ -1,5 +1,5 @@
 package com.rayrobdod.possibleEvolutions
-package evolutionData
+package seedData
 
 import scala.collection.immutable.{Seq, Map}
 

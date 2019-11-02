@@ -4,6 +4,7 @@ import scala.collection.immutable.Seq
 import scala.collection.immutable.SortedSet
 import scalatags.generic.Bundle
 import scalatags.generic.Frag
+import com.rayrobdod.possibleEvolutions.seedData.{Natural => NaturalSeedData}
 
 object PageTemplatesText extends PageTemplates(
 	  scalatags.Text
@@ -99,7 +100,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		val checkMon = AllPokemon.get(monNo).get
 		val evos:Map[String, Seq[Pokemon]] = predictions.possibleEvolutions(monNo)
 		val realEvos:Map[Runs.Value, Map[String,DexNo]] = SeedData.runToValue.mapValues({seedData => seedData.evolutions.getOrElse(monNo, Map.empty)}).map{x => x}
-		val naturalEvos:Map[String, DexNo] = evolutionData.Natural.evolutions.getOrElse(monNo, Map.empty)
+		val naturalEvos:Map[String, DexNo] = seedData.Natural.evolutions.getOrElse(monNo, Map.empty)
 		val prevos = predictions.possiblePrevolutions(monNo)
 		val realPrevos = SeedData.runToValue.mapValues({seedData => seedData.prevos.getOrElse(monNo, Set.empty)}).to[Seq].flatMap{case (a,bs) => bs.map{b => ((a,b))}}
 		val prevos2 = prevos.flatMap{mon => predictions.possiblePrevolutions(mon.dexNo)}.distinct
@@ -353,7 +354,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					val mons = for (
 						startDexNo <- predictions.extantPokemon.map{_.dexNo};
 						thisGameFinalEvo <- seedData.finalEvolutions(startDexNo);
-						naturalFinalEvo <- evolutionData.Natural.finalEvolutions(startDexNo)
+						naturalFinalEvo <- NaturalSeedData.finalEvolutions(startDexNo)
 									if (thisGameFinalEvo == naturalFinalEvo) 
 					) yield { predictions.getPokemon(startDexNo) }
 					
@@ -480,7 +481,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						, tbody(frag({
 							for (
 								prevo <- AllPokemon.apply;
-								(method, _) <- evolutionData.Natural.evolutions.get(prevo.dexNo).getOrElse(Map.empty)
+								(method, _) <- seedData.Natural.evolutions.get(prevo.dexNo).getOrElse(Map.empty)
 							) yield {
 								val evos:Seq[(Run, DexNo)] = {
 									for (

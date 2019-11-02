@@ -101,10 +101,10 @@ abstract class SeedData {
 
 object SeedData {
 	val runToValue:SortedMap[Run, SeedData] = SortedMap(
-		Runs.Natural -> evolutionData.Natural,
-		Runs.AlphaSapphire -> evolutionData.AlphaSapphire,
-		Runs.Platinum -> evolutionData.Platinum,
-		Runs.White2 -> evolutionData.White2,
-		Runs.Randy -> evolutionData.Randy,
+		Runs.Natural -> seedData.Natural,
+		Runs.AlphaSapphire -> seedData.AlphaSapphire,
+		Runs.Platinum -> seedData.Platinum,
+		Runs.White2 -> seedData.White2,
+		Runs.Randy -> seedData.Randy,
 	)
 }

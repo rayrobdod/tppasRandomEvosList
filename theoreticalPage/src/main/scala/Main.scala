@@ -6,7 +6,7 @@ import org.scalajs.dom.window
 import scalatags.JsDom.implicits._
 
 object TheoreticalPage {
-	private[this] val seedDatas = Seq(evolutionData.Natural)
+	private[this] val seedDatas = Seq(seedData.Natural)
 	
 	
 	def main(args:Array[String]):Unit = {
