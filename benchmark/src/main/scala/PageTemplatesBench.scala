@@ -11,7 +11,7 @@ object PageTemplatesBench {
 	class _State {
 		val dexnos = (1 to 50).map{DexNo.national(_)}
 		val runs = Seq(Runs.AlphaSapphire, Runs.Platinum, Runs.White2)
-		val settings = Seq(EvosGame.AlphaSapphire, EvosGame.Platinum, EvosGame.White2)
+		val settings = runs.map(RandomizerSettings.runToValue)
 		val seedDatas = Seq(evolutionData.Natural, evolutionData.AlphaSapphire, evolutionData.Platinum)
 
 		val predictors = runs.zip(settings).map({x => ((x._1, new Predictor(x._2)))})

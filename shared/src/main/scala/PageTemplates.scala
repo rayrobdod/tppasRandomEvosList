@@ -63,7 +63,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			, predictions:Predictor
 			, game:Runs.Value
 	):scalatags.generic.Frag[Builder,FragT] = {
-		implicit val config = EvosGame.runToValue(game)
+		implicit val config = RandomizerSettings.runToValue(game)
 		val seedDatas = SeedData.runToValue.get(game)
 		val checkMon = AllPokemon.get(monNo).get
 		
@@ -91,7 +91,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	def perMonMain(
 			  monNo:DexNo
 			, predictions:Predictor
-			, config:EvosGame.Value
+			, config:RandomizerSettings
 			, seedDatas:Option[SeedData]
 			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
 	):scalatags.generic.Frag[Builder,FragT] = {
@@ -143,7 +143,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case Erratic => "600000"
 						case Fluctuating => "1640000"
 					}
-					val types = config.monToMatch match {
+					val types = config.typeMatch match {
 						case MonTypeToMatch.Neither => ""
 						case MonTypeToMatch.BaseForm => {
 							val (type1, type2) = checkMon.types
@@ -209,7 +209,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					h1(game.name),
 					perGameMain(
 						predictions,
-						EvosGame.runToValue(game),
+						RandomizerSettings.runToValue(game),
 						SeedData.runToValue.get(game),
 						hrefDexNoLinkModifier,
 					)
@@ -223,11 +223,11 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	
 	def perGameMain(
 		predictions:Predictor,
-		settings:EvosGame.Value,
+		settings:RandomizerSettings,
 		seedDatas:Option[SeedData],
 		dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder],
 	):scalatags.generic.Frag[Builder,FragT] = {
-		implicit val config:EvosGame.Value = settings
+		implicit val config:RandomizerSettings = settings
 		
 		frag(
 			frag(
@@ -259,7 +259,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case MonTypeType.RandPlat => "Randomized Platinum's Types"
 					  })
 					, dt("Type Match")
-					, dd(config.monToMatch match {
+					, dd(config.typeMatch match {
 						case MonTypeToMatch.BaseForm => "Base Form"
 						case MonTypeToMatch.EvolvedForm => "Natural Evolution"
 						case MonTypeToMatch.Neither => "Off"
@@ -359,7 +359,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					
 					pokemonListTable(mons, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount, dexNoLinkModifier)
 				  }
-				, if (config.monToMatch == MonTypeToMatch.Neither) {frag(
+				, if (config.typeMatch == MonTypeToMatch.Neither) {frag(
 					  h2("Pokémon with same-type evolutions")
 					, table(
 						thead(
@@ -970,13 +970,13 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			, resolveDexNo:DexNo => Pokemon
 			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
 			, seedDatas:Option[SeedData]
-			)(implicit config:EvosGame.Value
+			)(implicit config:RandomizerSettings
 	):scalatags.generic.Frag[Builder,FragT] = frag(
 		  div(s"Number of candidates: ${possible.size}")
 		, seedDatas.map{seedData => frag(
 			  h4("Observed")
 			, {
-				val observedThisGame = observed.filter({x => EvosGame.runToValue.get(x._1) == Option(config)}).map(_._2).map(resolveDexNo).to[Seq]
+				val observedThisGame = observed.filter({x => RandomizerSettings.runToValue.get(x._1) == Option(config)}).map(_._2).map(resolveDexNo).to[Seq]
 				if (observedThisGame.size == 0) {
 					p("None")
 				} else {
@@ -1001,7 +1001,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			, possibleEvosCount:DexNo => Int
 			, possiblePrevosCount:DexNo => Int
 			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
-			)(implicit config:EvosGame.Value
+			)(implicit config:RandomizerSettings
 	):scalatags.generic.Frag[Builder,FragT] = {
 		table(`class` := "pokemon-list")(
 			  thead(
@@ -1089,7 +1089,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			, possiblePrevosCount:DexNo => Int
 			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
 			)(x:Pokemon
-			)(implicit config:EvosGame.Value
+			)(implicit config:RandomizerSettings
 	):scalatags.generic.Frag[Builder,FragT] = {
 		val game = realEvos.filter({_._2 == x.dexNo}).map(_._1).to[Seq].distinct.sortBy(_.id).map(_.name).mkString("", " ", "")
 		

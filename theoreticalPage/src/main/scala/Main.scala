@@ -71,8 +71,8 @@ object TheoreticalPage {
 	}
 	
 	
-	private[this] def getEvosGameFromQueryString(params:Map[String, String]):EvosGame.Value = {
-		EvosGame.Custom(
+	private[this] def getEvosGameFromQueryString(params:Map[String, String]):RandomizerSettings = {
+		RandomizerSettings(
 			  knownDexnos = {
 				params.get("dexNos")
 					.map{s => java.net.URLDecoder.decode(s, "UTF-8")}
@@ -89,7 +89,7 @@ object TheoreticalPage {
 					.map{name => MonTypeType.withName(name)}
 					.getOrElse(MonTypeType.Natural)
 			  }
-			, monToMatch = {
+			, typeMatch = {
 				params.get("typeToMatch")
 					.map{name => MonTypeToMatch.withName(name)}
 					.getOrElse(MonTypeToMatch.Neither)
