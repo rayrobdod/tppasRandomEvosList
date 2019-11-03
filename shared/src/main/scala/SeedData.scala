@@ -1,17 +1,14 @@
 package com.rayrobdod.possibleEvolutions
 
-import scala.collection.immutable.{Seq, Map}
+import scala.collection.immutable.{Seq, Map, SortedMap}
 import scala.collection.mutable.{Buffer => MSeq}
 
 /**
  * Data about a particular game's true evolutions
  */
 abstract class SeedData {
-	def game:EvosGame.Value
 	def evolutions:Map[DexNo, Map[String, DexNo]]
-	
-	
-	private[this] val extantDexNos = game.knownDexnos
+	def extantDexNos:Seq[DexNo]
 	
 	/** The evolution data, but ignoring the method used to evolve */
 	private[this] val abridgedEvosData:Map[DexNo, Seq[DexNo]] = {
@@ -100,4 +97,14 @@ abstract class SeedData {
 	
 	/** Pokemon with multiple prevos */
 	final val multiplePrevos:Set[DexNo] = prevos.filter{_._2.size >= 2}.keySet
+}
+
+object SeedData {
+	val runToValue:SortedMap[Run, SeedData] = SortedMap(
+		Runs.Natural -> seedData.Natural,
+		Runs.AlphaSapphire -> seedData.AlphaSapphire,
+		Runs.Platinum -> seedData.Platinum,
+		Runs.White2 -> seedData.White2,
+		Runs.Randy -> seedData.Randy,
+	)
 }

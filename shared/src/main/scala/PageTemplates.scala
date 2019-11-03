@@ -1,8 +1,10 @@
 package com.rayrobdod.possibleEvolutions
 
 import scala.collection.immutable.Seq
+import scala.collection.immutable.SortedSet
 import scalatags.generic.Bundle
 import scalatags.generic.Frag
+import com.rayrobdod.possibleEvolutions.seedData.{Natural => NaturalSeedData}
 
 object PageTemplatesText extends PageTemplates(
 	  scalatags.Text
@@ -32,6 +34,10 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		(dexNo) => href := s"${dexNo}.html"
 	}
 	
+	private[this] val runToColgroup:Function[Run, scalatags.generic.Frag[Builder,FragT]] = {
+		(run) => colgroup(colgroupSpan := "1", dataGame := run.name)
+	}
+
 	def index(prologue:scalatags.generic.Frag[Builder,FragT], gameNames:Seq[String]):scalatags.generic.Frag[Builder,FragT] = {
 		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
@@ -60,15 +66,15 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	def perMonPage(
 			  monNo:DexNo
 			, predictions:Predictor
-			, game:EvosGame.Value
-			, seedDatas:Seq[SeedData]
+			, game:Runs.Value
 	):scalatags.generic.Frag[Builder,FragT] = {
-		implicit val config = game
+		implicit val settings = RandomizerSettings.runToValue(game)
+		val seedDatas = SeedData.runToValue.get(game)
 		val checkMon = AllPokemon.get(monNo).get
 		
 		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
-				  title(s"Possible Evolutions - $config - ${checkMon.name}")
+				  title(s"Possible Evolutions - ${game.name} - ${checkMon.name}")
 				, link(rel := "stylesheet", href := "../style/style.css")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
@@ -81,7 +87,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				  )
 				, main(
 					h1(checkMon.name),
-					perMonMain(monNo, predictions, game, seedDatas, hrefDexNoLinkModifier)
+					perMonMain(monNo, predictions, settings, seedDatas, hrefDexNoLinkModifier)
 				  )
 			)
 		))
@@ -90,23 +96,24 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	def perMonMain(
 			  monNo:DexNo
 			, predictions:Predictor
-			, game:EvosGame.Value
-			, seedDatas:Seq[SeedData]
+			, settings:RandomizerSettings
+			, seedDatas:Option[SeedData]
 			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
 	):scalatags.generic.Frag[Builder,FragT] = {
-		implicit val config = game
-		
+		implicit val typeType:MonTypeType.Value = settings.typeType
+		implicit val bstType:MonBstType.Value = settings.bstType
 		val checkMon = AllPokemon.get(monNo).get
 		val evos:Map[String, Seq[Pokemon]] = predictions.possibleEvolutions(monNo)
-		val realEvos:Map[EvosGame.Value, Map[String,DexNo]] = seedDatas.map{s => ((s.game, s.evolutions.getOrElse(monNo, Map.empty)))}.toMap
+		val realEvos:Map[Runs.Value, Map[String,DexNo]] = SeedData.runToValue.mapValues({seedData => seedData.evolutions.getOrElse(monNo, Map.empty)}).map{x => x}
+		val naturalEvos:Map[String, DexNo] = seedData.Natural.evolutions.getOrElse(monNo, Map.empty)
 		val prevos = predictions.possiblePrevolutions(monNo)
-		val realPrevos = seedDatas.map{s => ((s.game, s.prevos.getOrElse(monNo, Set.empty)))}.flatMap{case (a,bs) => bs.map{b => ((a,b))}}
+		val realPrevos = SeedData.runToValue.mapValues({seedData => seedData.prevos.getOrElse(monNo, Set.empty)}).to[Seq].flatMap{case (a,bs) => bs.map{b => ((a,b))}}
 		val prevos2 = prevos.flatMap{mon => predictions.possiblePrevolutions(mon.dexNo)}.distinct
 		val realPrevos2 = {
 			for (
-				seedData <- game.seedData.to[Seq];
-				(game, prevo) <- realPrevos;
-				prevo2 <- seedData.prevos.getOrElse(prevo, Set.empty)
+				seedData <- seedDatas.to[Seq];
+				(game, prevo) <- realPrevos.to[Seq];
+				prevo2 <- seedData.prevos.getOrElse(prevo, Set.empty).to[Seq]
 			) yield {
 				(game, prevo2)
 			}
@@ -127,8 +134,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					} else {frag("")}
 			  )
 			, h2("Possible Evos")
-			, div(evos.toSeq.sortBy{x => realEvos(EvosGame.Natural)(x._1)}.flatMap{case (method:String, possibleEvos:Seq[Pokemon]) =>
-				val naturalEvo = predictions.getPokemon(realEvos(EvosGame.Natural)(method))
+			, div(evos.toSeq.sortBy{x => naturalEvos(x._1)}.flatMap{case (method:String, possibleEvos:Seq[Pokemon]) =>
+				val naturalEvo = predictions.getPokemon(naturalEvos(method))
 				val naturalBst = naturalEvo.bst
 				val realEvosMethod = realEvos.flatMap{case (a,bs) => bs.get(method).map{b => ((a, b))}}
 				
@@ -142,7 +149,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case Erratic => "600000"
 						case Fluctuating => "1640000"
 					}
-					val types = config.monToMatch match {
+					val types = settings.typeMatch match {
 						case MonTypeToMatch.Neither => ""
 						case MonTypeToMatch.BaseForm => {
 							val (type1, type2) = checkMon.types
@@ -153,7 +160,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							s"&type=${type1.toString.toLowerCase}&type=${type2.toString.toLowerCase}"
 						}
 					}
-					val bstRange = config.bstMatchFunction match {
+					val bstRange = settings.bstMatchFunction match {
 						case BstMatchFunction.Any => ""
 						case BstMatchFunction.Pk3ds => s"stat_total=${naturalBst * 5 / 6}-${naturalBst * 6 / 5}"
 						case BstMatchFunction.Pk3ds_2 => s"stat_total=${naturalBst * 10 / 11}-${naturalBst * 11 / 10}"
@@ -161,7 +168,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case BstMatchFunction.GoDTool => s"stat_total=${checkMon.bst}-${checkMon.bst * 10}"
 						case BstMatchFunction.Custom(min, max) => s"stat_total=${(naturalBst * min).intValue}-${(naturalBst * max).intValue}"
 					}
-					val generation = config.knownDexnos match {
+					val generation = settings.knownDexnos match {
 						case DexNo.NationalDexNoRange(1, high) => s"&id=<=${high}"
 						case _ => "&id=???"
 					}
@@ -170,7 +177,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						"http://veekun.com/dex/pokemon/search?" +
 						bstRange +
 						generation +
-						(if (config.expGroupMustMatch) {s"&growth_rate=$growthRate"} else {""}) ++
+						(if (settings.expGroupMustMatch) {s"&growth_rate=$growthRate"} else {""}) ++
 						types
 					)
 				}
@@ -179,19 +186,19 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					  h3(method)
 					, div("Natural: ", naturalEvo.name, " (BST = ", naturalBst, ")")
 					, div(a(href := veekunSearchLink)("Veekun search with same parameters"))
-					, monPredictionSection(possibleEvos, realEvosMethod, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon, dexNoLinkModifier)
+					, monPredictionSection(possibleEvos, settings, realEvosMethod, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon, dexNoLinkModifier, seedDatas)
 				)
 			  }.to[Seq]:_*)
 			, h2("Possible Prevos")
-			, monPredictionSection(prevos, realPrevos, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon, dexNoLinkModifier)
+			, monPredictionSection(prevos, settings, realPrevos, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon, dexNoLinkModifier, seedDatas)
 			, h2("Possible Prevos^2")
-			, monPredictionSection(prevos2, realPrevos2, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon, dexNoLinkModifier)
+			, monPredictionSection(prevos2, settings, realPrevos2, predictions.possibleEvosCount, predictions.possiblePrevosCount, predictions.getPokemon, dexNoLinkModifier, seedDatas)
 		)
 	}
 	
 	def perGamePage(
 			  predictions:Predictor
-			, game:EvosGame.Value
+			, game:Runs.Value
 	):scalatags.generic.Frag[Builder,FragT] = {
 		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
@@ -205,8 +212,13 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					a(href := "../index.html")("Back to Index")
 				  )
 				, main(
-					  h1(game.toString)
-					, perGameMain(predictions, game, hrefDexNoLinkModifier)
+					h1(game.name),
+					perGameMain(
+						predictions,
+						RandomizerSettings.runToValue(game),
+						SeedData.runToValue.get(game),
+						hrefDexNoLinkModifier,
+					)
 				  )
 			  )
 		))
@@ -216,17 +228,18 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	private val Gen7PlusDex = DexNo.NationalDexNoRange(1, 807) ++ DexNo.alolanDexNos :+ DexNo.duskRockruff
 	
 	def perGameMain(
-			  predictions:Predictor
-			, game:EvosGame.Value
-			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
+		predictions:Predictor,
+		settings:RandomizerSettings,
+		seedDatas:Option[SeedData],
+		dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder],
 	):scalatags.generic.Frag[Builder,FragT] = {
-		implicit val config:EvosGame.Value = game
+		implicit val typeType:MonTypeType.Value = settings.typeType
 		
 		frag(
 			frag(
 				  dl(
 					  dt("Pokémon")
-					, dd(game.knownDexnos match {
+					, dd(settings.knownDexnos match {
 						case DexNo.NationalDexNoRange(1, 151) => "Gen 1"
 						case DexNo.NationalDexNoRange(1, 251) => "Gen 2"
 						case DexNo.NationalDexNoRange(1, 386) => "Gen 3"
@@ -239,38 +252,39 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case _ => "Something complicated"
 					  })
 					, dt("Base Stat Totals")
-					, dd(game.bstType match {
+					, dd(settings.bstType match {
 						case MonBstType.Gen1 => "Gen 1"
 						case MonBstType.Gen2 => "Gen 2 - 5"
 						case MonBstType.Gen6 => "Gen 6"
 						case MonBstType.Gen7 => "Gen 7"
 					  })
 					, dt("Pokémon Types")
-					, dd(game.typeType match {
+					, dd(settings.typeType match {
 						case MonTypeType.Natural => "Natural (Gen 6+)"
 						case MonTypeType.NoFairy => "Natural (Gen 2-5)"
 						case MonTypeType.RandPlat => "Randomized Platinum's Types"
 					  })
 					, dt("Type Match")
-					, dd(game.monToMatch match {
+					, dd(settings.typeMatch match {
 						case MonTypeToMatch.BaseForm => "Base Form"
 						case MonTypeToMatch.EvolvedForm => "Natural Evolution"
 						case MonTypeToMatch.Neither => "Off"
 					  })
 					, dt("Experience Group Match")
-					, dd(if (game.expGroupMustMatch) {"Yes"} else {"No"})
+					, dd(if (settings.expGroupMustMatch) {"Yes"} else {"No"})
 					, dt("Natural Evolution Allowed")
-					, dd(if (game.naturalEvoAllowed) {"Yes"} else {"No"})
+					, dd(if (settings.naturalEvoAllowed) {"Yes"} else {"No"})
 					, dt("Remaining Evolution Stage Match")
-					, dd(if (game.remainingStageMatch) {"Yes"} else {"No"})
+					, dd(if (settings.remainingStageMatch) {"Yes"} else {"No"})
 					, dt("Evolution Into Legendary Allowed")
-					, dd(if (game.legendaryAllowed) {"Yes"} else {"No"})
+					, dd(if (settings.legendaryAllowed) {"Yes"} else {"No"})
 					, dt("Base Stat Total Range")
-					, dd(game.bstMatchFunction.description)
+					, dd(settings.bstMatchFunction.description)
 				  )
 				, h2("Pokémon List")
 				, pokemonListTable(
 					  predictions.extantPokemon
+					, settings
 					, Map.empty
 					, predictions.possibleEvosCount
 					, predictions.possiblePrevosCount
@@ -279,7 +293,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				, h2("Prediction Summary")
 				, predictionSummary(predictions.extantPokemon, predictions.possibleEvosCount)
 			),
-			game.seedData.map{seedData => frag(
+			seedDatas.map{seedData => frag(
 				  h2("Evolutions")
 				, table(
 					  thead(
@@ -315,12 +329,14 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				, h2("Pokémon that nothing evolves into")
 				, pokemonListTable(
 					  seedData.firstStageMons.map{predictions.getPokemon _}
+					, settings
 					, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount
 					, dexNoLinkModifier
 				  )
 				, h2("Pokémon that multiple things evolve into")
 				, pokemonListTable(
 					  seedData.multiplePrevos.map{predictions.getPokemon _}
+					, settings
 					, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount
 					, dexNoLinkModifier
 				  )
@@ -338,6 +354,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							Seq(prevoNo)
 						}
 					}).flatten.to[Seq].distinct.map{predictions.getPokemon _}
+					, settings
 					, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount
 					, dexNoLinkModifier
 				  )
@@ -346,13 +363,13 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					val mons = for (
 						startDexNo <- predictions.extantPokemon.map{_.dexNo};
 						thisGameFinalEvo <- seedData.finalEvolutions(startDexNo);
-						naturalFinalEvo <- evolutionData.Natural.finalEvolutions(startDexNo)
+						naturalFinalEvo <- NaturalSeedData.finalEvolutions(startDexNo)
 									if (thisGameFinalEvo == naturalFinalEvo) 
 					) yield { predictions.getPokemon(startDexNo) }
 					
-					pokemonListTable(mons, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount, dexNoLinkModifier)
+					pokemonListTable(mons, settings, Seq.empty, predictions.possibleEvosCount, predictions.possiblePrevosCount, dexNoLinkModifier)
 				  }
-				, if (game.monToMatch == MonTypeToMatch.Neither) {frag(
+				, if (settings.typeMatch == MonTypeToMatch.Neither) {frag(
 					  h2("Pokémon with same-type evolutions")
 					, table(
 						thead(
@@ -429,8 +446,11 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		)
 	}
 	
-	def sharedPage(seedDatas:Seq[SeedData]):scalatags.generic.Frag[Builder,FragT] = {
-		val nameHeaders = seedDatas.map{_.game.shortName}.map{x => th(x)}
+	def sharedPage():scalatags.generic.Frag[Builder,FragT] = {
+		val seedDatas = SeedData.runToValue
+		val runs = seedDatas.keys.to[Seq]
+		val nameHeaders = runs.map{_.shortName}.map{x => th(x)}
+		val runColgroups = runs.map(runToColgroup)
 		
 		def linkToSubpageIfSubpageExists(num:DexNo, name:String):scalatags.generic.Frag[Builder,FragT] = {
 			val subpages = Seq("133")
@@ -458,7 +478,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h2("Repeat Evolutions")
 					, table(`class` := "checktable")(
 						  colgroup(colgroupSpan := "5")
-						, frag( seedDatas.map{x => colgroup(colgroupSpan := "1", dataGame := x.game.toString)}:_* )
+						, frag( runColgroups:_* )
 						, thead(tr(
 							  th("From Num")
 							, th("From")
@@ -470,21 +490,21 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						, tbody(frag({
 							for (
 								prevo <- AllPokemon.apply;
-								(method, _) <- evolutionData.Natural.evolutions.get(prevo.dexNo).getOrElse(Map.empty)
+								(method, _) <- seedData.Natural.evolutions.get(prevo.dexNo).getOrElse(Map.empty)
 							) yield {
-								val evos:Seq[(SeedData, DexNo)] = {
+								val evos:Seq[(Run, DexNo)] = {
 									for (
-										seedData <- seedDatas;
+										(run, seedData) <- seedDatas.to[Seq];
 										prevoData <- seedData.evolutions.get(prevo.dexNo);
 										methodData <- prevoData.get(method)
-									) yield { (seedData, methodData) }
+									) yield { (run, methodData) }
 								}
 								
-								val multiGameEvos:Map[DexNo, Seq[SeedData]] = {
+								val multiGameEvos:Map[DexNo, Seq[Run]] = {
 									evos.groupBy{_._2}.mapValues{_.map{_._1}}.filter{_._2.size >= 2}
 								}
 								
-								multiGameEvos.to[Seq].map{case (evoNum, games) =>
+								multiGameEvos.to[Seq].map{case (evoNum, run) =>
 									val evoName = AllPokemon.get(evoNum).get.name
 									val prevoNum = prevo.dexNo
 									val prevoName = prevo.name
@@ -495,9 +515,9 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 										, td(dataSort := method, method)
 										, td(dataSort := evoNum.toStringPadded, evoNum.toString)
 										, td(dataSort := evoName, linkToSubpageIfSubpageExists(evoNum, evoName))
-										, frag( seedDatas.map{x =>
-											if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
-										  }:_*)
+										, frag( seedDatas.map(_._1).map({x =>
+											if (run contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
+										  }).to[Seq]:_*)
 									)
 								}
 							}
@@ -506,7 +526,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h2("Repeat Final Evolutions")
 					, table(`class` := "checktable")(
 						  colgroup(colgroupSpan := "5")
-						, frag( seedDatas.map{x => colgroup(colgroupSpan := "1", dataGame := x.game.toString)}:_* )
+						, frag( runColgroups:_* )
 						, thead(tr(
 							  th("From Num")
 							, th("From")
@@ -517,10 +537,10 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						  ))
 						, tbody(frag({
 							AllPokemon.apply.map{prevo =>
-								val allFinalEvoNums = seedDatas.flatMap{_.finalEvolutions(prevo.dexNo)}.distinct.sorted
+								val allFinalEvoNums = seedDatas.values.flatMap{_.finalEvolutions(prevo.dexNo)}.to[SortedSet].to[Seq]
 								
 								frag({allFinalEvoNums.map{evoNum =>
-									val games = seedDatas.filter{_.finalEvolutions(prevo.dexNo) contains evoNum}
+									val games = seedDatas.filter({_._2.finalEvolutions(prevo.dexNo) contains evoNum}).map(_._1).to[SortedSet]
 									if (games.size >= 2) {
 										val evoName = AllPokemon.get(evoNum).get.name
 										
@@ -530,9 +550,9 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 											, td(dataSort := "→", "→")
 											, td(dataSort := evoNum.toStringPadded, evoNum.toString)
 											, td(dataSort := evoName, linkToSubpageIfSubpageExists(evoNum, evoName))
-											, frag( seedDatas.map{x =>
+											, frag( runs.map{x =>
 												if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
-											  }:_*)
+											  }.to[Seq]:_*)
 										)
 									} else {
 										frag("")
@@ -544,7 +564,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h2("Pokémon with multiple prevos multiple times")
 					, table(`class` := "checktable")(
 						  colgroup(colgroupSpan := "2")
-						, frag( seedDatas.map{x => colgroup(colgroupSpan := "1", dataGame := x.game.toString)}:_* )
+						, frag( runColgroups:_* )
 						, thead(tr(
 							  th("DexNo")
 							, th("Pokémon")
@@ -552,7 +572,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						  ))
 						, tbody(frag({
 							AllPokemon.apply.map{mon =>
-								val games = seedDatas.filter{_.multiplePrevos contains mon.dexNo}
+								val games = seedDatas.filter({_._2.multiplePrevos contains mon.dexNo}).map(_._1).to[SortedSet]
 								if (games.size >= 2) {
 									val evoNum = mon.dexNo
 									val evoName = mon.name
@@ -560,9 +580,9 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 									tr(
 										  td(dataSort := evoNum.toStringPadded, evoNum.toString)
 										, td(dataSort := evoName, linkToSubpageIfSubpageExists(evoNum, evoName))
-										, frag( seedDatas.map{x =>
+										, frag( runs.map({x =>
 											if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
-										  }:_*)
+										  }).to[Seq]:_*)
 									)
 								} else {
 									frag("")
@@ -573,7 +593,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h2("Pokémon with no prevos multiple times")
 					, table(`class` := "checktable")(
 						  colgroup(colgroupSpan := "2")
-						, frag( seedDatas.map{x => colgroup(colgroupSpan := "1", dataGame := x.game.toString)}:_* )
+						, frag( runColgroups:_* )
 						, thead(tr(
 							  th("DexNo")
 							, th("Pokémon")
@@ -581,7 +601,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						  ))
 						, tbody(frag({
 							AllPokemon.apply.map{mon =>
-								val games = seedDatas.filter{_.firstStageMons contains mon.dexNo}
+								val games = runs.filter{run => SeedData.runToValue(run).firstStageMons contains mon.dexNo}
 								if (games.size >= 2) {
 									val evoNum = mon.dexNo
 									val evoName = mon.name
@@ -589,7 +609,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 									tr(
 										  td(dataSort := evoNum.toStringPadded, evoNum.toString)
 										, td(dataSort := evoName, linkToSubpageIfSubpageExists(evoNum, evoName))
-										, frag( seedDatas.map{x =>
+										, frag( runs.map{x =>
 											if (games contains x) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
 										  }:_*)
 									)
@@ -604,9 +624,10 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		))
 	}
 	
-	def sharedEeveePage(seedDatas:Seq[SeedData]):scalatags.generic.Frag[Builder,FragT] = {
+	def sharedEeveePage(runs:Seq[Runs.Value]):scalatags.generic.Frag[Builder,FragT] = {
 		val eeveeDexNo = DexNo.national(133)
-		val nameHeaders = seedDatas.map{_.game.shortName}.map{x => th(x)}
+		val runTableHeaders = runs.map{_.shortName}.map{x => th(x)}
+		val runColGroups = runs.map(runToColgroup)
 		
 		val methodIcons:Map[String, String] = Map(
 			"Used Item [Water Stone]" -> "🌊", // ☂
@@ -648,18 +669,19 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h2("Evolutions")
 					, table(`class` := "checktable")(
 						  colgroup(colgroupSpan := "2")
-						, frag( seedDatas.map{x => colgroup(colgroupSpan := "1", dataGame := x.game.toString)}:_* )
+						, frag( runColGroups:_* )
 						, thead(tr(
 							th("To Num"),
 							th("To"),
-							frag( nameHeaders:_* )
+							frag( runTableHeaders:_* )
 						  ))
 						, tbody(frag({
-							val eeveeEvos:Map[DexNo, Map[SeedData, Seq[String]]] = {
-								val a:Seq[(DexNo, SeedData, String)] = for (
-									seedData <- seedDatas;
+							val eeveeEvos:Map[DexNo, Map[Run, Seq[String]]] = {
+								val a:Seq[(DexNo, Run, String)] = for (
+									run <- runs;
+									seedData <- SeedData.runToValue.get(run).to[Seq];
 									(method, toNo) <- seedData.evolutions(eeveeDexNo)
-								) yield {(toNo, seedData, method)}
+								) yield {(toNo, run, method)}
 								a.groupBy{_._1}.mapValues{_.groupBy{_._2}.mapValues{_.map{_._3}}.map{x => x}}.map{x => x}
 							}
 							def nameOf(dexNo:DexNo) = AllPokemon.get(dexNo).map{_.name}.getOrElse{"???"}
@@ -667,8 +689,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							eeveeEvos.to[Seq].sortBy{_._1}.map{case (toNo, gameMethods) => tr(
 								td(dataSort := toNo.toStringPadded, toNo.toString),
 								td(dataSort := nameOf(toNo), nameOf(toNo)),
-								frag(seedDatas.map{game =>
-									val methods = gameMethods.getOrElse(game, Seq.empty)
+								frag(runs.map{run =>
+									val methods = gameMethods.getOrElse(run, Seq.empty)
 									val sortStr = {
 										val a = methods.map{method => methodSorting.getOrElse(method, "-1")}.mkString
 										if (a == "") {"\u007E"} else {a}
@@ -685,77 +707,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	}
 	
 	def sharedFossilPage():scalatags.generic.Frag[Builder,FragT] = {
-		val data:Seq[(String, Map[String, DexNo])] = Seq(
-			"Natural" -> Map(
-				"Amber" -> DexNo.national(142),
-				"Helix" -> DexNo.national(138),
-				"Dome" -> DexNo.national(140),
-				"Root" -> DexNo.national(345),
-				"Claw" -> DexNo.national(347),
-				"Skull" -> DexNo.national(408),
-				"Armor" -> DexNo.national(410),
-				"Cover" -> DexNo.national(564),
-				"Plume" -> DexNo.national(566),
-				"Jaw" -> DexNo.national(696),
-				"Sail" -> DexNo.national(698),
-			),
-			"FireRed" -> Map(
-				"Amber" -> DexNo.national(6),
-				"Helix" -> DexNo.national(211),
-				"Dome" -> DexNo.national(168),
-			),
-			"HeartGold" -> Map(
-				"Amber" -> DexNo.national(288),
-				"Helix" -> DexNo.national(200),
-				"Dome" -> DexNo.national(132) /*?*/,
-				"Root" -> DexNo.national(399) /*?*/,
-				"Claw" -> DexNo.national(466),
-				"Skull" -> DexNo.national(2) /*?*/,
-				"Armor" -> DexNo.national(180) /*?*/,
-			),
-			"Platinum" -> Map(
-				"Amber" -> DexNo.national(207),
-				"Helix" -> DexNo.national(17),
-				"Dome" -> DexNo.national(431),
-				"Root" -> DexNo.national(94),
-				"Claw" -> DexNo.national(290),
-				"Skull" -> DexNo.national(109),
-				"Armor" -> DexNo.national(31),
-			),
-			"White2" -> Map(
-				"Amber" -> DexNo.national(472),
-				"Helix" -> DexNo.national(531),
-				"Dome" -> DexNo.national(152),
-				"Root" -> DexNo.national(399),
-				"Claw" -> DexNo.national(570),
-				"Skull" -> DexNo.national(432),
-				"Armor" -> DexNo.national(256),
-				"Cover" -> DexNo.national(195),
-				"Plume" -> DexNo.national(163),
-			),
-		)
-		
-		def gameNameToClass(x:String):String = x match {
-			case "Natural" => "natural"
-			case "FireRed" => "fire-red"
-			case "HeartGold" => "heart-gold"
-			case "Platinum" => "platinum"
-			case "White2" => "white2"
-			case _ => "???"
-		}
-		val fossilOrdering:Map[String, String] = Map(
-			"Amber" -> "A",
-			"Helix" -> "B",
-			"Dome" -> "C",
-			"Root" -> "D",
-			"Claw" -> "E",
-			"Skull" -> "F",
-			"Armor" -> "G",
-			"Cover" -> "H",
-			"Plume" -> "I",
-			"Jaw" -> "J",
-			"Sail" -> "K",
-		)
+		val data = Fossils.seedData
 		
 		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
@@ -776,16 +728,16 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h2("Revivals")
 					, table(`class` := "checktable")(
 						  colgroup(colgroupSpan := "2")
-						, frag( data.map{x => colgroup(colgroupSpan := "1", dataGame := gameNameToClass(x._1))}:_* )
+						, frag( data.keys.to[Seq].map(runToColgroup):_* )
 						, thead(tr(
 							th("To Num"),
 							th("To"),
-							frag( data.map{x => th(x._1)}:_* )
+							frag( data.map{x => th(x._1.name)}.to[Seq]:_* )
 						  ))
 						, tbody(frag({
-							val dataInvert:Map[DexNo, Map[String, Seq[String]]] = {
-								val a:Seq[(DexNo, String, String)] = for (
-									(gameName, gameData) <- data;
+							val dataInvert:Map[DexNo, Map[Run, Seq[Fossils.Value]]] = {
+								val a:Seq[(DexNo, Run, Fossils.Value)] = for (
+									(gameName, gameData) <- data.to[Seq];
 									(fossilName, toNo) <- gameData
 								) yield {(toNo, gameName, fossilName)}
 								a.groupBy{_._1}.mapValues{_.groupBy{_._2}.mapValues{_.map{_._3}}.map{x => x}}.map{x => x}
@@ -795,10 +747,10 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							dataInvert.to[Seq].sortBy{_._1}.map{case (toNo, gameMethods) => tr(
 								td(dataSort := toNo.toStringPadded, toNo.toString),
 								td(dataSort := nameOf(toNo), nameOf(toNo)),
-								frag(data.map{_._1}.map{gameName =>
+								frag(data.map{_._1}.to[Seq].map{gameName =>
 									val fossils = gameMethods.getOrElse(gameName, Seq.empty)
 									val sortStr = {
-										val a = fossils.map{method => fossilOrdering.getOrElse(method, "-1")}.mkString
+										val a = fossils.map{fossil => "" + ('A' + fossil.id).toChar}.mkString
 										if (a == "") {"\u007E"} else {a}
 									}
 									val iconStr = fossils.mkString(", ")
@@ -952,22 +904,23 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	
 	private[this] def monPredictionSection(
 			  possible:Seq[Pokemon]
-			, observed:Iterable[(EvosGame.Value, DexNo)]
+			, settings:RandomizerSettings
+			, observed:Iterable[(Runs.Value, DexNo)]
 			, possibleEvosCount:DexNo => Int
 			, possiblePrevosCount:DexNo => Int
 			, resolveDexNo:DexNo => Pokemon
 			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
-			)(implicit config:EvosGame.Value
+			, seedDatas:Option[SeedData]
 	):scalatags.generic.Frag[Builder,FragT] = frag(
 		  div(s"Number of candidates: ${possible.size}")
-		, config.seedData.map{seedData => frag(
+		, seedDatas.map{seedData => frag(
 			  h4("Observed")
 			, {
-				val observedThisGame = observed.filter{_._1 == config}.map{_._2}.map(resolveDexNo).to[Seq]
+				val observedThisGame = observed.filter({x => RandomizerSettings.runToValue.get(x._1) == Option(settings)}).map(_._2).map(resolveDexNo).to[Seq]
 				if (observedThisGame.size == 0) {
 					p("None")
 				} else {
-					pokemonListTable(observedThisGame, observed, possibleEvosCount, possiblePrevosCount, dexNoLinkModifier)
+					pokemonListTable(observedThisGame, settings, observed, possibleEvosCount, possiblePrevosCount, dexNoLinkModifier)
 				}
 			  }
 		  )}.getOrElse(frag(""))
@@ -976,7 +929,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			if (possible.size == 0) {
 				p("None")
 			} else {
-				pokemonListTable(possible, observed, possibleEvosCount, possiblePrevosCount, dexNoLinkModifier)
+				pokemonListTable(possible, settings, observed, possibleEvosCount, possiblePrevosCount, dexNoLinkModifier)
 			}
 		  }
 	)
@@ -984,11 +937,11 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	
 	private[this] def pokemonListTable(
 			  x:Iterable[Pokemon]
-			, realEvos:Iterable[(EvosGame.Value, DexNo)]
+			, settings:RandomizerSettings
+			, realEvos:Iterable[(Runs.Value, DexNo)]
 			, possibleEvosCount:DexNo => Int
 			, possiblePrevosCount:DexNo => Int
 			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
-			)(implicit config:EvosGame.Value
 	):scalatags.generic.Frag[Builder,FragT] = {
 		table(`class` := "pokemon-list")(
 			  thead(
@@ -1008,7 +961,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					.to[Seq]
 					.sorted
 					.distinct
-					.map{(pokemonTableRow(realEvos, possibleEvosCount, possiblePrevosCount, dexNoLinkModifier) _)}
+					.map{(pokemonTableRow(settings, realEvos, possibleEvosCount, possiblePrevosCount, dexNoLinkModifier) _)}
 			):_*)
 		)
 	}
@@ -1071,14 +1024,16 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	}
 	
 	private[this] def pokemonTableRow(
-			  realEvos:Iterable[(EvosGame.Value, DexNo)]
+			settings:RandomizerSettings,
+			  realEvos:Iterable[(Runs.Value, DexNo)]
 			, possibleEvosCount:DexNo => Int
 			, possiblePrevosCount:DexNo => Int
 			, dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder]
 			)(x:Pokemon
-			)(implicit config:EvosGame.Value
 	):scalatags.generic.Frag[Builder,FragT] = {
-		val game = realEvos.filter{_._2 == x.dexNo}.map{_._1}.to[Seq].distinct.sortBy{_.id}.mkString("", " ", "")
+		implicit val typeType:MonTypeType.Value = settings.typeType
+		implicit val bstType:MonBstType.Value = settings.bstType
+		val game = realEvos.filter({_._2 == x.dexNo}).map(_._1).to[Seq].distinct.sortBy(_.id).map(_.name).mkString("", " ", "")
 		
 		tr(dataGame := game)(
 			  td(dataSort := x.dexNo.toStringPadded)(x.dexNo.toString)

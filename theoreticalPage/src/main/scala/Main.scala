@@ -6,7 +6,7 @@ import org.scalajs.dom.window
 import scalatags.JsDom.implicits._
 
 object TheoreticalPage {
-	private[this] val seedDatas = Seq(evolutionData.Natural)
+	private[this] val seedDatas = Seq(seedData.Natural)
 	
 	
 	def main(args:Array[String]):Unit = {
@@ -46,20 +46,21 @@ object TheoreticalPage {
 			case None => {
 				mainElem.appendChild(
 					PageTemplatesJsDom.perGameMain(
-						  predictions = predictor
-						, game = game
-						, {dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := monPageUrlFun(dexNo))}
+						predictions = predictor,
+						settings = game,
+						seedDatas = None,
+						{dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := monPageUrlFun(dexNo))},
 					).render
 				)
 			}
 			case Some(monNo) => {
 				mainElem.appendChild(
 					PageTemplatesJsDom.perMonMain(
-						  monNo = monNo
-						, predictions = predictor
-						, game = game
-						, seedDatas = seedDatas
-						, {dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := monPageUrlFun(dexNo))}
+						monNo = monNo,
+						predictions = predictor,
+						settings = game,
+						seedDatas = None,
+						{dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := monPageUrlFun(dexNo))},
 					).render
 				)
 			}
@@ -70,8 +71,8 @@ object TheoreticalPage {
 	}
 	
 	
-	private[this] def getEvosGameFromQueryString(params:Map[String, String]):EvosGame.Value = {
-		EvosGame.Custom(
+	private[this] def getEvosGameFromQueryString(params:Map[String, String]):RandomizerSettings = {
+		RandomizerSettings(
 			  knownDexnos = {
 				params.get("dexNos")
 					.map{s => java.net.URLDecoder.decode(s, "UTF-8")}
@@ -88,7 +89,7 @@ object TheoreticalPage {
 					.map{name => MonTypeType.withName(name)}
 					.getOrElse(MonTypeType.Natural)
 			  }
-			, monToMatch = {
+			, typeMatch = {
 				params.get("typeToMatch")
 					.map{name => MonTypeToMatch.withName(name)}
 					.getOrElse(MonTypeToMatch.Neither)

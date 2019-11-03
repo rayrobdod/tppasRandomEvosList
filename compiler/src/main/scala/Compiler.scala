@@ -10,15 +10,14 @@ object Compiler {
 		def /(x:String) = new File(f, x)
 	}
 	private[this] val gamesToMakePagesAbout = Seq(
-		EvosGame.AlphaSapphire,
-		EvosGame.Platinum,
-		EvosGame.White2,
-		EvosGame.Randy,
-		EvosGame.Colosseum,
-		EvosGame.UltraMoon,
+		Runs.AlphaSapphire,
+		Runs.Platinum,
+		Runs.White2,
+		Runs.Randy,
+		Runs.Colosseum,
+		Runs.UltraMoon,
 	)
-	private[this] val seedDatas = evolutionData.Natural +: gamesToMakePagesAbout.flatMap{_.seedData}
-	private[this] val predictors = gamesToMakePagesAbout.map{game => ((game, new Predictor(game)))}
+	private[this] val predictors = gamesToMakePagesAbout.map{game => ((game, new Predictor(RandomizerSettings.runToValue(game))))}
 	private[this] val bracketsWithLineBreak = ">" + System.lineSeparator + "<"
 	
 	final case class Context(
@@ -46,7 +45,7 @@ object Compiler {
 				mon <- predictions.extantPokemon
 			) yield {
 				val x = mon.dexNo
-				writeToFile(s"${game.name}/${x}.html", () => PageTemplatesText.perMonPage(x, predictions, game, seedDatas).render)(ctx)
+				writeToFile(s"${game.name}/${x}.html", () => PageTemplatesText.perMonPage(x, predictions, game).render)(ctx)
 			}
 		}
 		
@@ -58,8 +57,8 @@ object Compiler {
 		
 		val otherPages:Seq[File] = Seq(
 			writeToFile("index.html", () => PageTemplatesText.index(IndexPrologue.apply, gamesToMakePagesAbout.map{_.name}).render)(ctx),
-			writeToFile("shared/index.html", () => PageTemplatesText.sharedPage(seedDatas).render)(ctx),
-			writeToFile("shared/133.html", () => PageTemplatesText.sharedEeveePage(seedDatas).render)(ctx),
+			writeToFile("shared/index.html", () => PageTemplatesText.sharedPage().render)(ctx),
+			writeToFile("shared/133.html", () => PageTemplatesText.sharedEeveePage(SeedData.runToValue.keys.to[Seq]).render)(ctx),
 			writeToFile("shared/fossil.html", () => PageTemplatesText.sharedFossilPage().render)(ctx),
 			writeToFile("theoretical/index.html", () => PageTemplatesText.theoreticalFormPage.render)(ctx),
 			writeToFile("theoretical/results.html", () => PageTemplatesText.theoreticalPage.render)(ctx),

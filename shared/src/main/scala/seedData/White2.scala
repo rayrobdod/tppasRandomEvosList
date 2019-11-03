@@ -1,11 +1,9 @@
 package com.rayrobdod.possibleEvolutions
-package evolutionData
+package seedData
 
-import scala.collection.immutable.Map
+import scala.collection.immutable.{Seq, Map}
 
 object White2 extends SeedData {
-	def game:EvosGame.Value = EvosGame.White2
-	
 	lazy val evolutions:Map[DexNo, Map[String, DexNo]] = {
 		val builder = Map.newBuilder[DexNo, Map[String, DexNo]]
 		
@@ -320,4 +318,6 @@ object White2 extends SeedData {
 
 		builder.result
 	}
+
+	override def extantDexNos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 649)
 }

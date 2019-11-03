@@ -6,14 +6,15 @@ import scala.collection.mutable.{Buffer => MSeq}
 /**
  * For a given game's settings, list the likely post-randomization evolutions
  */
-final class Predictor(game:EvosGame.Value) {
-	private[this] implicit val config:EvosGame.Value = game
+final class Predictor(game:RandomizerSettings) {
+	private[this] implicit val typeType:MonTypeType.Value = game.typeType
+	private[this] implicit val bstType:MonBstType.Value = game.bstType
 	
 	private[this] val knownDexNos = game.knownDexnos
 	val extantPokemon:Iterable[Pokemon] = knownDexNos.map{num => AllPokemon.get(num).get}
 	def getPokemon(id:DexNo):Pokemon = extantPokemon.find{_.dexNo == id}.get
 	
-	private[this] val naturalEvos = evolutionData.Natural.evolutions
+	private[this] val naturalEvos = seedData.Natural.evolutions
 			.filter{case (k,_) => knownDexNos.contains(k)}
 			.map{case (k,v) => ((k, v.filter{case (_, v2) => knownDexNos.contains(v2)}))}
 
@@ -41,7 +42,7 @@ final class Predictor(game:EvosGame.Value) {
 			val checkMon = this.getPokemon(checkNo)
 			
 			((checkNo, naturalEvoMons.mapValues{naturalEvoMon => extantPokemon.filter{candidate =>
-				val typsMatch = game.monToMatch match {
+				val typsMatch = game.typeMatch match {
 					case MonTypeToMatch.Neither => true
 					case MonTypeToMatch.BaseForm => {
 						typesMatch(checkMon.types._1, checkMon.types._2, candidate.types._1, candidate.types._2)
