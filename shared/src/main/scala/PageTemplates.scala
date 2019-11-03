@@ -34,6 +34,10 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		(dexNo) => href := s"${dexNo}.html"
 	}
 	
+	private[this] val runToColgroup:Function[Run, scalatags.generic.Frag[Builder,FragT]] = {
+		(run) => colgroup(colgroupSpan := "1", dataGame := run.name)
+	}
+
 	def index(prologue:scalatags.generic.Frag[Builder,FragT], gameNames:Seq[String]):scalatags.generic.Frag[Builder,FragT] = {
 		frag(htmlDoctype, html(lang := "en-US")(
 			  head(
@@ -441,7 +445,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		val seedDatas = SeedData.runToValue
 		val runs = seedDatas.keys.to[Seq]
 		val nameHeaders = runs.map{_.shortName}.map{x => th(x)}
-		val runColgroups = runs.map{x => colgroup(colgroupSpan := "1", dataGame := x.name)}
+		val runColgroups = runs.map(runToColgroup)
 		
 		def linkToSubpageIfSubpageExists(num:DexNo, name:String):scalatags.generic.Frag[Builder,FragT] = {
 			val subpages = Seq("133")
@@ -584,7 +588,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h2("Pokémon with no prevos multiple times")
 					, table(`class` := "checktable")(
 						  colgroup(colgroupSpan := "2")
-						, frag( runs.map{x => colgroup(colgroupSpan := "1", dataGame := x.name)}:_* )
+						, frag( runColgroups:_* )
 						, thead(tr(
 							  th("DexNo")
 							, th("Pokémon")
@@ -618,7 +622,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	def sharedEeveePage(runs:Seq[Runs.Value]):scalatags.generic.Frag[Builder,FragT] = {
 		val eeveeDexNo = DexNo.national(133)
 		val runTableHeaders = runs.map{_.shortName}.map{x => th(x)}
-		val runColGroups = runs.map{x => colgroup(colgroupSpan := "1", dataGame := x.name)}
+		val runColGroups = runs.map(runToColgroup)
 		
 		val methodIcons:Map[String, String] = Map(
 			"Used Item [Water Stone]" -> "🌊", // ☂
@@ -719,7 +723,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					, h2("Revivals")
 					, table(`class` := "checktable")(
 						  colgroup(colgroupSpan := "2")
-						, frag( data.map{x => colgroup(colgroupSpan := "1", dataGame := x._1.name)}.to[Seq]:_* )
+						, frag( data.keys.to[Seq].map(runToColgroup):_* )
 						, thead(tr(
 							th("To Num"),
 							th("To"),
