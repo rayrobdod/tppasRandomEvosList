@@ -58,7 +58,7 @@ object TheoreticalPage {
 					PageTemplatesJsDom.perMonMain(
 						monNo = monNo,
 						predictions = predictor,
-						config = game,
+						settings = game,
 						seedDatas = None,
 						{dexNo => scalatags.JsDom.tags.modifier(scalatags.JsDom.attrs.href := monPageUrlFun(dexNo))},
 					).render

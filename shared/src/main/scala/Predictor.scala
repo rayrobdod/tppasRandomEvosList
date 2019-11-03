@@ -7,7 +7,8 @@ import scala.collection.mutable.{Buffer => MSeq}
  * For a given game's settings, list the likely post-randomization evolutions
  */
 final class Predictor(game:RandomizerSettings) {
-	private[this] implicit val config:RandomizerSettings = game
+	private[this] implicit val typeType:MonTypeType.Value = game.typeType
+	private[this] implicit val bstType:MonBstType.Value = game.bstType
 	
 	private[this] val knownDexNos = game.knownDexnos
 	val extantPokemon:Iterable[Pokemon] = knownDexNos.map{num => AllPokemon.get(num).get}

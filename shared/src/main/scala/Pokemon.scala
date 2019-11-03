@@ -26,13 +26,13 @@ final class Pokemon(
 		((_1, _2))
 	}
 	
-	def types(implicit config:RandomizerSettings):(ElementalType.Value, ElementalType.Value) = config.typeType match {
+	def types(implicit typeType:MonTypeType.Value):(ElementalType.Value, ElementalType.Value) = typeType match {
 		case MonTypeType.RandPlat => rpTypes
 		case MonTypeType.Natural => natTypes
 		case MonTypeType.NoFairy => noFairyTypes
 	}
 	
-	def bst(implicit config:RandomizerSettings):Int = config.bstType match {
+	def bst(implicit bstType:MonBstType.Value):Int = bstType match {
 		case MonBstType.Gen1 => gen1bst
 		case MonBstType.Gen2 => gen2bst
 		case MonBstType.Gen6 => gen6bst
