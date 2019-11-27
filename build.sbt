@@ -1,6 +1,10 @@
 import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 import com.rayrobdod.possibleEvolutions.SharedCrossType
 
+val generateHtmlFiles = taskKey[Seq[File]]("")
+val theoreticalPageJs = taskKey[Seq[File]]("")
+import scala.collection.immutable.{Seq => ISeq}
+
 lazy val shared = crossProject(JVMPlatform, JSPlatform).crossType(SharedCrossType)
 	.settings(name := "tppRandomEvos")
 	.settings(libraryDependencies ++= Seq(
@@ -38,40 +42,57 @@ lazy val website = project
 	.settings(pipelineStages := Nil)
 	.settings(
 		git.remoteRepo := "https://rayrobdod@github.com/rayrobdod/tppasRandomEvosList",
-		(mappings in ghpagesSynchLocal) := com.typesafe.sbt.web.Import.WebKeys.pipeline.value,
+		(ghpagesSynchLocal / mappings) := com.typesafe.sbt.web.Import.WebKeys.pipeline.value,
 	)
 	.settings(mySettings:_*)
 	.settings(
-		TaskKey[Seq[File]]("generateHtmlFiles") in Assets := {
-			val genMonPagesValue:java.lang.Boolean = (perMonPages in TaskKey[Seq[File]]("generateHtmlFiles") in Assets).value
-			val target = (resourceManaged in Assets).value
-			
-			val cp:Seq[java.net.URL] = (fullClasspath in Compile in compiler).value.files.map{_.toURI.toURL}
-			val loader = new java.net.URLClassLoader(cp.toArray, this.getClass.getClassLoader)
-			val contextClazz = loader.loadClass("com.rayrobdod.possibleEvolutions.Compiler$Context")
-			val contextConstructor = contextClazz.getConstructor(loader.loadClass("java.lang.Boolean"), loader.loadClass("java.io.File"))
-			val contextInstance:java.lang.Object = contextConstructor.newInstance(genMonPagesValue, target).asInstanceOf[Object]
-			val compilerClazz = loader.loadClass("com.rayrobdod.possibleEvolutions.Compiler")
-			val compilerMethod = compilerClazz.getMethod("apply", contextClazz)
-			val result = compilerMethod.invoke(null, contextInstance)
-			
-			result.getClass.getMethod("files").invoke(result).asInstanceOf[Array[_]].toSeq.map{_.asInstanceOf[File]}
+		Assets / generateHtmlFiles / fileInputs += Glob((compiler / crossTarget).value.toPath.resolve("classes"), RecursiveGlob),
+		Assets / generateHtmlFiles / fileInputs += Glob((sharedJVM / crossTarget).value.toPath.resolve("classes"), RecursiveGlob),
+		Assets / generateHtmlFiles := {
+			def compile(params:(java.lang.Boolean, java.io.File, Seq[HashFileInfo])):ISeq[File] = {
+				val (genMonPagesValue, target, _) = params
+				val classpath:Seq[java.net.URL] = (compiler / Compile / fullClasspath).value.files.map(_.toURI.toURL)
+				val loader = new java.net.URLClassLoader(classpath.toArray, this.getClass.getClassLoader)
+				val contextClazz = loader.loadClass("com.rayrobdod.possibleEvolutions.Compiler$Context")
+				val contextConstructor = contextClazz.getConstructor(loader.loadClass("java.lang.Boolean"), loader.loadClass("java.io.File"))
+				val contextInstance:java.lang.Object = contextConstructor.newInstance(genMonPagesValue, target).asInstanceOf[Object]
+				val compilerClazz = loader.loadClass("com.rayrobdod.possibleEvolutions.Compiler")
+				val compilerMethod = compilerClazz.getMethod("apply", contextClazz)
+				val result = compilerMethod.invoke(null, contextInstance)
+				result.getClass.getMethod("files").invoke(result).asInstanceOf[Array[_]].to[ISeq].map(_.asInstanceOf[File])
+			}
+
+			val genMonPagesValue:java.lang.Boolean = (Assets / generateHtmlFiles / perMonPages).value
+			val cacheFactory = (Assets / generateHtmlFiles / streams).value.cacheStoreFactory
+			val classpathHashes = (Assets / generateHtmlFiles).inputFiles.map(x => FileInfo.hash(x.toFile))
+			val target = (Assets / resourceManaged).value
+
+			import sbt.util.CacheImplicits._
+			val tracker = Tracked.inputChanged[(java.lang.Boolean, java.io.File, Seq[HashFileInfo]), ISeq[File]](cacheFactory.make("input")) {
+				case (changed:Boolean, params:(java.lang.Boolean, java.io.File, Seq[HashFileInfo])) =>
+				val tracker = Tracked.lastOutput[(java.lang.Boolean, java.io.File, Seq[HashFileInfo]), ISeq[File]](cacheFactory.make("last")) {
+					case (_, Some(out)) if !changed => out
+					case (in, _) => compile(in)
+				}
+				tracker(params)
+			}
+			tracker( (genMonPagesValue, target, classpathHashes) )
 		},
-		managedResourceDirectories in Assets += (resourceManaged in Assets).value,
-		resourceGenerators in Assets += (TaskKey[Seq[File]]("generateHtmlFiles") in Assets).taskValue
+		Assets / managedResourceDirectories += (Assets / resourceManaged).value,
+		Assets / resourceGenerators += (Assets / generateHtmlFiles).taskValue
 	)
 	.settings(
-		TaskKey[Seq[File]]("theoreticalPageJs") in Assets := {
+		Assets / theoreticalPageJs := {
 			val relativeScriptLocation = "style/theoreticalPage.js"
-			val target = (resourceManaged in Assets).value / relativeScriptLocation
-			val src = new File((scalaJSLinkedFile in Compile in theoreticalPage).value.path)
-			
+			val target = (Assets / resourceManaged).value / relativeScriptLocation
+			val src = new File((theoreticalPage / Compile / scalaJSLinkedFile).value.path)
+
 			sbt.IO.createDirectory(target.getParentFile)
 			sbt.IO.copyFile(src, target)
 			Seq(target)
 		},
-		managedResourceDirectories in Assets += (resourceManaged in Assets).value,
-		resourceGenerators in Assets += (TaskKey[Seq[File]]("theoreticalPageJs") in Assets).taskValue
+		Assets / managedResourceDirectories += (Assets / resourceManaged).value,
+		Assets / resourceGenerators += (Assets / theoreticalPageJs).taskValue
 	)
 
 lazy val mySettings = Seq(
@@ -83,5 +104,5 @@ lazy val mySettings = Seq(
 )
 
 name := "aggregate"
-scalaJSStage in Global := org.scalajs.sbtplugin.Stage.FullOpt
-perMonPages in Global := true
+Global / scalaJSStage := org.scalajs.sbtplugin.Stage.FullOpt
+Global / perMonPages := true
