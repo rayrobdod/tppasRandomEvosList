@@ -38,6 +38,7 @@ lazy val website = project
 	.settings(
 		git.remoteRepo := "https://rayrobdod@github.com/rayrobdod/tppasRandomEvosList",
 		(ghpagesSynchLocal / mappings) := com.typesafe.sbt.web.Import.WebKeys.pipeline.value,
+		ghpagesCommitOptions := Seq("-m", s"Render of ${git.gitHeadCommit.value.get}")
 	)
 	.settings(mySettings:_*)
 	.settings(
