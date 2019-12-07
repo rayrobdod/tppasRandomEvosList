@@ -7,6 +7,7 @@ import scala.collection.immutable.{Seq => ISeq}
 
 lazy val shared = crossProject(JVMPlatform, JSPlatform).crossType(SharedCrossType)
 	.enablePlugins(JmhPlugin)
+	.enablePlugins(GenAllPokemonClass)
 	.settings(name := "tppRandomEvos")
 	.settings(libraryDependencies ++= Seq(
 		  "com.lihaoyi" %%% "scalatags" % "0.7.0"
