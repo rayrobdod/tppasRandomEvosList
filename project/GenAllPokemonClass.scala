@@ -9,6 +9,8 @@ import scala.collection.mutable.Buffer
 import scala.language.implicitConversions
 
 object GenAllPokemonClass extends AutoPlugin {
+	private[this] val PARTITION_SIZE = 300
+
 	object autoImport {
 		val genAllPokemon = taskKey[Seq[File]]("Build an object containing the known pokemon data")
 	}
@@ -40,6 +42,7 @@ object GenAllPokemonClass extends AutoPlugin {
 			val prefix = """|package com.rayrobdod.possibleEvolutions
 				|
 				|import scala.collection.immutable.Seq
+				|import scala.collection.mutable.Builder
 				|import com.rayrobdod.possibleEvolutions.ExperienceGrowth._
 				|import com.rayrobdod.possibleEvolutions.ElementalType._
 				|import com.rayrobdod.possibleEvolutions.LegendaryStatus.{Normal => NotLegendary, _}
@@ -55,15 +58,25 @@ object GenAllPokemonClass extends AutoPlugin {
 				|		val builder = Seq.newBuilder[Pokemon]
 				|
 				|""".stripMargin
-			val suffix = """|
+			val apply = (0 until outLines.grouped(PARTITION_SIZE).size).map(idx => s"\t\tthis.apply_impl_$idx(builder)").mkString("\r\n")
+			val middle = """|
 				|
 				|		builder.result
 				|	}
+				|
+				|""".stripMargin
+			val impls = outLines.grouped(PARTITION_SIZE).zipWithIndex.map({groupIdx =>
+				val (group, idx) = groupIdx
+				val prefix = s"\tprivate[this] def apply_impl_$idx(builder:Builder[Pokemon, Seq[Pokemon]]) = {\r\n"
+				val suffix = "\r\n\t}\r\n"
+				group.mkString(prefix, "\r\n", suffix)
+			}).mkString("\r\n")
+			val suffix = """|
 				|}
 				|""".stripMargin
 
 			sbt.IO.createDirectory(outFile.getParentFile)
-			sbt.IO.write(outFile, prefix ++ outLines.mkString("\r\n") ++ suffix, UTF_8, false)
+			sbt.IO.write(outFile, prefix ++ apply ++ middle ++ impls ++ suffix, UTF_8, false)
 			Seq(outFile)
 		},
 		Compile / sourceGenerators += (Compile / genAllPokemon).taskValue
