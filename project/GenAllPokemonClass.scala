@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets.UTF_8
 import scala.collection.mutable.Buffer
 import scala.language.implicitConversions
 
-object GenAllPokemonClass extends AutoPlugin {
+object GenAllPokemonClassPlugin extends AutoPlugin {
 	private[this] val PARTITION_SIZE = 300
 
 	object autoImport {
