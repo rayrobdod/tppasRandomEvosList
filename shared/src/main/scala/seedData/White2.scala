@@ -319,5 +319,5 @@ object White2 extends SeedData {
 		builder.result
 	}
 
-	override def extantDexNos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 649)
+	override def extantDexNos:Seq[DexNo] = DexNoSets.Gen5
 }

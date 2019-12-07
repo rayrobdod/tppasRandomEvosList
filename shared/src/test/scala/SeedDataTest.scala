@@ -4,7 +4,7 @@ import org.scalatest.FunSpec
 
 class SeedDataTest extends FunSpec {
 	final class MySeedData(datas:Map[Int, Seq[Int]]) extends SeedData {
-		override def extantDexNos = DexNo.NationalDexNoRange(1, 100)
+		override def extantDexNos = DexNoSets.NationalRange(1, 100)
 		override def evolutions = datas.map({x =>
 			val (from, tos) = x
 			val from2 = DexNo.national(from)
@@ -16,10 +16,10 @@ class SeedDataTest extends FunSpec {
 		Tuple4(DexNo.national(a), DexNo.national(b), DexNo.national(c), DexNo.national(d))
 	}
 	def nationalDexNoSet(a:Int*):Set[DexNo] = {
-		a.toSet.map(DexNo.national _)
+		a.toSet.map(DexNo.national.apply _)
 	}
 	def nationalDexNoSeq(a:Int*):Seq[DexNo] = {
-		a.toSeq.map(DexNo.national _)
+		a.toSeq.map(DexNo.national.apply _)
 	}
 
 	describe("SeedData") {

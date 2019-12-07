@@ -36,7 +36,7 @@ object RandomizerSettings {
 		bstMatchFunction = BstMatchFunction.Pk3ds,
 		naturalEvoAllowed = false,
 		legendaryAllowed = true,
-		knownDexnos = DexNo.NationalDexNoRange(1, 721),
+		knownDexnos = DexNoSets.Gen6,
 		bstType = MonBstType.Gen6,
 		typeType = MonTypeType.Natural,
 	)
@@ -48,7 +48,7 @@ object RandomizerSettings {
 		bstMatchFunction = BstMatchFunction.UniversalRandomizer,
 		naturalEvoAllowed = true,
 		legendaryAllowed = true,
-		knownDexnos = DexNo.NationalDexNoRange(1, 493),
+		knownDexnos = DexNoSets.Gen4,
 		bstType = MonBstType.Gen2,
 		typeType = MonTypeType.RandPlat,
 	)
@@ -60,7 +60,7 @@ object RandomizerSettings {
 		bstMatchFunction = BstMatchFunction.UniversalRandomizer,
 		naturalEvoAllowed = false,
 		legendaryAllowed = true,
-		knownDexnos = DexNo.NationalDexNoRange(1, 649),
+		knownDexnos = DexNoSets.Gen5,
 		bstType = MonBstType.Gen2,
 		typeType = MonTypeType.NoFairy,
 	)
@@ -72,7 +72,7 @@ object RandomizerSettings {
 		bstMatchFunction = BstMatchFunction.Pk3ds_2,
 		naturalEvoAllowed = true,
 		legendaryAllowed = false,
-		knownDexnos = DexNo.NationalDexNoRange(1, 721),
+		knownDexnos = DexNoSets.Gen6,
 		bstType = MonBstType.Gen6,
 		typeType = MonTypeType.Natural,
 	)
@@ -84,7 +84,7 @@ object RandomizerSettings {
 		bstMatchFunction = BstMatchFunction.GoDTool,
 		naturalEvoAllowed = false,
 		legendaryAllowed = true,
-		knownDexnos = DexNo.NationalDexNoRange(1, 386),
+		knownDexnos = DexNoSets.Gen3,
 		bstType = MonBstType.Gen2,
 		typeType = MonTypeType.NoFairy,
 	)
@@ -96,7 +96,7 @@ object RandomizerSettings {
 		bstMatchFunction = BstMatchFunction.Pk3ds_2,
 		naturalEvoAllowed = true,
 		legendaryAllowed = false,
-		knownDexnos = DexNo.NationalDexNoRange(1, 807) ++ DexNo.alolanDexNos :+ DexNo.duskRockruff,
+		knownDexnos = DexNoSets.Gen7Ultra,
 		bstType = MonBstType.Gen7,
 		typeType = MonTypeType.Natural,
 	)

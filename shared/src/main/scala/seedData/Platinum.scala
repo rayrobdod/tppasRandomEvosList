@@ -245,5 +245,5 @@ object Platinum extends SeedData {
 		builder.result
 	}
 
-	override def extantDexNos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 493)
+	override def extantDexNos:Seq[DexNo] = DexNoSets.Gen4
 }

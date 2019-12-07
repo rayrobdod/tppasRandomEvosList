@@ -352,5 +352,5 @@ object AlphaSapphire extends SeedData {
 		builder.result
 	}
 
-	override def extantDexNos:Seq[DexNo] = DexNo.NationalDexNoRange(1, 721)
+	override def extantDexNos:Seq[DexNo] = DexNoSets.Gen6
 }

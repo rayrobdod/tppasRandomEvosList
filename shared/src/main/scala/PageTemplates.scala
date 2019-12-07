@@ -138,7 +138,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				val naturalEvo = predictions.getPokemon(naturalEvos(method))
 				val naturalBst = naturalEvo.bst
 				val realEvosMethod = realEvos.flatMap{case (a,bs) => bs.get(method).map{b => ((a, b))}}
-				
+
 				val veekunSearchLink = {
 					import com.rayrobdod.possibleEvolutions.ExperienceGrowth._
 					val growthRate = checkMon.expGrowth match {
@@ -169,7 +169,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case BstMatchFunction.Custom(min, max) => s"stat_total=${(naturalBst * min).intValue}-${(naturalBst * max).intValue}"
 					}
 					val generation = settings.knownDexnos match {
-						case DexNo.NationalDexNoRange(1, high) => s"&id=<=${high}"
+						case DexNoSets.NationalRange(1, high) => s"&id=<=${high}"
 						case _ => "&id=???"
 					}
 					
@@ -224,15 +224,13 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		))
 	}
 	
-	private val Gen7Dex = DexNo.NationalDexNoRange(1, 802) ++ DexNo.alolanDexNos
-	private val Gen7PlusDex = DexNo.NationalDexNoRange(1, 807) ++ DexNo.alolanDexNos :+ DexNo.duskRockruff
-	
 	def perGameMain(
 		predictions:Predictor,
 		settings:RandomizerSettings,
 		seedDatas:Option[SeedData],
 		dexNoLinkModifier:DexNo => scalatags.generic.Modifier[Builder],
 	):scalatags.generic.Frag[Builder,FragT] = {
+		import DexNoSets._
 		implicit val typeType:MonTypeType.Value = settings.typeType
 		
 		frag(
@@ -240,15 +238,15 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 				  dl(
 					  dt("Pokémon")
 					, dd(settings.knownDexnos match {
-						case DexNo.NationalDexNoRange(1, 151) => "Gen 1"
-						case DexNo.NationalDexNoRange(1, 251) => "Gen 2"
-						case DexNo.NationalDexNoRange(1, 386) => "Gen 3"
-						case DexNo.NationalDexNoRange(1, 493) => "Gen 4"
-						case DexNo.NationalDexNoRange(1, 649) => "Gen 5"
-						case DexNo.NationalDexNoRange(1, 721) => "Gen 6"
-						case Gen7Dex => "Gen 7"
-						case Gen7PlusDex => "Gen 7+"
-						case DexNo.NationalDexNoRange(1, x) => s"Up to $x inclusive"
+						case Gen1 => "Gen 1"
+						case Gen2 => "Gen 2"
+						case Gen3 => "Gen 3"
+						case Gen4 => "Gen 4"
+						case Gen5 => "Gen 5"
+						case Gen6 => "Gen 6"
+						case Gen7 => "Gen 7"
+						case Gen7Ultra => "Gen 7+"
+						case NationalRange(1, x) => s"Up to $x inclusive"
 						case _ => "Something complicated"
 					  })
 					, dt("Base Stat Totals")
@@ -806,8 +804,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							, "Gen4" -> "1-493"
 							, "Gen5" -> "1-649"
 							, "Gen6" -> "1-721"
-							, "Gen7" -> ("1-802," + DexNo.alolanDexNos.mkString(","))
-							, "Gen7+" -> ("1-807," + DexNo.alolanDexNos.mkString(",") + "," + DexNo.duskRockruff.toString)
+							, "Gen7" -> ("1-802," + DexNoSets.alolan.mkString(","))
+							, "Gen7+" -> ("1-807," + DexNoSets.alolan.mkString(",") + "," + DexNo.duskRockruff.toString)
 						  ))
 						, options("Types", "types", Seq(
 							  "Normal" -> MonTypeType.Natural.toString
