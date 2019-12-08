@@ -8,6 +8,19 @@ import java.nio.charset.StandardCharsets.UTF_8
 import scala.collection.mutable.Buffer
 import scala.language.implicitConversions
 
+object dexNoSource {
+	private[this] val DUSKROCKRUFF = DexNo.duskRockruff
+	private[this] val RARESINISTEA = DexNo.antiqueSinistea
+	def apply(x:DexNo) = x match {
+		case DUSKROCKRUFF => "DexNo.duskRockruff"
+		case RARESINISTEA => "DexNo.antiqueSinistea"
+		case DexNo.national(y) => s"DexNo.national(${y})"
+		case DexNo.alola(y) => s"DexNo.alola(${y})"
+		case DexNo.galar(y) => s"DexNo.galar(${y})"
+		case _ => s"""DexNo.valueOf("${x}")"""
+	}
+}
+
 object GenAllPokemonClassPlugin extends AutoPlugin {
 	private[this] val PARTITION_SIZE = 300
 
@@ -25,16 +38,7 @@ object GenAllPokemonClassPlugin extends AutoPlugin {
 			val inLines = inputs.flatMap({input => sbt.io.IO.readLines(input.toFile, UTF_8)})
 			val outLines = inLines.map({line =>
 				val parts = line.split("\t")
-				val no = {
-					val FORMAT = """(\d+)([A-Z]*)""".r
-					parts(0) match {
-						case FORMAT(a, "") => s"DexNo.national($a)"
-						case FORMAT(a, "A") => s"DexNo.alola($a)"
-						case FORMAT(a, "G") => s"DexNo.galar($a)"
-						case FORMAT("744", "DUSK") => s"DexNo.duskRockruff"
-						case _ => s"""DexNo.valueOf("${parts(0)}")"""
-					}
-				}
+				val no = dexNoSource(DexNo.valueOf(parts(0)))
 				val name = "\"" + parts(1) + "\""
 
 				s"\t\tbuilder += new Pokemon($no, $name, ${parts.drop(2).mkString(", ")})"
