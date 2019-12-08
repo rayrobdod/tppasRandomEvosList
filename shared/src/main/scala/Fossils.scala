@@ -5,6 +5,7 @@ import scala.collection.immutable.SortedMap
 object Fossils extends Enumeration {
 	val Amber, Helix, Dome, Root, Claw, Skull, Armor,
 			Cover, Plume, Jaw, Sail = Value
+	val BirdDrake, BirdDino, FishDrake, FishDino = Value
 
 	lazy val seedData:SortedMap[Run, SortedMap[Fossils.Value, DexNo]] = SortedMap(
 		Runs.Natural -> SortedMap(
@@ -19,6 +20,10 @@ object Fossils extends Enumeration {
 			Fossils.Plume -> DexNo.national(566),
 			Fossils.Jaw -> DexNo.national(696),
 			Fossils.Sail -> DexNo.national(698),
+			Fossils.BirdDrake -> DexNo.national(880),
+			Fossils.BirdDino -> DexNo.national(881),
+			Fossils.FishDrake -> DexNo.national(882),
+			Fossils.FishDino -> DexNo.national(883),
 		),
 		Runs.FireRed -> SortedMap(
 			Fossils.Amber -> DexNo.national(6),

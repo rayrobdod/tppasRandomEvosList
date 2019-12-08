@@ -114,6 +114,9 @@ Level Up [28]	53
 == 52A ==
 Level Up with Friendship	53A
 
+== 52G ==
+Level Up [28]	863
+
 == 54 ==
 Level Up [33]	55
 
@@ -166,6 +169,9 @@ Trade	76A
 == 77 ==
 Level Up [40]	78
 
+== 77G ==
+Level Up [40]	78G
+
 == 79 ==
 Level Up [37]	80
 Trade with Held Item [King's Rock]	199
@@ -175,6 +181,9 @@ Level Up [30]	82
 
 == 82 ==
 Level Up at Electric	462
+
+== 83G ==
+Three Crits	865
 
 == 84 ==
 Level Up [31]	85
@@ -222,6 +231,7 @@ Level Up with Move [Rollout]	463
 
 == 109 ==
 Level Up [35]	110
+Level Up [35] (Galar)	110G
 
 == 111 ==
 Level Up [42]	112
@@ -246,6 +256,9 @@ Level Up [33]	119
 
 == 120 ==
 Used Item [Water Stone]	121
+
+== 122G ==
+Level Up [42]	866
 
 == 123 ==
 Trade with Held Item [Metal Coat]	212
@@ -392,6 +405,9 @@ Level Up [33]	221
 == 221 ==
 Level Up with Move [Ancient Power]	473
 
+== 222G ==
+Level Up [38]	864
+
 == 223 ==
 Level Up [25]	224
 
@@ -447,6 +463,12 @@ Level Up [18]	262
 
 == 263 ==
 Level Up [20]	264
+
+== 263G ==
+Level Up [20]	264G
+
+== 264G ==
+Level Up at Night [35]	862
 
 == 265 ==
 Level Up (Random < 5) [7]	266
@@ -700,6 +722,7 @@ Level Up with Move [Mimic]	185
 
 == 439 ==
 Level Up with Move [Mimic]	122
+Level Up with Move [Mimic] (Galar)	122G
 
 == 440 ==
 Level Up with Held Item (Day) [Oval Stone]	113
@@ -836,6 +859,9 @@ Level Up [40]	553
 == 554 ==
 Level Up [35]	555
 
+== 554G ==
+Used Item [Ice Stone]	555G
+
 == 557 ==
 Level Up [34]	558
 
@@ -844,6 +870,9 @@ Level Up [39]	560
 
 == 562 ==
 Level Up [34]	563
+
+== 562G ==
+Damaged at Dusty Bowl	867
 
 == 564 ==
 Level Up [37]	565
@@ -1156,3 +1185,110 @@ Level Up in Moon [53]	792
 
 == 803 ==
 Level Up with Move [Dragon Pulse]	804
+
+== 810 ==
+Level Up [16]	811
+
+== 811 ==
+Level Up [35]	812
+
+== 813 ==
+Level Up [16]	814
+
+== 814 ==
+Level Up [35]	815
+
+== 816 ==
+Level Up [16]	817
+
+== 817 ==
+Level Up [35]	818
+
+== 819 ==
+Level Up [24]	820
+
+== 821 ==
+Level Up [18]	822
+
+== 822 ==
+Level Up [38]	823
+
+== 824 ==
+Level Up [10]	825
+
+== 825 ==
+Level Up [30]	826
+
+== 827 ==
+Level Up [18]	828
+
+== 829 ==
+Level Up [20]	830
+
+== 831 ==
+Level Up [24]	832
+
+== 833 ==
+Level Up [22]	834
+
+== 835 ==
+Level Up [25]	836
+
+== 837 ==
+Level Up [18]	838
+
+== 838 ==
+Level Up [34]	839
+
+== 840 ==
+Used Item [Tart Apple]	841
+Used Item [Sweet Apple]	842
+
+== 843 ==
+Level Up [36]	844
+
+== 846 ==
+Level Up [26]	847
+
+== 848 ==
+Level Up with Amped Nature [30]	849
+Level Up with Low Key Nature [30]	849
+
+== 850 ==
+Level Up [28]	851
+
+== 852 ==
+Level Up with Move [Taunt]	853
+
+== 854 ==
+Used Item [Cracked Pot]	855
+
+== 854RARE ==
+Used Item [Chipped Pot]	855
+
+== 856 ==
+Level Up [32]	857
+
+== 857 ==
+Level Up [42]	858
+
+== 859 ==
+Level Up [32]	860
+
+== 860 ==
+Level Up [42]	861
+
+== 862 ==
+Spin with Held Sweet Item	863
+
+== 872 ==
+Level Up at Night with Friendship	873
+
+== 878 ==
+Level Up [34]	879
+
+== 885 ==
+Level Up [50]	886
+
+== 886 ==
+Level Up [60]	887

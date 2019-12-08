@@ -805,6 +805,89 @@
 805	Stakataka	Rock	Steel	???	???	0	0	0	570	Slow	Legendary
 806	Blacephalon	Fire	Ghost	???	???	0	0	0	570	Slow	Legendary
 807	Zeraora	Electric	Electric	???	???	0	0	0	600	Slow	Mythical
+808	Meltan	Steel	Steel	???	???	0	0	0	300	Slow	Mythical
+809	Melmetal	Steel	Steel	???	???	0	0	0	600	Slow	Mythical
+810	Grookey	Grass	Grass	???	???	0	0	0	310	MedSlow	NotLegendary
+811	Thwackey	Grass	Grass	???	???	0	0	0	420	MedSlow	NotLegendary
+812	Rillaboom	Grass	Grass	???	???	0	0	0	530	MedSlow	NotLegendary
+813	Scorbunny	Fire	Fire	???	???	0	0	0	310	MedSlow	NotLegendary
+814	Raboot	Fire	Fire	???	???	0	0	0	420	MedSlow	NotLegendary
+815	Cinderace	Fire	Fire	???	???	0	0	0	530	MedSlow	NotLegendary
+816	Sobble	Water	Water	???	???	0	0	0	310	MedSlow	NotLegendary
+817	Drizzile	Water	Water	???	???	0	0	0	420	MedSlow	NotLegendary
+818	Inteleon	Water	Water	???	???	0	0	0	530	MedSlow	NotLegendary
+819	Skwovet	Normal	Normal	???	???	0	0	0	275	MedFast	NotLegendary
+820	Greedent	Normal	Normal	???	???	0	0	0	460	MedFast	NotLegendary
+821	Rookidee	Flying	Flying	???	???	0	0	0	245	MedSlow	NotLegendary
+822	Corvisquire	Flying	Flying	???	???	0	0	0	365	MedSlow	NotLegendary
+823	Corviknight	Flying	Steel	???	???	0	0	0	495	MedSlow	NotLegendary
+824	Blipbug	Bug	Bug	???	???	0	0	0	180	MedFast	NotLegendary
+825	Dottler	Bug	Psychic	???	???	0	0	0	335	MedFast	NotLegendary
+826	Orbeetle	Bug	Psychic	???	???	0	0	0	505	MedFast	NotLegendary
+827	Nickit	Dark	Dark	???	???	0	0	0	245	Fast	NotLegendary
+828	Thievul	Dark	Dark	???	???	0	0	0	455	Fast	NotLegendary
+829	Gossifleur	Grass	Grass	???	???	0	0	0	250	MedFast	NotLegendary
+830	Eldegoss	Grass	Grass	???	???	0	0	0	460	MedFast	NotLegendary
+831	Wooloo	Normal	Normal	???	???	0	0	0	270	MedFast	NotLegendary
+832	Dubwool	Normal	Normal	???	???	0	0	0	490	MedFast	NotLegendary
+833	Chewtle	Water	Water	???	???	0	0	0	284	MedFast	NotLegendary
+834	Drednaw	Water	Rock	???	???	0	0	0	485	MedFast	NotLegendary
+835	Yamper	Electric	Electric	???	???	0	0	0	270	Fast	NotLegendary
+836	Boltund	Electric	Electric	???	???	0	0	0	490	Fast	NotLegendary
+837	Rolycoly	Rock	Rock	???	???	0	0	0	240	MedSlow	NotLegendary
+838	Carkol	Rock	Fire	???	???	0	0	0	410	MedSlow	NotLegendary
+839	Coalossal	Rock	Fire	???	???	0	0	0	510	MedSlow	NotLegendary
+840	Applin	Grass	Dragon	???	???	0	0	0	260	Erratic	NotLegendary
+841	Flapple	Grass	Dragon	???	???	0	0	0	485	Erratic	NotLegendary
+842	Appletun	Grass	Dragon	???	???	0	0	0	485	Erratic	NotLegendary
+843	Silicobra	Ground	Ground	???	???	0	0	0	315	MedFast	NotLegendary
+844	Sandaconda	Ground	Ground	???	???	0	0	0	510	MedFast	NotLegendary
+845	Cramorant	Flying	Water	???	???	0	0	0	475	MedFast	NotLegendary
+846	Arrokuda	Water	Water	???	???	0	0	0	280	Slow	NotLegendary
+847	Barraskewda	Water	Water	???	???	0	0	0	490	Slow	NotLegendary
+848	Toxel	Electric	Poison	???	???	0	0	0	242	MedSlow	NotLegendary
+849	Toxtricity	Electric	Poison	???	???	0	0	0	502	MedSlow	NotLegendary
+850	Sizzlipede	Fire	Bug	???	???	0	0	0	305	MedFast	NotLegendary
+851	Centiskorch	Fire	Bug	???	???	0	0	0	525	MedFast	NotLegendary
+852	Clobbopus	Fighting	Fighting	???	???	0	0	0	310	MedSlow	NotLegendary
+853	Grapploct	Fighting	Fighting	???	???	0	0	0	480	MedSlow	NotLegendary
+854	Sinistea	Ghost	Ghost	???	???	0	0	0	308	MedFast	NotLegendary
+855	Polteageist	Ghost	Ghost	???	???	0	0	0	508	MedFast	NotLegendary
+856	Hatenna	Psychic	Psychic	???	???	0	0	0	265	Slow	NotLegendary
+857	Hattrem	Psychic	Psychic	???	???	0	0	0	370	Slow	NotLegendary
+858	Hatterene	Psychic	Fairy	???	???	0	0	0	510	Slow	NotLegendary
+859	Impidimp	Dark	Fairy	???	???	0	0	0	265	MedFast	NotLegendary
+860	Morgrem	Dark	Fairy	???	???	0	0	0	370	MedFast	NotLegendary
+861	Grimmsnarl	Dark	Fairy	???	???	0	0	0	510	MedFast	NotLegendary
+862	Obstagoon	Dark	Normal	???	???	0	0	0	520	MedFast	NotLegendary
+863	Perrserker	Steel	Steel	???	???	0	0	0	440	MedFast	NotLegendary
+864	Cursola	Ghost	Ghost	???	???	0	0	0	510	Fast	NotLegendary
+865	Sirfetch'd	Fighting	Fighting	???	???	0	0	0	507	MedFast	NotLegendary
+866	Mr. Rime	Ice	Psychic	???	???	0	0	0	520	MedFast	NotLegendary
+867	Runerigus	Ground	Ghost	???	???	0	0	0	483	MedFast	NotLegendary
+868	Milcery	Fairy	Fairy	???	???	0	0	0	270	MedFast	NotLegendary
+869	Alcremie	Fairy	Fairy	???	???	0	0	0	495	MedFast	NotLegendary
+870	Falinks	Fighting	Fighting	???	???	0	0	0	470	MedFast	NotLegendary
+871	Pincurchin	Electric	Electric	???	???	0	0	0	435	MedFast	NotLegendary
+872	Snom	Ice	Bug	???	???	0	0	0	185	MedFast	NotLegendary
+873	Frosmoth	Ice	Bug	???	???	0	0	0	475	MedFast	NotLegendary
+874	Stonjourner	Rock	Rock	???	???	0	0	0	470	Slow	NotLegendary
+875	Eiscue	Ice	Ice	???	???	0	0	0	470	Slow	NotLegendary
+876	Indeedee	Psychic	Normal	???	???	0	0	0	475	Fast	NotLegendary
+877	Morpeko	Electric	Dark	???	???	0	0	0	436	MedFast	NotLegendary
+878	Cufant	Steel	Steel	???	???	0	0	0	330	MedFast	NotLegendary
+879	Copperajah	Steel	Steel	???	???	0	0	0	500	MedFast	NotLegendary
+880	Dracozolt	Electric	Dragon	???	???	0	0	0	505	Slow	NotLegendary
+881	Arctozolt	Electric	Ice	???	???	0	0	0	505	Slow	NotLegendary
+882	Dracovish	Water	Dragon	???	???	0	0	0	505	Slow	NotLegendary
+883	Arctovish	Water	Ice	???	???	0	0	0	505	Slow	NotLegendary
+884	Duraludon	Steel	Dragon	???	???	0	0	0	535	MedFast	NotLegendary
+885	Dreepy	Dragon	Ghost	???	???	0	0	0	270	Slow	NotLegendary
+886	Drakloak	Dragon	Ghost	???	???	0	0	0	410	Slow	NotLegendary
+887	Dragapult	Dragon	Ghost	???	???	0	0	0	600	Slow	NotLegendary
+888	Zacian	Fairy	Fairy	???	???	0	0	0	670	Slow	Legendary
+889	Zamazenta	Fighting	Fighting	???	???	0	0	0	670	Slow	Legendary
+890	Eternatus	Poison	Dragon	???	???	0	0	0	690	Slow	Legendary
 19A	Rattata (Alola)	Normal	Dark	???	???	218	253	253	253	MedFast	NotLegendary
 20A	Raticate (Alola)	Normal	Dark	???	???	0	413	413	413	MedFast	NotLegendary
 26A	Raichu (Alola)	Electric	Psychic	???	???	395	475	485	485	MedFast	NotLegendary
@@ -823,4 +906,18 @@
 89A	Muk (Alola)	Poison	Dark	???	???	400	500	500	500	MedFast	NotLegendary
 103A	Exeggutor (Alola)	Grass	Dragon	???	???	455	520	520	530	Slow	NotLegendary
 105A	Marowak (Alola)	Fire	Ghost	???	???	345	425	425	425	MedFast	NotLegendary
+52G	Meowth (Galar)	Steel	Steel	???	???	0	290	290	290	MedFast	NotLegendary
+77G	Ponyta (Galar)	Psychic	Psychic	???	???	345	410	410	410	MedFast	NotLegendary
+78G	Rapidash (Galar)	Psychic	Fairy	???	???	420	500	500	500	MedFast	NotLegendary
+83G	Farfetch'd (Galar)	Fighting	Fighting	???	???	290	352	352	377	MedFast	NotLegendary
+110G	Weezing (Galar)	Poison	Fairy	???	???	420	490	490	490	MedFast	NotLegendary
+122G	Mr. Mime (Galar)	Ice	Psychic	???	???	0	460	460	460	MedFast	NotLegendary
+222G	Corsola (Galar)	Ghost	Ghost	???	???	0	380	380	410	Fast	NotLegendary
+263G	Zigzagoon (Galar)	Dark	Normal	???	???	0	240	240	240	MedFast	NotLegendary
+264G	Linoone (Galar)	Dark	Normal	???	???	0	420	420	420	MedFast	NotLegendary
+554G	Darumaka (Galar)	Ice	Ice	???	???	0	315	315	315	MedSlow	NotLegendary
+555G	Darmanitan (Galar)	Ice	Ice	???	???	0	480	480	480	MedSlow	NotLegendary
+562G	Yamask (Galar)	Ground	Ghost	???	???	0	303	303	303	MedFast	NotLegendary
+618G	Stunfisk (Galar)	Ground	Steel	???	???	0	471	471	471	MedFast	NotLegendary
 744DUSK	Rockruff (Dusk)	Rock	Rock	???	???	0	0	0	280	MedFast	NotLegendary
+854RARE	Sinistea (Antique)	Ghost	Ghost	???	???	0	0	0	308	MedFast	NotLegendary

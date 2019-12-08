@@ -2,4 +2,4 @@
 *.html	text	diff=html
 *.js	text	diff=javascript
 
-style/theoreticalPage.js	binary	-diff
+style/theoreticalPage.js	binary	diff=print_size

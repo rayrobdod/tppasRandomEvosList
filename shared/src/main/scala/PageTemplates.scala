@@ -246,6 +246,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case Gen6 => "Gen 6"
 						case Gen7 => "Gen 7"
 						case Gen7Ultra => "Gen 7+"
+						case Gen8 => "Gen 8"
+						case Galar => "Galardex"
 						case NationalRange(1, x) => s"Up to $x inclusive"
 						case _ => "Something complicated"
 					  })
@@ -804,8 +806,10 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							, "Gen4" -> "1-493"
 							, "Gen5" -> "1-649"
 							, "Gen6" -> "1-721"
-							, "Gen7" -> ("1-802," + DexNoSets.alolan.mkString(","))
-							, "Gen7+" -> ("1-807," + DexNoSets.alolan.mkString(",") + "," + DexNo.duskRockruff.toString)
+							, "Gen7" -> "1-802,AlolanForms"
+							, "Gen7+" -> "1-807,AlolanForms,744DUSK"
+							, "Galar" -> "Galardex" // listing these out manually resulted in too long a URL for some browsers
+							, "Gen8" -> "1-890,AlolanForms,GalaranForms,744DUSK,854RARE"
 						  ))
 						, options("Types", "types", Seq(
 							  "Normal" -> MonTypeType.Natural.toString

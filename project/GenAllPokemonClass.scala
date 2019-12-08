@@ -30,6 +30,7 @@ object GenAllPokemonClassPlugin extends AutoPlugin {
 					parts(0) match {
 						case FORMAT(a, "") => s"DexNo.national($a)"
 						case FORMAT(a, "A") => s"DexNo.alola($a)"
+						case FORMAT(a, "G") => s"DexNo.galar($a)"
 						case FORMAT("744", "DUSK") => s"DexNo.duskRockruff"
 						case _ => s"""DexNo.valueOf("${parts(0)}")"""
 					}

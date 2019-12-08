@@ -78,11 +78,14 @@ object GenEvolutionsSeedDataClassPlugin extends AutoPlugin {
 				})
 
 				val DUSKROCKRUFF = DexNo.duskRockruff
+				val RARESINISTEA = DexNo.antiqueSinistea
 				def dexNoSource(x:DexNo) = x match {
 					case DUSKROCKRUFF => "DexNo.duskRockruff"
+					case RARESINISTEA => "DexNo.antiqueSinistea"
 					case DexNo.national(y) => s"DexNo.national(${y})"
 					case DexNo.alola(y) => s"DexNo.alola(${y})"
-					case y => s"""DexNo.valueOf("${x}")"""
+					case DexNo.galar(y) => s"DexNo.galar(${y})"
+					case _ => s"""DexNo.valueOf("${x}")"""
 				}
 
 				val evosStr = evos.map({x =>
