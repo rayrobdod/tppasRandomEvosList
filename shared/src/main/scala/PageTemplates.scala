@@ -763,6 +763,61 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			  )
 		))
 	}
+
+	def sharedTeachableMovesPage():scalatags.generic.Frag[Builder,FragT] = {
+		val data = TeachableMoves.seedData
+
+		frag(htmlDoctype, html(lang := "en-US")(
+			head(
+				title(s"Possible Evolutions - Shared - TeachableMoves"),
+				meta(charset := "utf-8"),
+				link(rel := "stylesheet", href := "../style/style.css"),
+				script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" "),
+				script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" "),
+			),
+			body(
+				header(
+					a(href := "../index.html")("Back to Index"),
+					" > ",
+					a(href := "index.html")("Game"),
+				),
+				main(
+					h1("Teachable Moves"),
+					h2("List"),
+					table(`class` := "checktable")(
+						colgroup(colgroupSpan := "1"),
+						frag( data.keys.to[Seq].map(runToColgroup):_* ),
+						thead(tr(
+							th("Move"),
+							frag( data.map({x => th(x._1.name)}).to[Seq]:_* ),
+						)),
+						tbody(frag({
+							val dataInvert:Map[String, Map[Run, Seq[String]]] = {
+								val a:Seq[(String, Run, String)] = for (
+									(gameName, gameData) <- data.to[Seq];
+									(technicalmachine, movename) <- gameData
+								) yield {(movename, gameName, technicalmachine)}
+								a.groupBy{_._1}.mapValues{_.groupBy{_._2}.mapValues{_.map{_._3}}.map{x => x}}.map{x => x}
+							}
+
+							dataInvert.to[Seq].sortBy{_._1}.map{case (moveName, gameMethods) => tr(
+								td(dataSort := moveName, moveName),
+								frag(data.map{_._1}.to[Seq].map{gameName =>
+									val tms = gameMethods.getOrElse(gameName, Seq.empty)
+									val sortStr = {
+										val a = tms.map{tm => if (tm.substring(0,2) == "TM") {"\u0021" + tm.substring(2)} else {tm}}.mkString
+										if (a == "") {"\u007E"} else {a}
+									}
+									val iconStr = tms.mkString(", ")
+									td(dataSort := sortStr, iconStr)
+								}:_*)
+							)}
+						}:_*)),
+					),
+				),
+			),
+		))
+	}
 	
 	private[this] val theoreticalPageNoScript:String = "For technical reasons, these calculations are done in the browser, so if scripting is disabled then the page won't work."
 	

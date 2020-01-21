@@ -60,6 +60,7 @@ object Compiler {
 			writeToFile("shared/index.html", () => PageTemplatesText.sharedPage().render)(ctx),
 			writeToFile("shared/133.html", () => PageTemplatesText.sharedEeveePage(SeedData.runToValue.keys.to[Seq]).render)(ctx),
 			writeToFile("shared/fossil.html", () => PageTemplatesText.sharedFossilPage().render)(ctx),
+			writeToFile("shared/tms.html", () => PageTemplatesText.sharedTeachableMovesPage().render)(ctx),
 			writeToFile("theoretical/index.html", () => PageTemplatesText.theoreticalFormPage.render)(ctx),
 			writeToFile("theoretical/results.html", () => PageTemplatesText.theoreticalPage.render)(ctx),
 		)
