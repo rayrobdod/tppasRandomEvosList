@@ -814,6 +814,33 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							)}
 						}:_*)),
 					),
+					h2("Repeat Pairs"),
+					table(`class` := "checktable")(
+						colgroup(colgroupSpan := "2"),
+						frag( data.keys.to[Seq].map(runToColgroup):_* ),
+						thead(tr(
+							th("Tutor"),
+							th("Move"),
+							frag( data.map({x => th(x._1.name)}).to[Seq]:_* ),
+						)),
+						tbody(frag({
+							val dataInvert:Map[(String, String), Seq[Run]] = {
+								val a:Seq[((String, String), Run)] = for (
+									(gameName, gameData) <- data.to[Seq];
+									(technicalmachine, movename) <- gameData
+								) yield {((technicalmachine, movename), gameName)}
+								a.groupBy{_._1}.filter{_._2.size >= 2}.mapValues{_.map{_._2}}.map{x => x}
+							}
+
+							dataInvert.to[Seq].sortBy{_._1._1}.map{case ((tutorName, moveName), runs) => tr(
+								td(dataSort := tutorName, tutorName),
+								td(dataSort := moveName, moveName),
+								frag(data.map{_._1}.to[Seq].map{run =>
+									if (runs contains run) {td(dataSort := "0", "✓")} else {td(dataSort := "1", "")}
+								}:_*)
+							)}
+						}:_*)),
+					),
 				),
 			),
 		))
