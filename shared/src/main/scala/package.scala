@@ -12,22 +12,22 @@ package possibleEvolutions {
 		 * @param name the name of the run, suitable to be part of a url
 		 * @param shortName the name of the run, suitable for a table header
 		 */
-		final class Value private[Runs] (val id:Int, val name:String, val shortName:String) {
+		final class Value private[Runs] (val id:Int, val name:String, val shortName:String, val displayName:String) {
 			override def toString:String = s"Runs.${name}"
 		}
 		object Value {
 			implicit val RunIdOrdering:scala.math.Ordering[Runs.Value] = Ordering[Int].on(_.id)
 		}
 
-		val Natural:Value = new Value(0, "natural", "nat")
-		val FireRed:Value = new Value(1, "fire-red", "fr")
-		val HeartGold:Value = new Value(2, "heart-gold", "hg")
-		val AlphaSapphire:Value = new Value(3, "alpha-sapphire", "αS")
-		val Platinum:Value = new Value(4, "platinum", "rP")
-		val White2:Value = new Value(5, "white2", "w2")
-		val Randy:Value = new Value(6, "randy", "rY")
-		val Colosseum:Value = new Value(7, "colosseum", "co")
-		val UltraMoon:Value = new Value(8, "ultra-moon", "um")
+		val Natural:Value = new Value(0, "natural", "nat", "Natural")
+		val FireRed:Value = new Value(1, "fire-red", "fr", "Fire Red")
+		val HeartGold:Value = new Value(2, "heart-gold", "hg", "Heart Gold")
+		val AlphaSapphire:Value = new Value(3, "alpha-sapphire", "αS", "Alpha Sapphire")
+		val Platinum:Value = new Value(4, "platinum", "rP", "Platinum")
+		val White2:Value = new Value(5, "white2", "w2", "White 2")
+		val Randy:Value = new Value(6, "randy", "rY", "Y")
+		val Colosseum:Value = new Value(7, "colosseum", "co", "Colosseum")
+		val UltraMoon:Value = new Value(8, "ultra-moon", "um", "Ultra Moon")
 	}
 
 	/** Which pokemon the randomized evolution's type must match */

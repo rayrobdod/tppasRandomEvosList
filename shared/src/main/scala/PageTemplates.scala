@@ -24,12 +24,17 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 
 	private[this] val main = tag("main")
 	private[this] val defer = attr("defer")
+	private[this] val prefix = attr("prefix")
+	private[this] val property = attr("property")
 	private[this] val colgroupSpan = attr("span")
 	private[this] val dataGame = data("game")
 	private[this] val dataSort = data("sort")
 	private[this] val dataType = data("type")
 	private[this] val title = tag("title")
 	
+	private[this] val canonicalBase = "https://rayrobdod.github.io/tppasRandomEvosList/"
+	private[this] val sitenameBase = "Twitch Plays Pokémon Randomized Evolutions Analysis"
+
 	private[this] val hrefDexNoLinkModifier:Function[DexNo, scalatags.generic.Modifier[Builder]] = {
 		(dexNo) => href := s"${dexNo}.html"
 	}
@@ -38,11 +43,28 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		(run) => colgroup(colgroupSpan := "1", dataGame := run.name)
 	}
 
+	private[this] def openGraphHeadElements(titleStr:String, description:String, urlPath:String):scalatags.generic.Frag[Builder,FragT] = {
+		frag(
+			title(titleStr),
+			link(rel := "canonical", href := (canonicalBase + urlPath)),
+			meta(property := "og:type", content := "website"),
+			meta(property := "og:title", content := titleStr),
+			meta(property := "og:site_name", content := sitenameBase),
+			meta(property := "og:url", content := (canonicalBase + urlPath)),
+			meta(property := "og:description", content := description),
+		)
+	}
+
 	def index(prologue:scalatags.generic.Frag[Builder,FragT], gameNames:Seq[String]):scalatags.generic.Frag[Builder,FragT] = {
-		frag(htmlDoctype, html(lang := "en-US")(
+		frag(htmlDoctype, html(lang := "en-US", prefix := "og: http://ogp.me/ns#")(
 			  head(
-				  title("Possible Evolutions")
-				, link(rel := "stylesheet", href := "style/style.css")
+			  	openGraphHeadElements(
+			  		titleStr = "Index",
+			  		description = "Data about Twitch Plays Pokémon Randomized Runs",
+			  		urlPath = "",
+			  	),
+				meta(name := "viewport", content := "width=500"),
+				link(rel := "stylesheet", href := "style/style.css"),
 			  )
 			, body(
 				main(
@@ -72,9 +94,13 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		val seedDatas = SeedData.runToValue.get(game)
 		val checkMon = AllPokemon.get(monNo).get
 		
-		frag(htmlDoctype, html(lang := "en-US")(
+		frag(htmlDoctype, html(lang := "en-US", prefix := "og: http://ogp.me/ns#")(
 			  head(
-				  title(s"Possible Evolutions - ${game.name} - ${checkMon.name}")
+			  	openGraphHeadElements(
+			  		titleStr = s"Possible Evolutions - ${game.displayName} - ${checkMon.name}",
+			  		description = s"Data about ${checkMon.name}'s evolutions during Twitch Plays Pokémon Randomized ${game.displayName}",
+			  		urlPath = s"${game.name}/${monNo}.html",
+			  	)
 				, link(rel := "stylesheet", href := "../style/style.css")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
@@ -200,9 +226,14 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			  predictions:Predictor
 			, game:Runs.Value
 	):scalatags.generic.Frag[Builder,FragT] = {
-		frag(htmlDoctype, html(lang := "en-US")(
+		frag(htmlDoctype, html(lang := "en-US", prefix := "og: http://ogp.me/ns#")(
 			  head(
-				  title(s"Possible Evolutions - ${game.name}")
+			  	openGraphHeadElements(
+			  		titleStr = s"Possible Evolutions - ${game.displayName}",
+			  		description = s"Data about evolutions during Twitch Plays Pokémon Randomized ${game.displayName}",
+			  		urlPath = s"${game.name}/",
+			  	)
+				, meta(name := "viewport", content := "width=500")
 				, link(rel := "stylesheet", href := "../style/style.css")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
@@ -212,7 +243,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 					a(href := "../index.html")("Back to Index")
 				  )
 				, main(
-					h1(game.name),
+					h1(game.displayName),
 					perGameMain(
 						predictions,
 						RandomizerSettings.runToValue(game),
@@ -462,9 +493,13 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 		}
 		
 		
-		frag(htmlDoctype, html(lang := "en-US")(
+		frag(htmlDoctype, html(lang := "en-US", prefix := "og: http://ogp.me/ns#")(
 			  head(
-				  title(s"Possible Evolutions - Shared")
+			  	openGraphHeadElements(
+			  		titleStr = "Possible Evolutions - Shared",
+			  		description = "Aggregation of data about evolutions in Twitch Plays Pokémon Randomized Runs",
+			  		urlPath = "shared.html",
+			  	)
 				, link(rel := "stylesheet", href := "../style/style.css")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/tableSort.js")(" ")
@@ -650,9 +685,13 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 			"Level Up with 50 Affection + MoveType [Fairy]" -> "8"
 		)
 		
-		frag(htmlDoctype, html(lang := "en-US")(
+		frag(htmlDoctype, html(lang := "en-US", prefix := "og: http://ogp.me/ns#")(
 			  head(
-				  title(s"Possible Evolutions - Shared - Eevee")
+			  	openGraphHeadElements(
+			  		titleStr = "Possible Evolutions - Shared - Eevee",
+			  		description = "Aggregation of data about Eevee's evolutions in Twitch Plays Pokémon Randomized Runs",
+			  		urlPath = "shared/133.html",
+			  	)
 				, meta(charset := "utf-8")
 				, link(rel := "stylesheet", href := "../style/style.css")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
@@ -709,9 +748,13 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	def sharedFossilPage():scalatags.generic.Frag[Builder,FragT] = {
 		val data = Fossils.seedData
 		
-		frag(htmlDoctype, html(lang := "en-US")(
+		frag(htmlDoctype, html(lang := "en-US", prefix := "og: http://ogp.me/ns#")(
 			  head(
-				  title(s"Possible Evolutions - Shared - Fossils")
+			  	openGraphHeadElements(
+			  		titleStr = "Possible Evolutions - Shared - Fossils",
+			  		description = "Aggregation of data about Fossil revivals in Twitch Plays Pokémon Randomized Runs",
+			  		urlPath = "shared/fossil.html",
+			  	)
 				, meta(charset := "utf-8")
 				, link(rel := "stylesheet", href := "../style/style.css")
 				, script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" ")
@@ -767,9 +810,13 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 	def sharedTeachableMovesPage():scalatags.generic.Frag[Builder,FragT] = {
 		val data = TeachableMoves.seedData
 
-		frag(htmlDoctype, html(lang := "en-US")(
+		frag(htmlDoctype, html(lang := "en-US", prefix := "og: http://ogp.me/ns#")(
 			head(
-				title(s"Possible Evolutions - Shared - TeachableMoves"),
+				openGraphHeadElements(
+					titleStr = "Possible Evolutions - Shared - Teachable Moves",
+					description = "Aggregation of data about TMs and Move Tutors in Twitch Plays Pokémon Randomized Runs",
+					urlPath = "shared/tms.html",
+				),
 				meta(charset := "utf-8"),
 				link(rel := "stylesheet", href := "../style/style.css"),
 				script(defer := "defer", `type` := "text/javascript", src := "../style/sectionCollapse.js")(" "),
