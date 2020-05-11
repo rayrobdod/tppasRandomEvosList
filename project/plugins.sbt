@@ -1,5 +1,5 @@
-addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.6.1")
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.29")
+addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.0.0")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.0.1")
 addSbtPlugin("com.typesafe.sbt" %% "sbt-web" % "1.4.4")
 addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.3.7")
 addSbtPlugin("com.typesafe.sbt" %% "sbt-ghpages" % "0.6.3")

@@ -53,7 +53,10 @@ object GenPrologue extends AutoPlugin {
 				}
 			}
 			
-			implicit def SeqFrag[A](xs:Seq[A])(implicit ev:A => TagsScalaSource.Frag):TagsScalaSource.Frag = new TagsScalaSource.Frag {
+			implicit def SeqFrag[A](xs:Seq[A])(implicit ev:A => TagsScalaSource.Frag):TagsScalaSource.Frag = {
+				this.GeneratorFrag(geny.Generator.from(xs))(ev)
+			}
+			implicit def GeneratorFrag[A](xs: geny.Generator[A])(implicit ev: A => TagsScalaSource.Frag):TagsScalaSource.Frag = new TagsScalaSource.Frag {
 				val xs2 = xs.map(ev)
 				def applyTo(t:TagsScalaSourceBuilder):Unit = {
 					xs2.foreach{_.applyTo(t)}

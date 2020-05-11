@@ -11,8 +11,8 @@ lazy val shared = crossProject(JVMPlatform, JSPlatform).crossType(SharedCrossTyp
 	.enablePlugins(GenEvolutionsSeedDataClassPlugin)
 	.settings(name := "tppRandomEvos")
 	.settings(libraryDependencies ++= Seq(
-		  "com.lihaoyi" %%% "scalatags" % "0.7.0"
-		, "org.scalatest" %%% "scalatest" % "3.0.8" % "test"
+		"com.lihaoyi" %%% "scalatags" % "0.9.1",
+		"org.scalatest" %%% "scalatest" % "3.1.2" % "test",
 	))
 	.settings(mySettings:_*)
 lazy val sharedJVM = shared.jvm
@@ -83,7 +83,7 @@ lazy val website = project
 		Assets / theoreticalPageJs := {
 			val relativeScriptLocation = "style/theoreticalPage.js"
 			val target = (Assets / resourceManaged).value / relativeScriptLocation
-			val src = new File((theoreticalPage / Compile / scalaJSLinkedFile).value.path)
+			val src = (theoreticalPage / Compile / scalaJSLinkedFile).value.data
 
 			sbt.IO.createDirectory(target.getParentFile)
 			sbt.IO.copyFile(src, target)
