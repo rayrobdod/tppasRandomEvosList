@@ -28,6 +28,7 @@ object DexNo {
 	val galar = new VariantApplication("G")
 	def duskRockruff = new DexNo(744, "DUSK")
 	def antiqueSinistea = new DexNo(854, "RARE")
+	def waterUrshifu = new DexNo(892, "WATER")
 	private def unapply(x:Any):Option[(Int, String)] = x match {
 		case x2:DexNo => Option((x2.number, x2.variant))
 		case _ => None
@@ -45,8 +46,10 @@ object DexNo {
 
 			x match {
 				case "Galardex" => DexNoSets.Galar
+				case "Galardlcdex" => DexNoSets.GalarDlc
 				case "AlolanForms" => DexNoSets.alolanForms
 				case "GalaranForms" => DexNoSets.galaranForms
+				case "GalaranDlcForms" => DexNoSets.galaranDlcForms
 				case NATIONAL_RANGE(low, high) => DexNoSets.NationalRange(low.toInt, high.toInt)
 				case x => Seq(DexNo.valueOf(x))
 			}
@@ -89,13 +92,27 @@ object DexNoSets {
 		862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878, 879,
 		880, 881, 882, 883, 884, 885, 886, 887, 888, 889, 890)
 
+	private[this] val GalarDlcNums = GalarNums ++ BitSet(
+		27, 28, 29, 30, 31, 32, 33, 34, 39, 40, 41, 42, 54, 55, 60, 61, 62, 63, 64, 65, 72, 73, 79,
+		80, 81, 82, 102, 103, 104, 105, 108, 113, 114, 115, 116, 117, 120, 121, 123, 124, 125, 126,
+		127, 128, 137, 138, 139, 140, 141, 142, 144, 145, 146, 147, 148, 149, 169, 174, 183, 184,
+		186, 199, 206, 212, 214, 227, 230, 233, 238, 239, 240, 241, 242, 293, 294, 295, 298, 304,
+		305, 306, 318, 319, 333, 334, 345, 346, 347, 348, 359, 363, 364, 365, 369, 371, 372, 373,
+		374, 375, 376, 377, 378, 379, 403, 404, 405, 427, 428, 440, 442, 443, 444, 445, 462, 463,
+		465, 466, 467, 474, 506, 507, 508, 531, 543, 544, 545, 548, 549, 551, 552, 553, 564, 565,
+		566, 567, 570, 571, 587, 590, 591, 615, 619, 620, 621, 626, 636, 637, 661, 662, 663, 690,
+		691, 692, 693, 696, 697, 698, 699, 702, 703, 707, 744, 745, 753, 754, 764, 769, 770, 891,
+		892, 893, 894, 895, 896, 897, 898)
+
 	private[this] val AlolanFormNums = BitSet(19, 20, 26, 27, 28, 37, 38, 50, 51, 52, 53, 74, 75,
 		76, 88, 89, 103, 105)
 	private[this] val GalaranFormNums = BitSet(52, 77, 78, 83, 110, 122, 222, 263, 264, 554, 555,
 		562, 618)
+	private[this] val GalaranDlcFormNums = BitSet(79, 80, 144, 145, 146, 199)
 
 	val alolanForms:Seq[DexNo] = AlolanFormNums.to[Seq].map(DexNo.alola.apply _)
 	val galaranForms:Seq[DexNo] = GalaranFormNums.to[Seq].map(DexNo.galar.apply _)
+	val galaranDlcForms:Seq[DexNo] = GalaranDlcFormNums.to[Seq].map(DexNo.galar.apply _)
 
 	val Gen1:Seq[DexNo] = NationalRange(1, 151)
 	val Gen2:Seq[DexNo] = NationalRange(1, 251)
@@ -108,8 +125,14 @@ object DexNoSets {
 	val Galar:Seq[DexNo] = GalarNums.to[Seq].map(DexNo.national.apply _) ++
 		(GalarNums & AlolanFormNums).to[Seq].map(DexNo.alola.apply _) ++
 		galaranForms :+ DexNo.antiqueSinistea
+	val GalarDlc:Seq[DexNo] = GalarDlcNums.to[Seq].map(DexNo.national.apply _) ++
+		(GalarDlcNums & AlolanFormNums).to[Seq].map(DexNo.alola.apply _) ++
+		galaranForms ++ galaranDlcForms :+ DexNo.duskRockruff :+ DexNo.antiqueSinistea :+
+		DexNo.waterUrshifu
 	val Gen8:Seq[DexNo] = NationalRange(1, 890) ++ alolanForms ++ galaranForms :+
 		DexNo.duskRockruff :+ DexNo.antiqueSinistea
+	val Gen8Dlc:Seq[DexNo] = NationalRange(1, 898) ++ alolanForms ++ galaranForms ++
+		galaranDlcForms :+ DexNo.duskRockruff :+ DexNo.antiqueSinistea :+ DexNo.waterUrshifu
 
 	/** A range from min to max, both sides inclusive, where min and max represent national dex numbers */
 	final case class NationalRange(min:Int, max:Int) extends IndexedSeq[DexNo] {

@@ -938,7 +938,9 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							, "Gen7" -> "1-802,AlolanForms"
 							, "Gen7+" -> "1-807,AlolanForms,744DUSK"
 							, "Galar" -> "Galardex" // listing these out manually resulted in too long a URL for some browsers
+							, "Galar+" -> "Galardlcdex" // listing these out manually resulted in too long a URL for some browsers
 							, "Gen8" -> "1-890,AlolanForms,GalaranForms,744DUSK,854RARE"
+							, "Gen8+" -> "1-898,AlolanForms,GalaranForms,GalaranDlcForms,744DUSK,854RARE,892WATER"
 						  ))
 						, options("Types", "types", Seq(
 							  "Normal" -> MonTypeType.Natural.toString

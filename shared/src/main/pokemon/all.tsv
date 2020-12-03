@@ -888,6 +888,14 @@
 888	Zacian	Fairy	Fairy	???	???	0	0	0	670	Slow	Legendary
 889	Zamazenta	Fighting	Fighting	???	???	0	0	0	670	Slow	Legendary
 890	Eternatus	Poison	Dragon	???	???	0	0	0	690	Slow	Legendary
+891	Kubfu	Fighting	Fighting	???	???	0	0	0	385	Slow	Legendary
+892	Urshifu (Single Strike)	Fighting	Dark	???	???	0	0	0	550	Slow	Legendary
+893	Zarude	Dark	Grass	???	???	0	0	0	600	Slow	Mythical
+894	Regieleki	Electric	Electric	???	???	0	0	0	580	Slow	Legendary
+895	Regidrago	Dragon	Dragon	???	???	0	0	0	580	Slow	Legendary
+896	Glastrier	Ice	Ice	???	???	0	0	0	580	Slow	Legendary
+897	Spectrier	Ghost	Ghost	???	???	0	0	0	580	Slow	Legendary
+898	Calyrex	Psychic	Grass	???	???	0	0	0	500	Slow	Legendary
 19A	Rattata (Alola)	Normal	Dark	???	???	218	253	253	253	MedFast	NotLegendary
 20A	Raticate (Alola)	Normal	Dark	???	???	0	413	413	413	MedFast	NotLegendary
 26A	Raichu (Alola)	Electric	Psychic	???	???	395	475	485	485	MedFast	NotLegendary
@@ -909,9 +917,15 @@
 52G	Meowth (Galar)	Steel	Steel	???	???	0	290	290	290	MedFast	NotLegendary
 77G	Ponyta (Galar)	Psychic	Psychic	???	???	345	410	410	410	MedFast	NotLegendary
 78G	Rapidash (Galar)	Psychic	Fairy	???	???	420	500	500	500	MedFast	NotLegendary
+79G	Slowpoke (Galar)	Psychic	Psychic	???	???	275	315	315	315	MedFast	NotLegendary
+80G	Slowbro (Galar)	Poison	Psychic	???	???	0	490	490	490	MedFast	NotLegendary
 83G	Farfetch'd (Galar)	Fighting	Fighting	???	???	290	352	352	377	MedFast	NotLegendary
 110G	Weezing (Galar)	Poison	Fairy	???	???	420	490	490	490	MedFast	NotLegendary
 122G	Mr. Mime (Galar)	Ice	Psychic	???	???	0	460	460	460	MedFast	NotLegendary
+144G	Articuno (Galar)	Psychic	Flying	???	???	0	580	580	580	Slow	Legendary
+145G	Zapdos (Galar)	Fighting	Flying	???	???	0	580	580	580	Slow	Legendary
+146G	Moltres (Galar)	Dark	Flying	???	???	0	580	580	580	Slow	Legendary
+199G	Slowking (Galar)	Poison	Psychic	???	???	0	490	490	490	MedFast	NotLegendary
 222G	Corsola (Galar)	Ghost	Ghost	???	???	0	380	380	410	Fast	NotLegendary
 263G	Zigzagoon (Galar)	Dark	Normal	???	???	0	240	240	240	MedFast	NotLegendary
 264G	Linoone (Galar)	Dark	Normal	???	???	0	420	420	420	MedFast	NotLegendary
@@ -921,3 +935,4 @@
 618G	Stunfisk (Galar)	Ground	Steel	???	???	0	471	471	471	MedFast	NotLegendary
 744DUSK	Rockruff (Dusk)	Rock	Rock	???	???	0	0	0	280	MedFast	NotLegendary
 854RARE	Sinistea (Antique)	Ghost	Ghost	???	???	0	0	0	308	MedFast	NotLegendary
+892WATER	Urshifu (Rapid Strike)	Fighting	Water	???	???	0	0	0	550	Slow	Legendary
