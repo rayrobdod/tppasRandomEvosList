@@ -6,7 +6,6 @@ val theoreticalPageJs = taskKey[Seq[File]]("")
 import scala.collection.immutable.{Seq => ISeq}
 
 lazy val shared = crossProject(JVMPlatform, JSPlatform).crossType(SharedCrossType)
-	.enablePlugins(JmhPlugin)
 	.enablePlugins(GenAllPokemonClassPlugin)
 	.enablePlugins(GenEvolutionsSeedDataClassPlugin)
 	.settings(name := "tppRandomEvos")
