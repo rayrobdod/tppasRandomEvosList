@@ -256,12 +256,12 @@ object GenPrologue extends AutoPlugin {
 	import autoImport.genPrologue
 	
 	override lazy val projectSettings = Seq(
-		target in genPrologue in Compile := {
-			(sourceManaged in Compile).value / "IndexPrologue.scala"
+		Compile / genPrologue / target := {
+			(Compile / sourceManaged).value / "IndexPrologue.scala"
 		},
-		genPrologue in Compile := {
+		Compile / genPrologue := {
 			val data = readPrologue(baseDirectory.value / ".." / "README.md")
-			val outFile = (target in genPrologue in Compile).value
+			val outFile = (Compile / genPrologue / target).value
 			
 			val prefix = """|package com.rayrobdod.possibleEvolutions
 				|
@@ -278,7 +278,7 @@ object GenPrologue extends AutoPlugin {
 			sbt.IO.write(outFile, prefix ++ data.render ++ suffix, UTF_8, false)
 			Seq(outFile)
 		},
-		sourceGenerators in Compile += (genPrologue in Compile).taskValue
+		Compile / sourceGenerators += (Compile / genPrologue).taskValue
 	)
 	
 }

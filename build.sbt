@@ -11,7 +11,7 @@ lazy val shared = crossProject(JVMPlatform, JSPlatform).crossType(SharedCrossTyp
 	.settings(name := "tppRandomEvos")
 	.settings(libraryDependencies ++= Seq(
 		"com.lihaoyi" %%% "scalatags" % "0.9.1",
-		"org.scalatest" %%% "scalatest" % "3.1.2" % "test",
+		"org.scalatest" %%% "scalatest" % "3.2.9" % "test",
 	))
 	.settings(mySettings:_*)
 lazy val sharedJVM = shared.jvm

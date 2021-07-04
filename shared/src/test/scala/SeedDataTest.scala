@@ -1,8 +1,8 @@
 package com.rayrobdod.possibleEvolutions
 
-import org.scalatest.FunSpec
+import org.scalatest.funspec.AnyFunSpec
 
-class SeedDataTest extends FunSpec {
+class SeedDataTest extends AnyFunSpec {
 	final class MySeedData(datas:Map[Int, Seq[Int]]) extends SeedData {
 		override def extantDexNos = DexNoSets.NationalRange(1, 100)
 		override def evolutions = datas.map({x =>

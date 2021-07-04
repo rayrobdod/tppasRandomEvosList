@@ -33,7 +33,7 @@ object GenAllPokemonClassPlugin extends AutoPlugin {
 
 	override lazy val projectSettings = Seq(
 		Compile / genAllPokemon / fileInputs += Glob((Compile / baseDirectory).value.getParentFile / "src" / "main" / "pokemon", "*.tsv"),
-		Compile / genAllPokemon / target := (sourceManaged in Compile).value / "AllPokemon.scala",
+		Compile / genAllPokemon / target := (Compile / sourceManaged).value / "AllPokemon.scala",
 		Compile / genAllPokemon := {
 			val inputs = (Compile / genAllPokemon).inputFiles
 			val outFile = (Compile / genAllPokemon / target).value
