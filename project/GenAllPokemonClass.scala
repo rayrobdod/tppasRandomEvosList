@@ -19,6 +19,7 @@ object dexNoSource {
 		case DexNo.national(y) => s"DexNo.national(${y})"
 		case DexNo.alola(y) => s"DexNo.alola(${y})"
 		case DexNo.galar(y) => s"DexNo.galar(${y})"
+		case DexNo.fused(y) => s"DexNo.fused(${y})"
 		case _ => s"""DexNo.valueOf("${x}")"""
 	}
 }

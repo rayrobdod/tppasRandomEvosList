@@ -29,6 +29,7 @@ object DexNo {
 	def duskRockruff = new DexNo(744, "DUSK")
 	def antiqueSinistea = new DexNo(854, "RARE")
 	def waterUrshifu = new DexNo(892, "WATER")
+	val fused = new VariantApplication("FUSED")
 	private def unapply(x:Any):Option[(Int, String)] = x match {
 		case x2:DexNo => Option((x2.number, x2.variant))
 		case _ => None
@@ -50,6 +51,7 @@ object DexNo {
 				case "AlolanForms" => DexNoSets.alolanForms
 				case "GalaranForms" => DexNoSets.galaranForms
 				case "GalaranDlcForms" => DexNoSets.galaranDlcForms
+				case "FusedCrystal" => DexNoSets.FusedCrystal
 				case NATIONAL_RANGE(low, high) => DexNoSets.NationalRange(low.toInt, high.toInt)
 				case x => Seq(DexNo.valueOf(x))
 			}
@@ -133,6 +135,8 @@ object DexNoSets {
 		DexNo.duskRockruff :+ DexNo.antiqueSinistea
 	val Gen8Dlc:Seq[DexNo] = NationalRange(1, 898) ++ alolanForms ++ galaranForms ++
 		galaranDlcForms :+ DexNo.duskRockruff :+ DexNo.antiqueSinistea :+ DexNo.waterUrshifu
+	val FusedCrystal:Seq[DexNo] = (1 to 200).map(DexNo.fused.apply _) ++ Seq(DexNo.national(201)) ++
+		(202 to 251).map(DexNo.fused.apply _)
 
 	/** A range from min to max, both sides inclusive, where min and max represent national dex numbers */
 	final case class NationalRange(min:Int, max:Int) extends IndexedSeq[DexNo] {

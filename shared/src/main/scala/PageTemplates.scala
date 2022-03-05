@@ -174,6 +174,8 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case MedSlow => "1059860"
 						case Erratic => "600000"
 						case Fluctuating => "1640000"
+						case SlightlyFast => "0"
+						case SlightlySlow => "0"
 					}
 					val types = settings.typeMatch match {
 						case MonTypeToMatch.Neither => ""
@@ -941,6 +943,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							, "Galar+" -> "Galardlcdex" // listing these out manually resulted in too long a URL for some browsers
 							, "Gen8" -> "1-890,AlolanForms,GalaranForms,744DUSK,854RARE"
 							, "Gen8+" -> "1-898,AlolanForms,GalaranForms,GalaranDlcForms,744DUSK,854RARE,892WATER"
+							, "Fused Crystal" -> "FusedCrystal"
 						  ))
 						, options("Types", "types", Seq(
 							  "Normal" -> MonTypeType.Natural.toString

@@ -107,6 +107,8 @@ package possibleEvolutions {
 
 		val Fast = new Val("Fast")
 		val MedFast = new Val("Medium Fast")
+		val SlightlyFast = new Val("Slightly Fast") // fused crystal
+		val SlightlySlow = new Val("Slightly Slow") // fused crystal
 		val MedSlow = new Val("Medium Slow")
 		val Slow = new Val("Slow")
 		val Fluctuating = new Val("Fluctuating")
