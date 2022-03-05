@@ -12,10 +12,12 @@ object dexNoSource {
 	private[this] val DUSKROCKRUFF = DexNo.duskRockruff
 	private[this] val RARESINISTEA = DexNo.antiqueSinistea
 	private[this] val WATERURSHIFU = DexNo.waterUrshifu
+	private[this] val PHANCERO = DexNo.phancero
 	def apply(x:DexNo) = x match {
 		case DUSKROCKRUFF => "DexNo.duskRockruff"
 		case RARESINISTEA => "DexNo.antiqueSinistea"
 		case WATERURSHIFU => "DexNo.waterUrshifu"
+		case PHANCERO => "DexNo.phancero"
 		case DexNo.national(y) => s"DexNo.national(${y})"
 		case DexNo.alola(y) => s"DexNo.alola(${y})"
 		case DexNo.galar(y) => s"DexNo.galar(${y})"

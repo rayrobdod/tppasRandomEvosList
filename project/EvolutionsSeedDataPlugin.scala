@@ -36,6 +36,7 @@ object GenEvolutionsSeedDataClassPlugin extends AutoPlugin {
 
 			x match {
 				case "All" => "AllPokemon.apply.map{_.dexNo}"
+				case "ChattyCrystal" => "DexNoSets.ChattyCrystal"
 				case GENX(x) => s"DexNoSets.$x"
 			}
 		}).reduce{_ + " ++ " + _}

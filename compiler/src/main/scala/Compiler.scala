@@ -16,6 +16,7 @@ object Compiler {
 		Runs.Randy,
 		Runs.Colosseum,
 		Runs.UltraMoon,
+		Runs.ChattyCrystal,
 	)
 	private[this] val predictors = gamesToMakePagesAbout.map{game => ((game, new Predictor(RandomizerSettings.runToValue(game))))}
 	private[this] val bracketsWithLineBreak = ">" + System.lineSeparator + "<"

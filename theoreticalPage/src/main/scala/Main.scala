@@ -102,6 +102,7 @@ object TheoreticalPage {
 						case "pk2" => BstMatchFunction.Pk3ds_2
 						case "ur" => BstMatchFunction.UniversalRandomizer
 						case "godt" => BstMatchFunction.GoDTool
+						case "racc" => BstMatchFunction.ChattyCrystal
 						case "custom" => {
 							val min = params.get("bstdifference_min").map{_.toDouble}.getOrElse(0d)
 							val max = params.get("bstdifference_max").map{_.toDouble}.getOrElse(10d)

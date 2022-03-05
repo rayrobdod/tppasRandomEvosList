@@ -29,6 +29,7 @@ object DexNo {
 	def duskRockruff = new DexNo(744, "DUSK")
 	def antiqueSinistea = new DexNo(854, "RARE")
 	def waterUrshifu = new DexNo(892, "WATER")
+	def phancero = new DexNo(1, "TWITCH")
 	val fused = new VariantApplication("FUSED")
 	private def unapply(x:Any):Option[(Int, String)] = x match {
 		case x2:DexNo => Option((x2.number, x2.variant))
@@ -52,6 +53,7 @@ object DexNo {
 				case "GalaranForms" => DexNoSets.galaranForms
 				case "GalaranDlcForms" => DexNoSets.galaranDlcForms
 				case "FusedCrystal" => DexNoSets.FusedCrystal
+				case "ChattyCrystal" => DexNoSets.ChattyCrystal
 				case NATIONAL_RANGE(low, high) => DexNoSets.NationalRange(low.toInt, high.toInt)
 				case x => Seq(DexNo.valueOf(x))
 			}
@@ -106,6 +108,16 @@ object DexNoSets {
 		691, 692, 693, 696, 697, 698, 699, 702, 703, 707, 744, 745, 753, 754, 764, 769, 770, 891,
 		892, 893, 894, 895, 896, 897, 898)
 
+	private[this] val ChattyCrystalExtraNational = BitSet(
+		252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 270, 271, 272, 276, 277, 278,
+		279, 280, 281, 282, 283, 284, 293, 294, 295, 296, 297, 298, 300, 301, 302, 304, 305, 306, 309,
+		310, 315, 320, 321, 328, 329, 330, 333, 334, 345, 346, 349, 350, 355, 356, 359, 361, 363, 364,
+		365, 371, 372, 373, 374, 375, 376, 381, 382, 383, 387, 388, 389, 390, 391, 392, 393, 394, 395,
+		399, 400, 403, 404, 405, 406, 407, 412, 414, 418, 419, 422, 423, 427, 428, 434, 435, 436, 437,
+		438, 441, 453, 454, 470, 471, 474, 477, 478, 491, 511, 512, 529, 530, 551, 552, 553, 580, 581,
+		602, 603, 604, 607, 608, 609, 692, 693, 694, 695, 698, 699, 700, 704, 705, 706, 739, 740, 742,
+		743)
+
 	private[this] val AlolanFormNums = BitSet(19, 20, 26, 27, 28, 37, 38, 50, 51, 52, 53, 74, 75,
 		76, 88, 89, 103, 105)
 	private[this] val GalaranFormNums = BitSet(52, 77, 78, 83, 110, 122, 222, 263, 264, 554, 555,
@@ -137,6 +149,8 @@ object DexNoSets {
 		galaranDlcForms :+ DexNo.duskRockruff :+ DexNo.antiqueSinistea :+ DexNo.waterUrshifu
 	val FusedCrystal:Seq[DexNo] = (1 to 200).map(DexNo.fused.apply _) ++ Seq(DexNo.national(201)) ++
 		(202 to 251).map(DexNo.fused.apply _)
+	val ChattyCrystal:Seq[DexNo] = Gen2 ++ ChattyCrystalExtraNational.to[Seq].map(DexNo.national.apply _) ++
+		Seq(DexNo.phancero) ++ Seq(95, 152, 153, 154, 163, 164, 175, 176, 187, 188, 189, 194, 195, 208).map(DexNo.fused.apply _)
 
 	/** A range from min to max, both sides inclusive, where min and max represent national dex numbers */
 	final case class NationalRange(min:Int, max:Int) extends IndexedSeq[DexNo] {

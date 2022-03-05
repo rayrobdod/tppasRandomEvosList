@@ -28,6 +28,7 @@ package possibleEvolutions {
 		val Randy:Value = new Value(6, "randy", "rY", "Y")
 		val Colosseum:Value = new Value(7, "colosseum", "co", "Colosseum")
 		val UltraMoon:Value = new Value(8, "ultra-moon", "um", "Ultra Moon")
+		val ChattyCrystal:Value = new Value(9, "chatty-crystal", "cc", "Chatty Crystal")
 	}
 
 	/** Which pokemon the randomized evolution's type must match */
@@ -89,6 +90,12 @@ package possibleEvolutions {
 				selfBst <= candidateBst
 			}
 			def description = "Greater Than or Equal To Current"
+		}
+		object ChattyCrystal extends Value {
+			def apply(selfBst:Int, naturalBst:Int, candidateBst:Int):Boolean = {
+				(naturalBst + 50 >= candidateBst) && (candidateBst >= naturalBst - 50)
+			}
+			def description = "Within 50 points of Natural"
 		}
 		final case class Custom(min:Double, max:Double) extends Value {
 			def apply(selfBst:Int, naturalBst:Int, candidateBst:Int):Boolean = {

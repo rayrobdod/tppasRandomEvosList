@@ -194,6 +194,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case BstMatchFunction.Pk3ds_2 => s"stat_total=${naturalBst * 10 / 11}-${naturalBst * 11 / 10}"
 						case BstMatchFunction.UniversalRandomizer => s"stat_total=${naturalBst * 9 / 10}-${naturalBst * 11 / 10}"
 						case BstMatchFunction.GoDTool => s"stat_total=${checkMon.bst}-${checkMon.bst * 10}"
+						case BstMatchFunction.ChattyCrystal => s"stat_total=${naturalBst - 50}-${naturalBst + 50}"
 						case BstMatchFunction.Custom(min, max) => s"stat_total=${(naturalBst * min).intValue}-${(naturalBst * max).intValue}"
 					}
 					val generation = settings.knownDexnos match {
@@ -281,6 +282,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 						case Gen7Ultra => "Gen 7+"
 						case Gen8 => "Gen 8"
 						case Galar => "Galardex"
+						case ChattyCrystal => "Chatty Crystal"
 						case NationalRange(1, x) => s"Up to $x inclusive"
 						case _ => "Something complicated"
 					  })
@@ -944,6 +946,7 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 							, "Gen8" -> "1-890,AlolanForms,GalaranForms,744DUSK,854RARE"
 							, "Gen8+" -> "1-898,AlolanForms,GalaranForms,GalaranDlcForms,744DUSK,854RARE,892WATER"
 							, "Fused Crystal" -> "FusedCrystal"
+							, "Chatty Crystal" -> "ChattyCrystal"
 						  ))
 						, options("Types", "types", Seq(
 							  "Normal" -> MonTypeType.Natural.toString
@@ -988,6 +991,10 @@ class PageTemplates[Builder, Output <: FragT, FragT](
 								, li(
 									  input(`type` := "radio", id := "bstdifference_godt", name := "bstdifference", value := "godt")
 									, label("Greater than current (Like GoD tool)", `for` := "bstdifference_godt")
+								  )
+								, li(
+									  input(`type` := "radio", id := "bstdifference_racc", name := "bstdifference", value := "racc")
+									, label("Within 50 points of natural (Like RaCC)", `for` := "bstdifference_racc")
 								  )
 								, fieldset(
 									legend(

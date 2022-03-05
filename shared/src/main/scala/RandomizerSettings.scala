@@ -101,6 +101,18 @@ object RandomizerSettings {
 		typeType = MonTypeType.Natural,
 	)
 
+	private[this] val ChattyCrystal = new RandomizerSettings(
+		typeMatch = MonTypeToMatch.EvolvedForm,
+		expGroupMustMatch = false,
+		remainingStageMatch = true,
+		bstMatchFunction = BstMatchFunction.ChattyCrystal,
+		naturalEvoAllowed = false,
+		legendaryAllowed = true,
+		knownDexnos = DexNoSets.ChattyCrystal,
+		bstType = MonBstType.Gen2,
+		typeType = MonTypeType.Natural,
+	)
+
 	val runToValue:SortedMap[Run, RandomizerSettings] = SortedMap(
 		Runs.AlphaSapphire -> AlphaSapphire,
 		Runs.Platinum -> Platinum,
@@ -108,5 +120,6 @@ object RandomizerSettings {
 		Runs.Randy -> Randy,
 		Runs.Colosseum -> Colosseum,
 		Runs.UltraMoon -> UltraMoon,
+		Runs.ChattyCrystal -> ChattyCrystal,
 	)
 }

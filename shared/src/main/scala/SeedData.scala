@@ -106,5 +106,6 @@ object SeedData {
 		Runs.Platinum -> seedData.Platinum,
 		Runs.White2 -> seedData.White2,
 		Runs.Randy -> seedData.Randy,
+		Runs.ChattyCrystal -> seedData.ChattyCrystal
 	)
 }
