@@ -87,6 +87,7 @@ dl dd {break-before: avoid;}
 [data-game="randy"]{background-color:#E2C7CE;} /* hsl(230/240, 33%, 200/240) */
 [data-game="colosseum"]{background-color:#DFBFEA;} /* hsl(190/240, 50%, 200/240) */
 [data-game="ultra-moon"]{background-color:#b3c0e4;}
+[data-game="chatty-crystal"]{background-color:#B5F4F4;} /* hsl(120/240, 75%, 200/240) */
 [data-game="theoretical"]{background-color:#CAEABF;} /* hsl(70/240, 50%, 200/240) */
 [data-game="natural platinum"]{
 	background-color:#EAC5BF;
@@ -115,4 +116,20 @@ dl dd {break-before: avoid;}
 [data-game="white2 randy"]{
 	background-color:#DDDDCC;
 	background: linear-gradient(to bottom, #DDDDCC 0%,#DDDDCC 50%,#E2C7CE 51%,#E2C7CE 100%);
+}
+[data-game="alpha-sapphire chatty-crystal"]{
+	background-color:#BFE4EA;
+	background: linear-gradient(to bottom, #BFE4EA 0%,#BFE4EA 50%,#B5F4F4 51%,#B5F4F4 100%);
+}
+[data-game="platinum chatty-crystal"]{
+	background-color:#C9D4DF;
+	background: linear-gradient(to bottom, #C9D4DF 0%,#C9D4DF 50%,#B5F4F4 51%,#B5F4F4 100%);
+}
+[data-game="white2 chatty-crystal"]{
+	background-color:#DDDDCC;
+	background: linear-gradient(to bottom, #DDDDCC 0%,#DDDDCC 50%,#B5F4F4 51%,#B5F4F4 100%);
+}
+[data-game="randy chatty-crystal"]{
+	background-color:#E2C7CE;
+	background: linear-gradient(to bottom, #E2C7CE 0%,#E2C7CE 50%,#B5F4F4 51%,#B5F4F4 100%);
 }
